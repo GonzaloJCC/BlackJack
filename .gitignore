@@ -1,4 +1,6 @@
 #not needed folder
 .vscode
+src/__pycache__/
+
 
 notes.txt
