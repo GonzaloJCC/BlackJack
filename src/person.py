@@ -24,10 +24,13 @@ class Player:
         self.chips-ammount
         return ammount
     def show(self):
-        print(self.name)
+        # print(f" PLAYER {self.name}:")
         for each in (self.hand):
             print(each, end = " ")
         print("")
+
+    def empty(self):
+        self.hand.clear
 
 
 
@@ -38,11 +41,14 @@ class Dealer:
     def showFirst(self):
         print("DEALER")
         for i in range(0, len(self.hand)):
-            if(i == 0):
+            if(i == 1):
                 print("[X]", end= " ")
             else:
                 print(self.hand[i], end = " ")
         print("\n")
+    
+    def empty(self):
+        self.hand.clear
 
         
         

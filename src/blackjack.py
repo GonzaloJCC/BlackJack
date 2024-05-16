@@ -10,9 +10,9 @@ def cls():
 #cleans the player and dealer cards
 def end():
     pass
-def printPlayers(playerAmmount, players):
+def printPlayers(playerAmmount, players, bets):
     for i in range(0, playerAmmount):
-        print(f"PLAYER {players[i].name}: ")
+        print(f"PLAYER {players[i].name}(BET: {bets[i]}): ")
         players[i].show()
         print("")
 
@@ -47,18 +47,25 @@ while(1):
         
         bet = int(input(f"PLAYER {players[i].name}, bet: "))
         bets[i] = (players[i].Bet(bet))
-        t.sleep(1)
+    
+    t.sleep(0.5)
+    cls()
+    print("STARTING TO DEAL")
+    t.sleep(2)
 
+    cls()
     #Deal card 1 to players
     for i in range(0, playerAmmount):
         auxDeck = random.choice(decks)
         chosenCard = random.choice(auxDeck.deck)
         auxDeck.deck.remove(chosenCard)
         players[i].hand.append(chosenCard)
-        players[i].show()
-        t.sleep(1)
-    cls()
-    printPlayers(playerAmmount, players)
+        cls()
+        dealer.showFirst()
+        printPlayers(playerAmmount, players, bets)
+        t.sleep(1.2)
+    
+
     
 
 
@@ -67,13 +74,10 @@ while(1):
     chosenCard = random.choice(auxDeck.deck)
     auxDeck.deck.remove(chosenCard)
     dealer.hand.append(chosenCard)
-    t.sleep(2)
     cls()
     dealer.showFirst()
-    printPlayers(playerAmmount, players)
-    t.sleep(2)
-    cls()
-    dealer.showFirst()
+    printPlayers(playerAmmount, players, bets)
+    
 
     #Deal card 2 to players
     for i in range(0, playerAmmount):
@@ -81,21 +85,20 @@ while(1):
         chosenCard = random.choice(auxDeck.deck)
         auxDeck.deck.remove(chosenCard)
         players[i].hand.append(chosenCard)
-        players[i].show()
-    t.sleep(2)
-    cls()
-    dealer.showFirst()
-    printPlayers(playerAmmount, players)
+        t.sleep(1.2)
+        cls()
+        dealer.showFirst()
+        printPlayers(playerAmmount, players, bets)
 
     #Deal card 2 to dealer
     auxDeck = random.choice(decks)
     chosenCard = random.choice(auxDeck.deck)
     auxDeck.deck.remove(chosenCard)
     dealer.hand.append(chosenCard)
-    t.sleep(2)
+    t.sleep(1.2)
     cls()
     dealer.showFirst()
-    printPlayers(playerAmmount, players)
+    printPlayers(playerAmmount, players, bets)
     
     t.sleep(70)
     
