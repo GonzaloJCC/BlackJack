@@ -64,15 +64,18 @@ while(1):
             decks.append(Deck())
 
     print("PLACE YOUR BETS")
-    for i in range(0, playerAmmount):
+    for i in range(playerAmmount):
         
         bet = int(input(f"PLAYER {players[i].name}, bet: "))
         bets[i] = (players[i].Bet(bet))
-    
-    t.sleep(0.5)
     cls()
+    t.sleep(0.5)
+    
     print("STARTING TO DEAL")
     t.sleep(2)
+    cls()
+    printPlayers(players, bets)
+    t.sleep(1.2)
 
     #Deal card 1 to players
     dealPlayers(players)
