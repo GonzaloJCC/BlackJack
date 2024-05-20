@@ -11,18 +11,20 @@ def cls():
 def end():
     pass
 def printPlayers(players, bets):
+    dealer.showFirst()
     for i, player in enumerate(players):
         print(f"{player.name.upper()} (BET: {bets[i]}): ")
         player.show()
         print("")
 def dealPlayers(players):
+    cls()
+    printPlayers(players, bets)
     for player in (players):
         auxDeck = random.choice(decks)
         chosenCard = random.choice(auxDeck.deck)
         auxDeck.deck.remove(chosenCard)
         player.hand.append(chosenCard)
         cls()
-        dealer.showFirst()
         printPlayers(players, bets)
         t.sleep(1.2)
 
@@ -31,9 +33,7 @@ def dealDealer(dealer, players, bets):
     chosenCard = random.choice(auxDeck.deck)
     auxDeck.deck.remove(chosenCard)
     dealer.hand.append(chosenCard)
-    t.sleep(1.2)
     cls()
-    dealer.showFirst()
     printPlayers(players, bets)
     t.sleep(1.2)
 #main
@@ -55,8 +55,6 @@ for i in range (0, playerAmmount):
     players.append(Player(name))
     bets.append(0)
 
-#TODO - make functions for the deal loops
-#TODO - cambiar for loops por for i, player in enumerate(players):
 while(1):
     if(resetDeckCount == 3):
         resetDeckCount = 0;
@@ -76,7 +74,6 @@ while(1):
     print("STARTING TO DEAL")
     t.sleep(2)
 
-    cls()
     #Deal card 1 to players
     dealPlayers(players)
 
