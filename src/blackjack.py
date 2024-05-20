@@ -10,13 +10,32 @@ def cls():
 #cleans the player and dealer cards
 def end():
     pass
-def printPlayers(playerAmmount, players, bets):
-    for i in range(0, playerAmmount):
-        print(f"PLAYER {players[i].name}(BET: {bets[i]}): ")
-        players[i].show()
+def printPlayers(players, bets):
+    for i, player in enumerate(players):
+        print(f"{player.name.upper()} (BET: {bets[i]}): ")
+        player.show()
         print("")
+def dealPlayers(players):
+    for player in (players):
+        auxDeck = random.choice(decks)
+        chosenCard = random.choice(auxDeck.deck)
+        auxDeck.deck.remove(chosenCard)
+        player.hand.append(chosenCard)
+        cls()
+        dealer.showFirst()
+        printPlayers(players, bets)
+        t.sleep(1.2)
 
-
+def dealDealer(dealer, players, bets):        
+    auxDeck = random.choice(decks)
+    chosenCard = random.choice(auxDeck.deck)
+    auxDeck.deck.remove(chosenCard)
+    dealer.hand.append(chosenCard)
+    t.sleep(1.2)
+    cls()
+    dealer.showFirst()
+    printPlayers(players, bets)
+    t.sleep(1.2)
 #main
 playerAmmount = 0
 players = []
@@ -24,6 +43,9 @@ bets = [4]
 resetDeckCount = 0
 decks = []
 dealer = Dealer()
+
+#TODO - make a menu BLACKJACK, press any key to start
+
 while(playerAmmount < 1 or playerAmmount > 4):
     playerAmmount = int(input("Enter the ammount of players(1-4): "))
     
@@ -33,7 +55,8 @@ for i in range (0, playerAmmount):
     players.append(Player(name))
     bets.append(0)
 
-
+#TODO - make functions for the deal loops
+#TODO - cambiar for loops por for i, player in enumerate(players):
 while(1):
     if(resetDeckCount == 3):
         resetDeckCount = 0;
@@ -55,50 +78,16 @@ while(1):
 
     cls()
     #Deal card 1 to players
-    for i in range(0, playerAmmount):
-        auxDeck = random.choice(decks)
-        chosenCard = random.choice(auxDeck.deck)
-        auxDeck.deck.remove(chosenCard)
-        players[i].hand.append(chosenCard)
-        cls()
-        dealer.showFirst()
-        printPlayers(playerAmmount, players, bets)
-        t.sleep(1.2)
-    
-
-    
-
+    dealPlayers(players)
 
     #Deal card 1 to dealer
-    auxDeck = random.choice(decks)
-    chosenCard = random.choice(auxDeck.deck)
-    auxDeck.deck.remove(chosenCard)
-    dealer.hand.append(chosenCard)
-    cls()
-    dealer.showFirst()
-    printPlayers(playerAmmount, players, bets)
+    dealDealer(dealer, players, bets)
     
-
     #Deal card 2 to players
-    for i in range(0, playerAmmount):
-        auxDeck = random.choice(decks)
-        chosenCard = random.choice(auxDeck.deck)
-        auxDeck.deck.remove(chosenCard)
-        players[i].hand.append(chosenCard)
-        t.sleep(1.2)
-        cls()
-        dealer.showFirst()
-        printPlayers(playerAmmount, players, bets)
+    dealPlayers(players)
 
     #Deal card 2 to dealer
-    auxDeck = random.choice(decks)
-    chosenCard = random.choice(auxDeck.deck)
-    auxDeck.deck.remove(chosenCard)
-    dealer.hand.append(chosenCard)
-    t.sleep(1.2)
-    cls()
-    dealer.showFirst()
-    printPlayers(playerAmmount, players, bets)
+    dealDealer(dealer, players, bets)
     
     t.sleep(70)
     
