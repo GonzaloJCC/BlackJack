@@ -16,6 +16,8 @@ def printPlayers(players, bets):
         print(f"{player.name.upper()} (BET: {bets[i]}): ")
         player.show()
         print("")
+
+#TODO: cambiar esta funcion a deal y añadirle como parametro un bool, si es true reparte al dealer si no no, eliminar dealDealer
 def dealPlayers(players):
     cls()
     printPlayers(players, bets)
@@ -36,6 +38,10 @@ def dealDealer(dealer, players, bets):
     cls()
     printPlayers(players, bets)
     t.sleep(1.2)
+
+def dealerHasBlackJack():
+
+    return True    
 #main
 playerAmmount = 0
 players = []
@@ -45,17 +51,18 @@ decks = []
 dealer = Dealer()
 
 #TODO - make a menu BLACKJACK, press any key to start
-
-while(playerAmmount < 1 or playerAmmount > 4):
-    playerAmmount = int(input("Enter the ammount of players(1-4): "))
-    
-
-for i in range (0, playerAmmount):
-    name = input(f"Enter the player {i+1} name: ")
-    players.append(Player(name))
-    bets.append(0)
-
+# input("PRESS ANY KEY TO START: ")
 while(1):
+    while(playerAmmount < 1 or playerAmmount > 4):
+        playerAmmount = int(input("Enter the ammount of players(1-4): "))
+        
+
+    for i in range (0, playerAmmount):
+        name = input(f"Enter the player {i+1} name: ")
+        players.append(Player(name))
+        bets.append(0)
+
+
     if(resetDeckCount == 3):
         resetDeckCount = 0;
     if(resetDeckCount == 0):
@@ -65,12 +72,12 @@ while(1):
 
     print("PLACE YOUR BETS")
     for i in range(playerAmmount):
-        
-        bet = int(input(f"PLAYER {players[i].name}, bet: "))
+            
+        bet = int(input(f"PLAYER {players[i].name} ({players[i].chips} Chips), bet: "))
         bets[i] = (players[i].Bet(bet))
     cls()
     t.sleep(0.5)
-    
+        
     print("STARTING TO DEAL")
     t.sleep(2)
     cls()
@@ -82,12 +89,24 @@ while(1):
 
     #Deal card 1 to dealer
     dealDealer(dealer, players, bets)
-    
+        
     #Deal card 2 to players
     dealPlayers(players)
 
     #Deal card 2 to dealer
     dealDealer(dealer, players, bets)
-    
+    #Now all the players and the dealer have 2 cards each
+
+    #if dealer has BlackJack all the players without BJ will lose their bets and the ones with BJ will get their bet returned
+    if dealerHasBlackJack():
+        print(1)
+
+
     t.sleep(70)
+    #after the round is finished you can choose to end the round or to play another
+    decision = input("IF YOU DON'T WANT TO PLAY ANOTHER ROUND PRESS 'Q' TO EXIT, OTHERWISE PRESS ANY KEY: ")
+    if decision.upper == 'q':
+        print("GAME ENDED")
+        t.sleep(700)
+
     

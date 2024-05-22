@@ -9,7 +9,8 @@ DOUBLE = "Double"
 SPLIT = "Split"
 STAND = "Stand"
 
-
+#TODO: crear clase padre de ambas
+#TODO: crear funcion que calcule el valor de la mano del jugador y del dealer, mayor numero que se aproxime a 21 sin pasarse, <= 21
 class Player:
     def __init__(self, name):
         self.hand = []
