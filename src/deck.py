@@ -1,12 +1,22 @@
 import random
 
+def getNumericalValue(value):
+    if value == "A":
+        return (1, 11)
+    
+    if value == "J" or value == "Q" or value == "K":
+        return (10, 10)
+    
+    aux = int(value)
 
+    return (aux, aux)
 
 #class card
 class Card:
-    def __init__(self, value, suit):
+    def __init__(self, value, suit, numericalValue):
         self.value = value
         self.suit = suit
+        self.numericalValue = numericalValue
 
     def __str__(self):
         return f"{self.value}{self.suit}"
@@ -22,7 +32,8 @@ class Deck:
 
         for suit in suits:
             for value in values:
-                card = Card(value, suit)
+                numericalValue = getNumericalValue(value)
+                card = Card(value, suit, numericalValue)
                 self.deck.append(card)
         
     def shuffle(self):

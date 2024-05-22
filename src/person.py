@@ -1,7 +1,9 @@
+from deck import *
 STARTING_CHIPS = 1000
 
 #score dealer must stop (all 17)
 DEALER_STOP = 17
+OBJECTIVE = 21
 
 #actions
 HIT = "Hit"
@@ -11,6 +13,13 @@ STAND = "Stand"
 
 #TODO: crear clase padre de ambas
 #TODO: crear funcion que calcule el valor de la mano del jugador y del dealer, mayor numero que se aproxime a 21 sin pasarse, <= 21
+
+# def getPoints(hand = list[Card]):
+
+#     for card in hand:
+#         card.numericalValue
+
+
 class Player:
     def __init__(self, name):
         self.hand = []
