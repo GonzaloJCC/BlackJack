@@ -52,15 +52,22 @@ dealer = Dealer()
 
 #TODO - make a menu BLACKJACK, press any key to start
 # input("PRESS ANY KEY TO START: ")
-while(1):
-    while(playerAmmount < 1 or playerAmmount > 4):
-        playerAmmount = int(input("Enter the ammount of players(1-4): "))
-        
+while True:
+    try:
+        playerAmmount = int(input("Enter the amount of players (1-4): "))
+        if playerAmmount < 1 or playerAmmount > 4:
+            raise ValueError("You must enter a number between 1 and 4, both included")
+        break
+    except ValueError as e:
+        print("You must enter a number between 1 and 4, both included")
 
-    for i in range (0, playerAmmount):
-        name = input(f"Enter the player {i+1} name: ")
-        players.append(Player(name))
-        bets.append(0)
+
+for i in range (0, playerAmmount):
+    name = input(f"Enter the player {i+1} name: ")
+    players.append(Player(name))
+    bets.append(0)
+while(1):
+    
 
 
     if(resetDeckCount == 3):
@@ -69,7 +76,7 @@ while(1):
         decks.clear()
         for i in range (0, 6):
             decks.append(Deck())
-
+    cls()
     print("PLACE YOUR BETS")
     for i in range(playerAmmount):
             

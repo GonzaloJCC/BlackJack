@@ -15,7 +15,8 @@ STAND = "Stand"
 #TODO: crear funcion que calcule el valor de la mano del jugador y del dealer, mayor numero que se aproxime a 21 sin pasarse, <= 21
 
 # def getPoints(hand = list[Card]):
-
+#     if hand == []:
+#       return 0
 #     for card in hand:
 #         card.numericalValue
 
