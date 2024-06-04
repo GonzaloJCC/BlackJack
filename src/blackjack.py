@@ -27,27 +27,29 @@ class blackJack:
             player.show()
             print("")
 
-    #TODO: cambiar esta funcion por deal, duplicandola y que si ha recibido true haga para dealer y si ha recibido false o nada lo haga para players
-    def dealPlayers(self):
-        self.cls()
-        self.printPlayers(self.players, self.bets)
-        for player in (self.players):
+    #recives true if the card is going to be dealed to the dealer or false if its going to be dealed to all players
+    def deal(self, x: bool):
+        if x == True:
             auxDeck = random.choice(self.decks)
             chosenCard = random.choice(auxDeck.deck)
             auxDeck.deck.remove(chosenCard)
-            player.hand.append(chosenCard)
+            self.dealer.hand.append(chosenCard)
             self.cls()
             self.printPlayers(self.players, self.bets)
             t.sleep(1.2)
+        
+        else:
+            self.cls()
+            self.printPlayers(self.players, self.bets)
+            for player in (self.players):
+                auxDeck = random.choice(self.decks)
+                chosenCard = random.choice(auxDeck.deck)
+                auxDeck.deck.remove(chosenCard)
+                player.hand.append(chosenCard)
+                self.cls()
+                self.printPlayers(self.players, self.bets)
+                t.sleep(1.2)
 
-    def dealDealer(self):        
-        auxDeck = random.choice(self.decks)
-        chosenCard = random.choice(auxDeck.deck)
-        auxDeck.deck.remove(chosenCard)
-        self.dealer.hand.append(chosenCard)
-        self.cls()
-        self.printPlayers(self.players, self.bets)
-        t.sleep(1.2)
 
     #TODO esta funcion debertia ir en dealer
     def dealerHasBlackJack(self):
@@ -97,16 +99,16 @@ class blackJack:
             t.sleep(1.2)
 
             #Deal card 1 to players
-            self.dealPlayers()
+            self.deal(False)
 
             #Deal card 1 to dealer
-            self.dealDealer()
+            self.deal(True)
                 
             #Deal card 2 to players
-            self.dealPlayers()
+            self.deal(False)
 
             #Deal card 2 to dealer
-            self.dealDealer()
+            self.deal(True)
             #Now all the players and the dealer have 2 cards each
 
             #if dealer has BlackJack all the players without BJ will lose their bets and the ones with BJ will get their bet returned
