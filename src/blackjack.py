@@ -86,8 +86,15 @@ class blackJack:
             self.cls()
             print("PLACE YOUR BETS")
             for i in range(playerAmmount):
-                    
-                bet = int(input(f"PLAYER {self.players[i].name} ({self.players[i].chips} Chips), bet: "))
+                while 1:
+                    try:
+                        bet = int(input(f"PLAYER {self.players[i].name} ({self.players[i].chips} Chips), bet: "))
+                        if(bet < 0 or bet > 9999999):
+                            raise ValueError("You must enter a number")
+                        break
+                    except ValueError as e:
+                        print("You must enter a valid number, between 1 and the ammount of chips you have")
+
                 self.bets[i] = (self.players[i].Bet(bet))
             self.cls()
             t.sleep(0.5)
