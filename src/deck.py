@@ -37,11 +37,15 @@ class Deck:
                 self.deck.append(card)
         
     def shuffle(self):
-        pass
-    def deal(self):
+        aux = []
+        for card in self.deck:
+            chosenCard = random.choice(self.deck)
+            self.deck.remove(chosenCard)
+            aux.append(chosenCard)
+        self.deck = aux
 
-        pass
-
+    def takeCard(self):
+        return self.deck.pop()
 
 
 

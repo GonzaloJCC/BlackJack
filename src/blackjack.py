@@ -30,10 +30,7 @@ class blackJack:
     #recives true if the card is going to be dealed to the dealer or false if its going to be dealed to all players
     def deal(self, x: bool):
         if x == True:
-            auxDeck = random.choice(self.decks)
-            chosenCard = random.choice(auxDeck.deck)
-            auxDeck.deck.remove(chosenCard)
-            self.dealer.hand.append(chosenCard)
+            self.dealer.hand.append(self.takeCard())
             self.cls()
             self.printPlayers(self.players, self.bets)
             t.sleep(1.2)
@@ -42,13 +39,18 @@ class blackJack:
             self.cls()
             self.printPlayers(self.players, self.bets)
             for player in (self.players):
-                auxDeck = random.choice(self.decks)
-                chosenCard = random.choice(auxDeck.deck)
-                auxDeck.deck.remove(chosenCard)
-                player.hand.append(chosenCard)
+                player.hand.append(self.takeCard())
                 self.cls()
                 self.printPlayers(self.players, self.bets)
                 t.sleep(1.2)
+
+    def shuffle(self):
+        for deck in self.decks:
+            deck.shuffle()
+
+    def takeCard(self):
+        auxDeck = random.choice(self.decks)
+        return auxDeck.takeCard()
 
 
     #TODO esta funcion debertia ir en dealer
@@ -59,6 +61,7 @@ class blackJack:
     # input("PRESS ANY KEY TO START: ")
 
     def gameLoop(self):
+        
         while True:
             try:
                 playerAmmount = int(input("Enter the amount of players (1-4): "))
@@ -83,9 +86,11 @@ class blackJack:
                 self.decks.clear()
                 for i in range (0, 6):
                     self.decks.append(Deck())
+                self.shuffle()
             self.cls()
             print("PLACE YOUR BETS")
             for i in range(playerAmmount):
+                #TODO: separar esto en una funcion
                 while 1:
                     try:
                         bet = int(input(f"PLAYER {self.players[i].name} ({self.players[i].chips} Chips), bet: "))
