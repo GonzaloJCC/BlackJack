@@ -1,15 +1,6 @@
 from deck import *
-STARTING_CHIPS = 1000
+from const import *
 
-#score dealer must stop (all 17)
-DEALER_STOP = 17
-OBJECTIVE = 21
-
-#actions
-HIT = "Hit"
-DOUBLE = "Double"
-SPLIT = "Split"
-STAND = "Stand"
 
 #TODO: crear clase padre de ambas
 #TODO: crear funcion que calcule el valor de la mano del jugador y del dealer, mayor numero que se aproxime a 21 sin pasarse, <= 21

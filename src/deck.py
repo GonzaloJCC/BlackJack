@@ -35,14 +35,12 @@ class Deck:
                 numericalValue = getNumericalValue(value)
                 card = Card(value, suit, numericalValue)
                 self.deck.append(card)
-        
+
+    def __str__(self):
+        return ', '.join(str(card) for card in self.deck)
+    
     def shuffle(self):
-        aux = []
-        for card in self.deck:
-            chosenCard = random.choice(self.deck)
-            self.deck.remove(chosenCard)
-            aux.append(chosenCard)
-        self.deck = aux
+        random.shuffle(self.deck)
 
     def takeCard(self):
         return self.deck.pop()

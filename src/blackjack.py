@@ -3,6 +3,7 @@ from deck import *
 import random as r
 import os
 import time as t
+from const import *
 
 class blackJack:
 
@@ -13,13 +14,14 @@ class blackJack:
         self.resetDeckCount = 0
         self.decks = []
         self.dealer = Dealer()
-        
+    
     def cls(self):
         os.system('cls' if os.name == 'nt' else 'clear')
 
     #cleans the player and dealer cards
     def end():
         pass
+
     def printPlayers(self, players, bets):
         self.dealer.showFirst()
         for i, player in enumerate(players):
@@ -44,6 +46,17 @@ class blackJack:
                 self.printPlayers(self.players, self.bets)
                 t.sleep(1.2)
 
+    #DECK MANAGEMENT
+    def randomDecks(self):
+        if self.resetDeckCount == RESET_DECK_COUNT:
+            self.resetDeckCount = 0;
+        
+        if self.resetDeckCount == 0:
+            self.decks.clear()
+            for i in range (0, NUMBER_OF_DECKS):
+                self.decks.append(Deck())
+            self.shuffle()
+        self.cls()
     def shuffle(self):
         for deck in self.decks:
             deck.shuffle()
@@ -77,17 +90,8 @@ class blackJack:
             self.players.append(Player(name))
             self.bets.append(0)
         while(1):
-            
 
-
-            if(self.resetDeckCount == 3):
-                self.resetDeckCount = 0;
-            if(self.resetDeckCount == 0):
-                self.decks.clear()
-                for i in range (0, 6):
-                    self.decks.append(Deck())
-                self.shuffle()
-            self.cls()
+            self.randomDecks()
             print("PLACE YOUR BETS")
             for i in range(playerAmmount):
                 #TODO: separar esto en una funcion
