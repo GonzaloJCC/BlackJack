@@ -5,13 +5,6 @@ from const import *
 #TODO: crear clase padre de ambas
 #TODO: crear funcion que calcule el valor de la mano del jugador y del dealer, mayor numero que se aproxime a 21 sin pasarse, <= 21
 
-# def getPoints(hand = list[Card]):
-#     if hand == []:
-#       return 0
-#     for card in hand:
-#         card.numericalValue
-
-
 class Player:
     def __init__(self, name):
         self.hand = []
@@ -33,11 +26,47 @@ class Player:
 
     def empty(self):
         self.hand.clear
-        
+
     def hasBlackjack(self):
         if len(self.hand) != 2:
             return False
         return (self.hand[0].numericalValue[1] + self.hand[1].numericalValue[1] == 21)
+    
+    def getScore(self):
+        score = 0
+        aces = []
+        others = []
+
+        if self.hand == []:
+            return 0
+        
+        #filter the cards by ace or other
+        for card in self.hand:
+            if card.numericalValue[1] == 11:
+                aces.append(card)
+            else:
+                others.append(card)
+        
+        for card in others:
+            score += card.numericalValue[0]
+            if score > OBJECTIVE:
+                #busted
+                return -1
+            
+        for card in aces:
+            score += card.numericalValue[1] 
+            if score >  OBJECTIVE:
+                score -= card.numericalValue[1]
+                if score > OBJECTIVE:
+                    return -1
+        
+        return score
+
+
+            
+
+        
+
 
 
 
@@ -61,6 +90,34 @@ class Dealer:
         if len(self.hand) != 2:
             return False
         return (self.hand[0].numericalValue[1] + self.hand[1].numericalValue[1] == 21)
+    
+    def getScore(self):
+        score = 0
+        aces = []
+        others = []
+
+        if self.hand == []:
+            return 0
+        #filter the cards by ace or other
+        for card in self.hand:
+            if card.numericalValue[1] == 11:
+                aces.append(card)
+            else:
+                others.append(card)
+        
+        for card in others:
+            score += card.numericalValue[0]
+            if score > OBJECTIVE:
+                #busted
+                return -1
+            
+        for card in aces:
+            score += card.numericalValue[1] 
+            if score >  OBJECTIVE:
+                score -= card.numericalValue[1]
+                if score > OBJECTIVE:
+                    return -1
+        
 
 
         

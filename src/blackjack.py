@@ -64,7 +64,7 @@ class BlackJack:
     def printPlayers(self, players, bets):
         self.dealer.showFirst()
         for i, player in enumerate(players):
-            print(f"{player.name.upper()} (BET: {bets[i]}): ")
+            print(f"{player.name.upper()} (BET: {bets[i]})  SCORE: {player.getScore()}: ")
             player.show()
             print("")
             
@@ -147,6 +147,7 @@ class BlackJack:
             #if dealer has BlackJack all the players without BJ will lose their bets and the ones with BJ will get their bet returned
             if self.dealer.hasBlackjack():
                 print("DEALER HAS BLACKJACK")
+                self.end()
 
 
 
