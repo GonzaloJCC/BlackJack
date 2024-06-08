@@ -33,6 +33,11 @@ class Player:
 
     def empty(self):
         self.hand.clear
+        
+    def hasBlackjack(self):
+        if len(self.hand) != 2:
+            return False
+        return (self.hand[0].numericalValue[1] + self.hand[1].numericalValue[1] == 21)
 
 
 
@@ -51,6 +56,12 @@ class Dealer:
     
     def empty(self):
         self.hand.clear
+    
+    def hasBlackjack(self):
+        if len(self.hand) != 2:
+            return False
+        return (self.hand[0].numericalValue[1] + self.hand[1].numericalValue[1] == 21)
+
 
         
         

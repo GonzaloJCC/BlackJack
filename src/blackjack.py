@@ -6,7 +6,7 @@ import time as t
 from const import *
 
 class BlackJack:
-
+    #TODO - cambiar listas players y bet a un diccionario player -> bet
     def __init__(self) -> None:
         self.playerAmmount = 0
         self.players = []
@@ -18,6 +18,45 @@ class BlackJack:
     def cls(self):
         os.system('cls' if os.name == 'nt' else 'clear')
 
+    def startGame(self):
+        #NOTE - the user selects the  number of players
+        while True:
+            try:
+                self.playerAmmount = int(input("Enter the amount of players (1-4): "))
+                if self.playerAmmount < 1 or self.playerAmmount > 4:
+                    raise ValueError("You must enter a number between 1 and 4, both included")
+                break
+            except ValueError as e:
+                print("You must enter a number between 1 and 4, both included")
+
+        #select player names
+        for i in range (0, self.playerAmmount):
+            name = input(f"Enter the player {i+1} name: ")
+            self.players.append(Player(name))
+            self.bets.append(0)
+
+        #NOTE - every player makes the initial bet
+        self.cls()
+        print("PLACE YOUR BETS")
+        for i in range(self.playerAmmount):
+            while 1:
+                try:
+                    bet = int(input(f"PLAYER {self.players[i].name} ({self.players[i].chips} Chips), bet: "))
+                    if(bet < 0 or bet > 9999999):
+                        raise ValueError("You must enter a number")
+                    break
+                except ValueError as e:
+                    print("You must enter a valid number, between 1 and the ammount of chips you have")
+
+            self.bets[i] = (self.players[i].Bet(bet))
+        self.cls()
+        t.sleep(0.5)
+
+        print("STARTING TO DEAL")
+        t.sleep(2)
+        self.cls()
+
+
     #cleans the player and dealer cards
     def end():
         pass
@@ -28,6 +67,8 @@ class BlackJack:
             print(f"{player.name.upper()} (BET: {bets[i]}): ")
             player.show()
             print("")
+            
+
 
     #recives true if the card is going to be dealed to the dealer or false if its going to be dealed to all players
     def deal(self, x: bool):
@@ -36,6 +77,8 @@ class BlackJack:
             self.cls()
             self.printPlayers(self.players, self.bets)
             t.sleep(1.2)
+            
+            
         
         else:
             self.cls()
@@ -45,6 +88,7 @@ class BlackJack:
                 self.cls()
                 self.printPlayers(self.players, self.bets)
                 t.sleep(1.2)
+                
 
     #DECK MANAGEMENT
     def randomDecks(self):
@@ -68,72 +112,44 @@ class BlackJack:
             auxDeck = random.choice(self.decks)
             card = auxDeck.takeCard()
         return card
+  
 
 
-    #TODO esta funcion debertia ir en dealer
-    def dealerHasBlackJack(self):
-        return True    
-    #main
+
     #TODO - make a menu BLACKJACK, press any key to start
     # input("PRESS ANY KEY TO START: ")
-
     def gameLoop(self):
         
-        while True:
-            try:
-                playerAmmount = int(input("Enter the amount of players (1-4): "))
-                if playerAmmount < 1 or playerAmmount > 4:
-                    raise ValueError("You must enter a number between 1 and 4, both included")
-                break
-            except ValueError as e:
-                print("You must enter a number between 1 and 4, both included")
+        self.startGame()
 
-
-        for i in range (0, playerAmmount):
-            name = input(f"Enter the player {i+1} name: ")
-            self.players.append(Player(name))
-            self.bets.append(0)
         while(1):
 
+            #the decks are shuffled and initialized
             self.randomDecks()
-            print("PLACE YOUR BETS")
-            for i in range(playerAmmount):
-                #TODO: separar esto en una funcion
-                while 1:
-                    try:
-                        bet = int(input(f"PLAYER {self.players[i].name} ({self.players[i].chips} Chips), bet: "))
-                        if(bet < 0 or bet > 9999999):
-                            raise ValueError("You must enter a number")
-                        break
-                    except ValueError as e:
-                        print("You must enter a valid number, between 1 and the ammount of chips you have")
 
-                self.bets[i] = (self.players[i].Bet(bet))
-            self.cls()
-            t.sleep(0.5)
-                
-            print("STARTING TO DEAL")
-            t.sleep(2)
-            self.cls()
+            #prints the table status
             self.printPlayers(self.players, self.bets)
             t.sleep(1.2)
-
+            
             #Deal card 1 to players
             self.deal(False)
-
+            
             #Deal card 1 to dealer
             self.deal(True)
-                
+            
             #Deal card 2 to players
             self.deal(False)
-
+            
             #Deal card 2 to dealer
             self.deal(True)
             #Now all the players and the dealer have 2 cards each
 
             #if dealer has BlackJack all the players without BJ will lose their bets and the ones with BJ will get their bet returned
-            if self.dealerHasBlackJack():
-                print(1)
+            if self.dealer.hasBlackjack():
+                print("DEALER HAS BLACKJACK")
+
+
+
 
 
             t.sleep(70)
