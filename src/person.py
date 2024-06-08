@@ -3,7 +3,6 @@ from const import *
 
 
 #TODO: crear clase padre de ambas
-#TODO: crear funcion que calcule el valor de la mano del jugador y del dealer, mayor numero que se aproxime a 21 sin pasarse, <= 21
 
 class Player:
     def __init__(self, name):
@@ -63,13 +62,6 @@ class Player:
         return score
 
 
-            
-
-        
-
-
-
-
 class Dealer:
     def __init__(self):
         self.hand = []
@@ -117,6 +109,7 @@ class Dealer:
                 score -= card.numericalValue[1]
                 if score > OBJECTIVE:
                     return -1
+        return score
         
 
 

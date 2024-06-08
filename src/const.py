@@ -6,6 +6,10 @@ RESET_DECK_COUNT = 15
 DEALER_STOP = 17
 OBJECTIVE = 21
 
+#the constant your bets multiply by if you win
+BLACKJACK_WIN_RATIO = 2.5
+WIN_RATIO = 2
+
 #actions
 HIT = "Hit"
 DOUBLE = "Double"

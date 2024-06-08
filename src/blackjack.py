@@ -58,8 +58,39 @@ class BlackJack:
 
 
     #cleans the player and dealer cards
-    def end():
-        pass
+    def end(self):
+        dealerScore = self.dealer.getScore()
+        # self.cls()
+        for i, player in enumerate(self.players):
+            playerScore = player.getScore()
+            
+            if player.hasBlackjack():
+                if self.dealer.hasBlackjack():
+                    player.chips += self.bets[i]
+                    print(f"{player.name} wins 0")
+                else:
+                    player.chips += BLACKJACK_WIN_RATIO * self.bets[i]
+                    print(f"{player.name} wins {BLACKJACK_WIN_RATIO * self.bets[i]}")
+
+            elif self.dealer.hasBlackjack():
+                #dealer wins
+                print(f"{player.name} loses {self.bets[i]}")
+
+            elif playerScore > dealerScore:
+                player.chips += WIN_RATIO * self.bets[i]
+                print(f"{player.name} wins {WIN_RATIO * self.bets[i]}")
+
+            elif playerScore == dealerScore:
+                player.chips += self.bets[i]
+                print(f"{player.name} wins 0")
+            
+            else:
+                #dealer wins
+                print(f"{player.name} loses {self.bets[i]}")
+
+
+            self.bets[i] = 0
+        
 
     def printPlayers(self, players, bets):
         self.dealer.showFirst()
@@ -149,6 +180,7 @@ class BlackJack:
                 print("DEALER HAS BLACKJACK")
                 self.end()
 
+            self.end()
 
 
 
