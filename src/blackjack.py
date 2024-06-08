@@ -5,12 +5,12 @@ import os
 import time as t
 from const import *
 
-class blackJack:
+class BlackJack:
 
     def __init__(self) -> None:
         self.playerAmmount = 0
         self.players = []
-        self.bets = [4]
+        self.bets = []
         self.resetDeckCount = 0
         self.decks = []
         self.dealer = Dealer()
@@ -57,13 +57,17 @@ class blackJack:
                 self.decks.append(Deck())
             self.shuffle()
         self.cls()
+
     def shuffle(self):
         for deck in self.decks:
             deck.shuffle()
 
     def takeCard(self):
-        auxDeck = random.choice(self.decks)
-        return auxDeck.takeCard()
+        card = Card("-1", "-1", -1)
+        while card.numericalValue == -1:
+            auxDeck = random.choice(self.decks)
+            card = auxDeck.takeCard()
+        return card
 
 
     #TODO esta funcion debertia ir en dealer

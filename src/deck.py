@@ -43,6 +43,8 @@ class Deck:
         random.shuffle(self.deck)
 
     def takeCard(self):
+        if self.deck == []:
+            return Card("-1", "-1", -1)
         return self.deck.pop()
 
 

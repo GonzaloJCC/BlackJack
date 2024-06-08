@@ -1,8 +1,8 @@
-from blackjack import blackJack
+from blackjack import BlackJack
 
 
 def main():
-    bj = blackJack()
+    bj = BlackJack()
     bj.gameLoop()
 
 
