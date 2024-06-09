@@ -50,14 +50,14 @@ class Player:
             score += card.numericalValue[0]
             if score > OBJECTIVE:
                 #busted
-                return -1
+                return BUSTED
             
         for card in aces:
             score += card.numericalValue[1] 
             if score >  OBJECTIVE:
                 score -= card.numericalValue[1]
                 if score > OBJECTIVE:
-                    return -1
+                    return BUSTED
         
         return score
 
@@ -65,7 +65,13 @@ class Player:
 class Dealer:
     def __init__(self):
         self.hand = []
-    
+
+    def show(self):
+        print(f"DEALER:")
+        for each in (self.hand):
+            print(each, end = " ")
+        print("\n")
+
     def showFirst(self):
         print("DEALER")
         for i in range(0, len(self.hand)):
@@ -101,14 +107,14 @@ class Dealer:
             score += card.numericalValue[0]
             if score > OBJECTIVE:
                 #busted
-                return -1
+                return BUSTED
             
         for card in aces:
             score += card.numericalValue[1] 
             if score >  OBJECTIVE:
                 score -= card.numericalValue[1]
                 if score > OBJECTIVE:
-                    return -1
+                    return BUSTED
         return score
         
 

@@ -4,7 +4,7 @@ import random as r
 import os
 import time as t
 from const import *
-
+#TODO -  devolver strings en vez de numeros al mostrar score
 class BlackJack:
     #TODO - cambiar listas players y bet a un diccionario player -> bet
     def __init__(self) -> None:
@@ -58,7 +58,7 @@ class BlackJack:
 
 
     #cleans the player and dealer cards
-    def end(self):
+    def endGame(self):
         dealerScore = self.dealer.getScore()
         # self.cls()
         for i, player in enumerate(self.players):
@@ -143,7 +143,29 @@ class BlackJack:
             auxDeck = random.choice(self.decks)
             card = auxDeck.takeCard()
         return card
-  
+    
+    def dealersTurn(self):
+        score = self.dealer.getScore()
+        while score < int(DEALER_STOP) and score != int(BUSTED):
+            t.sleep(1.2)
+            self.cls()
+            self.dealer.hand.append(self.takeCard())
+            self.dealer.show()
+            for i, player in enumerate(self.players):
+                print(f"{player.name.upper()} (BET: {self.bets[i]})  SCORE: {player.getScore()}: ")
+                player.show()
+                print("")
+
+            score = self.dealer.getScore()
+
+        self.cls()
+        self.dealer.show()
+        for i, player in enumerate(self.players):
+            print(f"{player.name.upper()} (BET: {self.bets[i]})  SCORE: {player.getScore()}: ")
+            player.show()
+            print("")
+        t.sleep(4)
+        # self.cls()
 
 
 
@@ -178,9 +200,10 @@ class BlackJack:
             #if dealer has BlackJack all the players without BJ will lose their bets and the ones with BJ will get their bet returned
             if self.dealer.hasBlackjack():
                 print("DEALER HAS BLACKJACK")
-                self.end()
+                self.endGame()
 
-            self.end()
+            self.dealersTurn()
+            self.endGame()
 
 
 
