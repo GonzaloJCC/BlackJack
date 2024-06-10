@@ -4,7 +4,7 @@ import random as r
 import os
 import time as t
 from const import *
-#TODO -  devolver strings en vez de numeros al mostrar score
+#TODO -  para imprimir score comprobar si es -1, en ese caso imprimir busted
 class BlackJack:
     #TODO - cambiar listas players y bet a un diccionario player -> bet
     def __init__(self) -> None:
@@ -146,18 +146,33 @@ class BlackJack:
     
     def dealersTurn(self):
         score = self.dealer.getScore()
-        while score < int(DEALER_STOP) and score != int(BUSTED):
-            t.sleep(1.2)
+
+        bestPlayerScore = -1
+        #get the best score without blackjack
+        for player in self.players:
+            if player.hasBlackjack():
+                continue
+            tempScore = player.getScore()
+            if tempScore > bestPlayerScore:
+                bestPlayerScore = tempScore
+
+        #the dealer takes cards 
+        while score < int(DEALER_STOP) and score != int(BUSTED) and score <= bestPlayerScore:
+            
             self.cls()
-            self.dealer.hand.append(self.takeCard())
+            
             self.dealer.show()
+            self.dealer.hand.append(self.takeCard())
             for i, player in enumerate(self.players):
                 print(f"{player.name.upper()} (BET: {self.bets[i]})  SCORE: {player.getScore()}: ")
                 player.show()
                 print("")
 
             score = self.dealer.getScore()
+            t.sleep(1.2)
 
+        #the final board is printed
+        # t.sleep(1.2)
         self.cls()
         self.dealer.show()
         for i, player in enumerate(self.players):
@@ -201,6 +216,7 @@ class BlackJack:
             if self.dealer.hasBlackjack():
                 print("DEALER HAS BLACKJACK")
                 self.endGame()
+                t.seep(700)
 
             self.dealersTurn()
             self.endGame()

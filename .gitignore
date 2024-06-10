@@ -1,8 +1,8 @@
 #not needed folder
 .vscode
 src/__pycache__/
+src/tempCodeRunnerFile.py
 
 #file for future implementations
 notes.txt
-src/tests.py
-src/tempCodeRunnerFile.py
+test

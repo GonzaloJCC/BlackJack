@@ -56,6 +56,7 @@ class Player:
             score += card.numericalValue[1] 
             if score >  OBJECTIVE:
                 score -= card.numericalValue[1]
+                score += card.numericalValue[0]
                 if score > OBJECTIVE:
                     return BUSTED
         
@@ -113,6 +114,7 @@ class Dealer:
             score += card.numericalValue[1] 
             if score >  OBJECTIVE:
                 score -= card.numericalValue[1]
+                score += card.numericalValue[0]
                 if score > OBJECTIVE:
                     return BUSTED
         return score
