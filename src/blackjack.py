@@ -91,9 +91,21 @@ class BlackJack:
 
             self.bets[i] = 0
     
+    def printDealer(self):
+        score = self.dealer.getScore()
+        if score == -1:
+            score = "BUSTED"
+        print(f"DEALER SCORE: {score}: ")
+        self.dealer.show()
+        print("")
+        
+
 
     def printPlayer(self, player, bet):
-        print(f"{player.name.upper()} (BET: {bet})  SCORE: {player.getScore()}: ")
+        score = player.getScore()
+        if score == -1:
+            score = "BUSTED"
+        print(f"{player.name.upper()} (BET: {bet})  SCORE: {score}: ")
         player.show()
         print("")
 
@@ -165,7 +177,7 @@ class BlackJack:
             
             self.cls()
             
-            self.dealer.show()
+            self.printDealer()
             self.dealer.hand.append(self.takeCard())
             for i, player in enumerate(self.players):
                 print(f"{player.name.upper()} (BET: {self.bets[i]})  SCORE: {player.getScore()}: ")
@@ -178,7 +190,7 @@ class BlackJack:
         #the final board is printed
         # t.sleep(1.2)
         self.cls()
-        self.dealer.show()
+        self.printDealer()
         for i, player in enumerate(self.players):
             print(f"{player.name.upper()} (BET: {self.bets[i]})  SCORE: {player.getScore()}: ")
             player.show()
@@ -231,7 +243,7 @@ class BlackJack:
             t.sleep(70)
             #after the round is finished you can choose to end the round or to play another
             decision = input("IF YOU DON'T WANT TO PLAY ANOTHER ROUND PRESS 'Q' TO EXIT, OTHERWISE PRESS ANY KEY: ")
-            if decision.upper == 'q':
+            if decision.upper() == 'Q':
                 print("GAME ENDED")
                 t.sleep(700)
 

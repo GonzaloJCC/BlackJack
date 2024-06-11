@@ -68,13 +68,13 @@ class Dealer:
         self.hand = []
 
     def show(self):
-        print(f"DEALER:")
+        # print(f"DEALER:")
         for each in (self.hand):
             print(each, end = " ")
         print("\n")
 
     def showFirst(self):
-        print("DEALER")
+        print("DEALER SCORE: ?")
         for i in range(0, len(self.hand)):
             if(i == 1):
                 print("[X]", end= " ")
