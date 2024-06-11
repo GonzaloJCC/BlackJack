@@ -198,17 +198,25 @@ class BlackJack:
 
 
     def chooseMove(self, player, bet):
-
+        canDouble = True
         while player.getScore() <= int(OBJECTIVE) and player.getScore() != int(BUSTED):
             decision = 0
             while decision not in [HIT, DOUBLE, SPLIT, STAND]:
                 print(f"{player.name.upper()} choose your action: ")
                 decision = int(input(f"\n\tHIT:    {HIT}\n\tDOUBLE: {DOUBLE}\n\tSPLIT:  {SPLIT}\n\tSTAND:  {STAND}\n\tACTION: "))
-            
+                #TODO - try except
             if decision == HIT:
                 player.hand.append(self.takeCard())
+                canDouble = False
 
             elif decision == DOUBLE:
+                
+                if canDouble == False:
+                    print("\nYOU CAN NOT DOUBLE AFTER A HIT OR A SPLIT")
+                    t.sleep(2)
+                    self.cls()
+                    self.printPlayers(self.players, self.bets)
+                    continue
 
                 if player.chips < bet:
                     print("NOT ENOUGH CHIPS")
@@ -227,7 +235,7 @@ class BlackJack:
                 t.sleep(1.2)
                 self.cls()
                 self.printPlayers(self.players, self.bets)
-
+ 
                 break
 
             elif decision == SPLIT:
@@ -238,17 +246,21 @@ class BlackJack:
                 t.sleep(1.2)
                 self.cls()
                 self.printPlayers(self.players, self.bets)
+
                 break
 
             t.sleep(1.2)
             self.cls()
             self.printPlayers(self.players, self.bets)
+   
 
 
 
     def playersTurn(self):
         for i, player in enumerate(self.players):
             if player.hasBlackjack():
+                print(f"PLAYER {player.name.upper()} HAS BLACKJACK")
+                t.sleep(1.2)
                 continue
             self.chooseMove(player, self.bets[i])
             
