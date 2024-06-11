@@ -90,14 +90,18 @@ class BlackJack:
 
 
             self.bets[i] = 0
-        
+    
+
+    def printPlayer(self, player, bet):
+        print(f"{player.name.upper()} (BET: {bet})  SCORE: {player.getScore()}: ")
+        player.show()
+        print("")
 
     def printPlayers(self, players, bets):
         self.dealer.showFirst()
         for i, player in enumerate(players):
-            print(f"{player.name.upper()} (BET: {bets[i]})  SCORE: {player.getScore()}: ")
-            player.show()
-            print("")
+            self.printPlayer(player, bets[i])
+            
             
 
 
