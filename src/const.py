@@ -12,7 +12,7 @@ BLACKJACK_WIN_RATIO = 2.5
 WIN_RATIO = 2
 
 #actions
-HIT = "Hit"
-DOUBLE = "Double"
-SPLIT = "Split"
-STAND = "Stand"
+HIT = 1
+DOUBLE = 2
+SPLIT = 3
+STAND = 4

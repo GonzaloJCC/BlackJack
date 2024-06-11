@@ -4,7 +4,7 @@ import random as r
 import os
 import time as t
 from const import *
-#TODO -  para imprimir score comprobar si es -1, en ese caso imprimir busted
+
 class BlackJack:
     #TODO - cambiar listas players y bet a un diccionario player -> bet
     def __init__(self) -> None:
@@ -48,7 +48,7 @@ class BlackJack:
                 except ValueError as e:
                     print("You must enter a valid number, between 1 and the ammount of chips you have")
 
-            self.bets[i] = (self.players[i].Bet(bet))
+            self.bets[i] = (self.players[i].bet(bet))
         self.cls()
         t.sleep(0.5)
 
@@ -64,46 +64,48 @@ class BlackJack:
         for i, player in enumerate(self.players):
             playerScore = player.getScore()
             
-            if player.hasBlackjack():
+            if playerScore == BUSTED:
+                print(f"{player.name.upper()} loses {self.bets[i]}")
+
+            elif player.hasBlackjack():
                 if self.dealer.hasBlackjack():
                     player.chips += self.bets[i]
-                    print(f"{player.name} wins 0")
+                    print(f"{player.name.upper()} wins 0")
                 else:
                     player.chips += BLACKJACK_WIN_RATIO * self.bets[i]
                     print(f"{player.name} wins {BLACKJACK_WIN_RATIO * self.bets[i]}")
 
             elif self.dealer.hasBlackjack():
                 #dealer wins
-                print(f"{player.name} loses {self.bets[i]}")
+                print(f"{player.name.upper()} loses {self.bets[i]}")
 
             elif playerScore > dealerScore:
                 player.chips += WIN_RATIO * self.bets[i]
-                print(f"{player.name} wins {WIN_RATIO * self.bets[i]}")
+                print(f"{player.name.upper()} wins {WIN_RATIO * self.bets[i]}")
 
             elif playerScore == dealerScore:
                 player.chips += self.bets[i]
-                print(f"{player.name} wins 0")
+                print(f"{player.name.upper()} wins 0")
             
             else:
                 #dealer wins
-                print(f"{player.name} loses {self.bets[i]}")
+                print(f"{player.name.upper()} loses {self.bets[i]}")
 
 
             self.bets[i] = 0
     
     def printDealer(self):
         score = self.dealer.getScore()
-        if score == -1:
+        if score == BUSTED:
             score = "BUSTED"
         print(f"DEALER SCORE: {score}: ")
         self.dealer.show()
-        print("")
         
 
 
     def printPlayer(self, player, bet):
         score = player.getScore()
-        if score == -1:
+        if score == BUSTED:
             score = "BUSTED"
         print(f"{player.name.upper()} (BET: {bet})  SCORE: {score}: ")
         player.show()
@@ -180,9 +182,7 @@ class BlackJack:
             self.printDealer()
             self.dealer.hand.append(self.takeCard())
             for i, player in enumerate(self.players):
-                print(f"{player.name.upper()} (BET: {self.bets[i]})  SCORE: {player.getScore()}: ")
-                player.show()
-                print("")
+                self.printPlayer(player, self.bets[i])
 
             score = self.dealer.getScore()
             t.sleep(1.2)
@@ -192,12 +192,67 @@ class BlackJack:
         self.cls()
         self.printDealer()
         for i, player in enumerate(self.players):
-            print(f"{player.name.upper()} (BET: {self.bets[i]})  SCORE: {player.getScore()}: ")
-            player.show()
-            print("")
+            self.printPlayer(player, self.bets[i])
         t.sleep(4)
         # self.cls()
 
+
+    def chooseMove(self, player, bet):
+
+        while player.getScore() <= int(OBJECTIVE) and player.getScore() != int(BUSTED):
+            decision = 0
+            while decision not in [HIT, DOUBLE, SPLIT, STAND]:
+                print(f"{player.name.upper()} choose your action: ")
+                decision = int(input(f"\n\tHIT:    {HIT}\n\tDOUBLE: {DOUBLE}\n\tSPLIT:  {SPLIT}\n\tSTAND:  {STAND}\n\tACTION: "))
+            
+            if decision == HIT:
+                player.hand.append(self.takeCard())
+
+            elif decision == DOUBLE:
+
+                if player.chips < bet:
+                    print("NOT ENOUGH CHIPS")
+                    t.sleep(1.2)
+                    self.cls()
+                    self.printPlayers(self.players, self.bets)
+                    continue
+                bet += player.bet(bet)
+                for i in range(0, self.playerAmmount):
+                    if player == self.players[i]:
+                        self.bets[i] = bet
+  
+                player.hand.append(self.takeCard())
+                
+
+                t.sleep(1.2)
+                self.cls()
+                self.printPlayers(self.players, self.bets)
+
+                break
+
+            elif decision == SPLIT:
+                #TODO - split 
+                print("TODO")
+
+            elif decision == STAND:
+                t.sleep(1.2)
+                self.cls()
+                self.printPlayers(self.players, self.bets)
+                break
+
+            t.sleep(1.2)
+            self.cls()
+            self.printPlayers(self.players, self.bets)
+
+
+
+    def playersTurn(self):
+        for i, player in enumerate(self.players):
+            if player.hasBlackjack():
+                continue
+            self.chooseMove(player, self.bets[i])
+            
+        
 
 
     #TODO - make a menu BLACKJACK, press any key to start
@@ -232,19 +287,19 @@ class BlackJack:
             if self.dealer.hasBlackjack():
                 print("DEALER HAS BLACKJACK")
                 self.endGame()
-                t.seep(700)
+            else:
+                #player decide their actions
+                self.playersTurn()
 
-            self.dealersTurn()
-            self.endGame()
+                #the dealer gets the cards
+                self.dealersTurn()
+                self.endGame()
 
-
-
-
-            t.sleep(70)
             #after the round is finished you can choose to end the round or to play another
             decision = input("IF YOU DON'T WANT TO PLAY ANOTHER ROUND PRESS 'Q' TO EXIT, OTHERWISE PRESS ANY KEY: ")
             if decision.upper() == 'Q':
                 print("GAME ENDED")
-                t.sleep(700)
+                return
+                
 
     

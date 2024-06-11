@@ -10,12 +10,12 @@ class Player:
         self.chips = STARTING_CHIPS
         self.name = name
 
-    def Bet(self, ammount):
+    def bet(self, ammount):
         while(ammount > self.chips or ammount < 1):
             print("You don't have enough chips to bet, enter a valid number")
             ammount = int(input("Bet: "))
 
-        self.chips-ammount
+        self.chips-=ammount
         return ammount
     def show(self):
         # print(f" PLAYER {self.name}:")
