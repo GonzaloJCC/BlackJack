@@ -24,7 +24,7 @@ class BlackJack:
             try:
                 self.playerAmmount = int(input("Enter the amount of players (1-4): "))
                 if self.playerAmmount < 1 or self.playerAmmount > 4:
-                    raise ValueError("You must enter a number between 1 and 4, both included")
+                    raise ValueError("")
                 break
             except ValueError as e:
                 print("You must enter a number between 1 and 4, both included")
@@ -42,11 +42,12 @@ class BlackJack:
             while 1:
                 try:
                     bet = int(input(f"PLAYER {self.players[i].name} ({self.players[i].chips} Chips), bet: "))
-                    if(bet < 0 or bet > 9999999):
-                        raise ValueError("You must enter a number")
+                    if(bet < 0 or bet > self.players[i].chips):
+                        raise ValueError("")
                     break
                 except ValueError as e:
-                    print("You must enter a valid number, between 1 and the ammount of chips you have")
+                    print("You must enter a valid number, "
+                          "between 1 and the ammount of chips you have")
 
             self.bets[i] = (self.players[i].bet(bet))
         self.cls()
@@ -119,7 +120,8 @@ class BlackJack:
             
 
 
-    #recives true if the card is going to be dealed to the dealer or false if its going to be dealed to all players
+    #recives true if the card is going to be dealed to the dealer or false if its 
+    # going to be dealed to all players
     def deal(self, x: bool):
         if x == True:
             self.dealer.hand.append(self.takeCard())
@@ -175,7 +177,8 @@ class BlackJack:
                 bestPlayerScore = tempScore
 
         #the dealer takes cards 
-        while score < int(DEALER_STOP) and score != int(BUSTED) and score <= bestPlayerScore:
+        while score < int(DEALER_STOP) and score != int(BUSTED) \
+            and score <= bestPlayerScore:
             
             self.cls()
             
@@ -199,11 +202,17 @@ class BlackJack:
 
     def chooseMove(self, player, bet):
         canDouble = True
-        while player.getScore() <= int(OBJECTIVE) and player.getScore() != int(BUSTED):
+        while player.getScore() <= int(OBJECTIVE) \
+            and player.getScore() != int(BUSTED):
             decision = 0
             while decision not in [HIT, DOUBLE, SPLIT, STAND]:
                 print(f"{player.name.upper()} choose your action: ")
-                decision = int(input(f"\n\tHIT:    {HIT}\n\tDOUBLE: {DOUBLE}\n\tSPLIT:  {SPLIT}\n\tSTAND:  {STAND}\n\tACTION: "))
+                decision = int(input(f"\
+                                     \n\tHIT:    {HIT}\
+                                     \n\tDOUBLE: {DOUBLE}\
+                                     \n\tSPLIT:  {SPLIT}\
+                                     \n\tSTAND:  {STAND}\
+                                     \n\tACTION: "))
                 #TODO - try except
             if decision == HIT:
                 player.hand.append(self.takeCard())
@@ -295,7 +304,8 @@ class BlackJack:
             self.deal(True)
             #Now all the players and the dealer have 2 cards each
 
-            #if dealer has BlackJack all the players without BJ will lose their bets and the ones with BJ will get their bet returned
+            #if dealer has BlackJack all the players without BJ will lose their bets
+            # and the ones with BJ will get their bet returned
             if self.dealer.hasBlackjack():
                 print("DEALER HAS BLACKJACK")
                 self.endGame()
@@ -307,8 +317,12 @@ class BlackJack:
                 self.dealersTurn()
                 self.endGame()
 
-            #after the round is finished you can choose to end the round or to play another
-            decision = input("IF YOU DON'T WANT TO PLAY ANOTHER ROUND PRESS 'Q' TO EXIT, OTHERWISE PRESS ANY KEY: ")
+            #after the round is finished you can choose to end the round 
+            # or to play another
+            decision = input(
+                            "IF YOU DON'T WANT TO PLAY ANOTHER ROUND "
+                            "PRESS 'Q' TO EXIT, "
+                            "OTHERWISE PRESS ANY KEY: ")
             if decision.upper() == 'Q':
                 print("GAME ENDED")
                 return
