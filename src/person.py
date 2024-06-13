@@ -88,7 +88,7 @@ class Dealer:
     def hasBlackjack(self):
         if len(self.hand) != 2:
             return False
-        return (self.hand[0].numericalValue[1] + self.hand[1].numericalValue[1] == 21)
+        return (self.hand[0].numericalValue[1] + self.hand[1].numericalValue[1] == OBJECTIVE)
     
     def getScore(self):
         score = 0
