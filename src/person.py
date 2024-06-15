@@ -10,28 +10,28 @@ class Player:
         self.chips = STARTING_CHIPS
         self.name = name
 
-    def bet(self, ammount):
+    def bet(self, ammount) -> None:
         while(ammount > self.chips or ammount < 1):
             print("You don't have enough chips to bet, enter a valid number")
             ammount = int(input("Bet: "))
 
         self.chips-=ammount
         return ammount
-    def show(self):
+    def show(self) -> None:
         # print(f" PLAYER {self.name}:")
         for each in (self.hand):
             print(each, end = " ")
         print("")
 
-    def empty(self):
+    def empty(self) -> None:
         self.hand.clear
 
-    def hasBlackjack(self):
+    def hasBlackjack(self) -> bool:
         if len(self.hand) != 2:
             return False
         return (self.hand[0].numericalValue[1] + self.hand[1].numericalValue[1] == OBJECTIVE)
     
-    def getScore(self):
+    def getScore(self) -> int:
         score = 0
         aces = []
         others = []
@@ -67,13 +67,13 @@ class Dealer:
     def __init__(self):
         self.hand = []
 
-    def show(self):
+    def show(self) -> None:
         # print(f"DEALER:")
         for each in (self.hand):
             print(each, end = " ")
         print("\n")
 
-    def showFirst(self):
+    def showFirst(self) -> None:
         print("DEALER SCORE: ?")
         for i in range(0, len(self.hand)):
             if(i == 1):
@@ -82,15 +82,15 @@ class Dealer:
                 print(self.hand[i], end = " ")
         print("\n")
     
-    def empty(self):
+    def empty(self) -> None:
         self.hand.clear
     
-    def hasBlackjack(self):
+    def hasBlackjack(self) -> bool:
         if len(self.hand) != 2:
             return False
         return (self.hand[0].numericalValue[1] + self.hand[1].numericalValue[1] == OBJECTIVE)
     
-    def getScore(self):
+    def getScore(self) -> int:
         score = 0
         aces = []
         others = []

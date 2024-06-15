@@ -18,7 +18,7 @@ class BlackJack:
     def cls(self):
         os.system('cls' if os.name == 'nt' else 'clear')
 
-    def startGame(self):
+    def startGame(self) -> None:
         #NOTE - the user selects the  number of players
         while True:
             try:
@@ -59,7 +59,7 @@ class BlackJack:
 
 
     #cleans the player and dealer cards
-    def endGame(self):
+    def endGame(self) -> None:
         dealerScore = self.dealer.getScore()
         # self.cls()
         for i, player in enumerate(self.players):
@@ -95,7 +95,7 @@ class BlackJack:
 
             self.bets[i] = 0
     
-    def printDealer(self):
+    def printDealer(self) -> None:
         score = self.dealer.getScore()
         if score == BUSTED:
             score = "BUSTED"
@@ -104,7 +104,7 @@ class BlackJack:
         
 
 
-    def printPlayer(self, player, bet):
+    def printPlayer(self, player: Player, bet: float) -> None:
         score = player.getScore()
         if score == BUSTED:
             score = "BUSTED"
@@ -112,7 +112,7 @@ class BlackJack:
         player.show()
         print("")
 
-    def printPlayers(self, players, bets):
+    def printPlayers(self, players: list[Player], bets: list[float]):
         self.dealer.showFirst()
         for i, player in enumerate(players):
             self.printPlayer(player, bets[i])
@@ -122,7 +122,7 @@ class BlackJack:
 
     #recives true if the card is going to be dealed to the dealer or false if its 
     # going to be dealed to all players
-    def deal(self, x: bool):
+    def deal(self, x: bool) -> None:
         if x == True:
             self.dealer.hand.append(self.takeCard())
             self.cls()
@@ -142,7 +142,7 @@ class BlackJack:
                 
 
     #DECK MANAGEMENT
-    def randomDecks(self):
+    def randomDecks(self) -> None:
         if self.resetDeckCount == RESET_DECK_COUNT:
             self.resetDeckCount = 0;
         
@@ -153,18 +153,18 @@ class BlackJack:
             self.shuffle()
         self.cls()
 
-    def shuffle(self):
+    def shuffle(self) -> None:
         for deck in self.decks:
             deck.shuffle()
 
-    def takeCard(self):
+    def takeCard(self) -> None:
         card = Card("-1", "-1", -1)
         while card.numericalValue == -1:
             auxDeck = random.choice(self.decks)
             card = auxDeck.takeCard()
         return card
     
-    def dealersTurn(self):
+    def dealersTurn(self) -> None:
         score = self.dealer.getScore()
 
         bestPlayerScore = -1
@@ -200,7 +200,7 @@ class BlackJack:
         # self.cls()
 
 
-    def chooseMove(self, player, bet):
+    def chooseMove(self, player: Player, bet: float) -> None:
         canDouble = True
         while player.getScore() <= int(OBJECTIVE) \
             and player.getScore() != int(BUSTED):
@@ -265,7 +265,7 @@ class BlackJack:
 
 
 
-    def playersTurn(self):
+    def playersTurn(self) -> None:
         for i, player in enumerate(self.players):
             if player.hasBlackjack():
                 print(f"PLAYER {player.name.upper()} HAS BLACKJACK")
@@ -278,7 +278,7 @@ class BlackJack:
 
     #TODO - make a menu BLACKJACK, press any key to start
     # input("PRESS ANY KEY TO START: ")
-    def gameLoop(self):
+    def gameLoop(self) -> None:
         
         self.startGame()
 
