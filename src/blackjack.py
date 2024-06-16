@@ -8,15 +8,36 @@ from const import *
 class BlackJack:
     #TODO - cambiar listas players y bet a un diccionario player -> bet
     def __init__(self) -> None:
-        self.playerAmmount = 0
-        self.players = []
-        self.bets = []
-        self.resetDeckCount = 0
-        self.decks = []
-        self.dealer = Dealer()
+        self.playerAmmount: int = 0
+        self.players: list[Player] = []
+        self.bets: float = []
+        self.resetDeckCount: int = 0
+        self.decks: list[Deck] = []
+        self.dealer: Dealer = Dealer()
     
     def cls(self):
         os.system('cls' if os.name == 'nt' else 'clear')
+
+    def initialBets(self):
+        print("PLACE YOUR BETS")
+        for i in range(len(self.players)):
+            while 1:
+                try:
+                    bet = int(input(f"PLAYER {self.players[i].name} ({self.players[i].chips} Chips), bet: "))
+                    if(bet < 0 or bet > self.players[i].chips):
+                        raise ValueError("")
+                    break
+                except ValueError as e:
+                    print("You must enter a valid number, "
+                          "between 1 and the ammount of chips you have")
+
+            self.bets[i] = (self.players[i].bet(bet))
+        self.cls()
+        t.sleep(0.5)
+
+        print("STARTING TO DEAL")
+        t.sleep(2)
+        self.cls()
 
     def startGame(self) -> None:
         #NOTE - the user selects the  number of players
@@ -37,31 +58,11 @@ class BlackJack:
 
         #NOTE - every player makes the initial bet
         self.cls()
-        print("PLACE YOUR BETS")
-        for i in range(self.playerAmmount):
-            while 1:
-                try:
-                    bet = int(input(f"PLAYER {self.players[i].name} ({self.players[i].chips} Chips), bet: "))
-                    if(bet < 0 or bet > self.players[i].chips):
-                        raise ValueError("")
-                    break
-                except ValueError as e:
-                    print("You must enter a valid number, "
-                          "between 1 and the ammount of chips you have")
-
-            self.bets[i] = (self.players[i].bet(bet))
-        self.cls()
-        t.sleep(0.5)
-
-        print("STARTING TO DEAL")
-        t.sleep(2)
-        self.cls()
-
 
     #cleans the player and dealer cards
     def endGame(self) -> None:
         dealerScore = self.dealer.getScore()
-        # self.cls()
+
         for i, player in enumerate(self.players):
             playerScore = player.getScore()
             
@@ -92,8 +93,25 @@ class BlackJack:
                 #dealer wins
                 print(f"{player.name.upper()} loses {self.bets[i]}")
 
-
+            
+        print("")
+        t.sleep(1.2)
+        aux = []
+        for player in self.players:
+            print(f"{player.name.upper()}'S CHIPS: {player.chips}")
             self.bets[i] = 0
+            player.hand = []
+            if player.chips <= 0:
+                print(f"{player.name.upper()} HAS 0 CHIPS, HE CAN NO LONGER PLAY")
+            else:
+                aux.append(player)
+            print("")
+            
+        self.players = aux
+        self.dealer.hand = []
+        
+        
+
     
     def printDealer(self) -> None:
         score = self.dealer.getScore()
@@ -284,6 +302,9 @@ class BlackJack:
 
         while(1):
 
+            #the players place their bets for this game
+            self.initialBets()
+
             #the decks are shuffled and initialized
             self.randomDecks()
 
@@ -307,6 +328,7 @@ class BlackJack:
             #if dealer has BlackJack all the players without BJ will lose their bets
             # and the ones with BJ will get their bet returned
             if self.dealer.hasBlackjack():
+                self.dealersTurn()
                 print("DEALER HAS BLACKJACK")
                 self.endGame()
             else:
@@ -316,6 +338,11 @@ class BlackJack:
                 #the dealer gets the cards
                 self.dealersTurn()
                 self.endGame()
+
+            if len(self.players) == 0:  
+                t.sleep(3)
+                print("ALL PLAYERS HAVE 0 CHIPS")
+                return
 
             #after the round is finished you can choose to end the round 
             # or to play another
