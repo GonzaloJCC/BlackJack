@@ -52,7 +52,19 @@ class BlackJack:
 
         #select player names
         for i in range (0, self.playerAmmount):
-            name = input(f"Enter the player {i+1} name: ")
+            names = []
+            for player in self.players:
+                names.append(player.name)
+
+            x = 0
+            while x == 0:
+                name = input(f"Enter the player {i+1} name: ")
+                
+                if(name in names):
+                    print("NAMES MUST BE UNIQUE, PICK ANOTHER NAME")
+                else:
+                    x = 1
+                    
             self.players.append(Player(name))
             self.bets.append(0)
 
