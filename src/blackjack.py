@@ -6,11 +6,10 @@ import time as t
 from const import *
 
 class BlackJack:
-    #TODO - cambiar listas players y bet a un diccionario player -> bet
     def __init__(self) -> None:
         self.playerAmmount: int = 0
         self.players: list[Player] = []
-        self.bets: float = []
+        self.bets: list[float] = []
         self.resetDeckCount: int = 0
         self.decks: list[Deck] = []
         self.dealer: Dealer = Dealer()
@@ -40,7 +39,7 @@ class BlackJack:
         self.cls()
 
     def startGame(self) -> None:
-        #NOTE - the user selects the  number of players
+        #the user selects the number of players
         while True:
             try:
                 self.playerAmmount = int(input("Enter the amount of players (1-4): "))
@@ -68,7 +67,7 @@ class BlackJack:
             self.players.append(Player(name))
             self.bets.append(0)
 
-        #NOTE - every player makes the initial bet
+        #every player makes the initial bet
         self.cls()
 
     #cleans the player and dealer cards
@@ -234,16 +233,22 @@ class BlackJack:
         canDouble = True
         while player.getScore() <= int(OBJECTIVE) \
             and player.getScore() != int(BUSTED):
+
             decision = 0
             while decision not in [HIT, DOUBLE, SPLIT, STAND]:
-                print(f"{player.name.upper()} choose your action: ")
-                decision = int(input(f"\
-                                     \n\tHIT:    {HIT}\
-                                     \n\tDOUBLE: {DOUBLE}\
-                                     \n\tSPLIT:  {SPLIT}\
-                                     \n\tSTAND:  {STAND}\
-                                     \n\tACTION({player.name.upper()}): "))
-                #TODO - try except
+                try:
+                    print(f"{player.name.upper()} choose your action: ")
+                    decision = int(input(f"\
+                                        \n\tHIT:    {HIT}\
+                                        \n\tDOUBLE: {DOUBLE}\
+                                        \n\tSPLIT:  {SPLIT}\
+                                        \n\tSTAND:  {STAND}\
+                                        \n\tACTION({player.name.upper()}): "))
+                    if decision not in [HIT, DOUBLE, SPLIT, STAND]:
+                        raise ValueError
+                except ValueError:
+                    print("YOU MUST ENTER A NUMBER BETWEEN 1 AND 4")
+
             if decision == HIT:
                 player.hand.append(self.takeCard())
                 canDouble = False
@@ -313,10 +318,6 @@ class BlackJack:
             self.chooseMove(player, self.bets[i])
             
         
-
-
-    #TODO - make a menu BLACKJACK, press any key to start
-    # input("PRESS ANY KEY TO START: ")
     def gameLoop(self) -> None:
         
         self.startGame()
