@@ -2,123 +2,82 @@ from deck import *
 from const import *
 
 
-#TODO: crear clase padre de ambas
-
-class Player:
-    def __init__(self, name):
-        self.hand = []
-        self.chips = STARTING_CHIPS
-        self.name = name
-
-    def bet(self, ammount) -> None:
-        while(ammount > self.chips or ammount < 1):
-            print("You don't have enough chips to bet, enter a valid number")
-            ammount = int(input("Bet: "))
-
-        self.chips-=ammount
-        return ammount
-    def show(self) -> None:
-        # print(f" PLAYER {self.name}:")
-        for each in (self.hand):
-            print(each, end = " ")
-        print("")
-
-    def empty(self) -> None:
-        self.hand.clear
-
-    def hasBlackjack(self) -> bool:
-        if len(self.hand) != 2:
-            return False
-        return (self.hand[0].numericalValue[1] + self.hand[1].numericalValue[1] == OBJECTIVE)
-    
-    def getScore(self) -> int:
-        score = 0
-        aces = []
-        others = []
-
-        if self.hand == []:
-            return 0
-        
-        #filter the cards by ace or other
-        for card in self.hand:
-            if card.numericalValue[1] == 11:
-                aces.append(card)
-            else:
-                others.append(card)
-        
-        for card in others:
-            score += card.numericalValue[0]
-            if score > OBJECTIVE:
-                #busted
-                return BUSTED
-            
-        for card in aces:
-            score += card.numericalValue[1] 
-            if score >  OBJECTIVE:
-                score -= card.numericalValue[1]
-                score += card.numericalValue[0]
-                if score > OBJECTIVE:
-                    return BUSTED
-        
-        return score
-
-
-class Dealer:
+class Person:
     def __init__(self):
         self.hand = []
 
     def show(self) -> None:
-        # print(f"DEALER:")
-        for each in (self.hand):
-            print(each, end = " ")
-        print("\n")
+        for each in self.hand:
+            print(each, end=" ")
+        print("")
 
-    def showFirst(self) -> None:
-        print("DEALER SCORE: ?")
-        for i in range(0, len(self.hand)):
-            if(i == 1):
-                print("[X]", end= " ")
-            else:
-                print(self.hand[i], end = " ")
-        print("\n")
-    
     def empty(self) -> None:
-        self.hand.clear
-    
+        self.hand.clear()
+
     def hasBlackjack(self) -> bool:
         if len(self.hand) != 2:
             return False
-        return (self.hand[0].numericalValue[1] + self.hand[1].numericalValue[1] == OBJECTIVE)
-    
+        return self.hand[0].numericalValue[1] + self.hand[1].numericalValue[1] == OBJECTIVE
+
     def getScore(self) -> int:
         score = 0
         aces = []
         others = []
 
-        if self.hand == []:
+        if not self.hand:
             return 0
-        #filter the cards by ace or other
+
+        # Filter the cards by ace or other
         for card in self.hand:
             if card.numericalValue[1] == 11:
                 aces.append(card)
             else:
                 others.append(card)
-        
+
         for card in others:
             score += card.numericalValue[0]
             if score > OBJECTIVE:
-                #busted
+                # busted
                 return BUSTED
-            
+
         for card in aces:
-            score += card.numericalValue[1] 
-            if score >  OBJECTIVE:
+            score += card.numericalValue[1]
+            if score > OBJECTIVE:
                 score -= card.numericalValue[1]
                 score += card.numericalValue[0]
                 if score > OBJECTIVE:
                     return BUSTED
+
         return score
-        
+
+
+class Player(Person):
+    def __init__(self, name: str):
+        super().__init__()
+        self.chips = STARTING_CHIPS
+        self.name = name
+
+    def bet(self, amount) -> int:
+        while amount > self.chips or amount < 1:
+            print("You don't have enough chips to bet, enter a valid number")
+            amount = int(input("Bet: "))
+
+        self.chips -= amount
+        return amount
+
+
+class Dealer(Person):
+    def __init__(self):
+        super().__init__()
+
+    def showFirst(self) -> None:
+        print("DEALER SCORE: ?")
+        for i in range(len(self.hand)):
+            if i == 1:
+                print("[X]", end=" ")
+            else:
+                print(self.hand[i], end=" ")
+        print("")
 
 
         

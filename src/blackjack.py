@@ -23,7 +23,7 @@ class BlackJack:
         for i in range(len(self.players)):
             while 1:
                 try:
-                    bet = int(input(f"PLAYER {self.players[i].name} ({self.players[i].chips} Chips), bet: "))
+                    bet = int(input(f"PLAYER {self.players[i].name.upper()} ({self.players[i].chips} Chips), bet: "))
                     if(bet < 0 or bet > self.players[i].chips):
                         raise ValueError("")
                     break
@@ -242,7 +242,7 @@ class BlackJack:
                                      \n\tDOUBLE: {DOUBLE}\
                                      \n\tSPLIT:  {SPLIT}\
                                      \n\tSTAND:  {STAND}\
-                                     \n\tACTION: "))
+                                     \n\tACTION({player.name.upper()}): "))
                 #TODO - try except
             if decision == HIT:
                 player.hand.append(self.takeCard())
@@ -278,8 +278,17 @@ class BlackJack:
                 break
 
             elif decision == SPLIT:
-                #TODO - split 
-                print("TODO")
+                if len(player.hand) != 2 or player.hand[0].value != player.hand[1].value:
+                    print("YOU CAN NOT SPLIT THIS HAND")
+                    t.sleep(1.2)
+                    self.cls()
+                    self.printPlayers(self.players, self.bets)
+                    continue
+                
+
+                t.sleep(1.2)
+                self.cls()
+                self.printPlayers(self.players, self.bets)
 
             elif decision == STAND:
                 t.sleep(1.2)
@@ -365,6 +374,7 @@ class BlackJack:
             if decision.upper() == 'Q':
                 print("GAME ENDED")
                 return
+            self.cls()
                 
 
     
