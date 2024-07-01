@@ -4,7 +4,7 @@ from const import *
 
 class Person:
     def __init__(self):
-        self.hand = []
+        pass
 
     def show(self) -> None:
         for each in self.hand:
@@ -54,6 +54,7 @@ class Person:
 class Player(Person):
     def __init__(self, name: str):
         super().__init__()
+        self.hand = []
         self.chips = STARTING_CHIPS
         self.name = name
 
@@ -69,6 +70,7 @@ class Player(Person):
 class Dealer(Person):
     def __init__(self):
         super().__init__()
+        self.hand = []
 
     def showFirst(self) -> None:
         print("DEALER SCORE: ?")

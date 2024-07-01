@@ -243,7 +243,7 @@ class BlackJack:
                                         \n\tDOUBLE: {DOUBLE}\
                                         \n\tSPLIT:  {SPLIT}\
                                         \n\tSTAND:  {STAND}\
-                                        \n\tACTION({player.name.upper()}): "))
+                                        \n\tACTION ({player.name.upper()}): "))
                     if decision not in [HIT, DOUBLE, SPLIT, STAND]:
                         raise ValueError
                 except ValueError:
