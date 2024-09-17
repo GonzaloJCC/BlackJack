@@ -1,10 +1,10 @@
 from deck import *
 from const import *
-
+import sys
 
 class Person:
     def __init__(self):
-        pass
+        self.hand = []
 
     def show(self) -> None:
         for each in self.hand:
@@ -54,14 +54,16 @@ class Person:
 class Player(Person):
     def __init__(self, name: str):
         super().__init__()
-        self.hand = []
         self.chips = STARTING_CHIPS
         self.name = name
 
     def bet(self, amount) -> int:
         while amount > self.chips or amount < 1:
             print("You don't have enough chips to bet, enter a valid number")
-            amount = int(input("Bet: "))
+            try:
+                amount = int(input("Bet: "))
+            except EOFError as e:
+                exit_signal(1, "signal ctrl+D")
 
         self.chips -= amount
         return amount
@@ -70,7 +72,6 @@ class Player(Person):
 class Dealer(Person):
     def __init__(self):
         super().__init__()
-        self.hand = []
 
     def showFirst(self) -> None:
         print("DEALER SCORE: ?")

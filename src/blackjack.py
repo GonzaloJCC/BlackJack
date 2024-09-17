@@ -4,6 +4,7 @@ import random as r
 import os
 import time as t
 from const import *
+from utils import exit_signal
 
 class BlackJack:
     def __init__(self) -> None:
@@ -29,6 +30,8 @@ class BlackJack:
                 except ValueError as e:
                     print("You must enter a valid number, "
                           "between 1 and the ammount of chips you have")
+                except EOFError as e:
+                    exit_signal(1, "signal ctrl+D")
 
             self.bets[i] = (self.players[i].bet(bet))
         self.cls()
@@ -48,6 +51,8 @@ class BlackJack:
                 break
             except ValueError as e:
                 print("You must enter a number between 1 and 4, both included")
+            except EOFError as e:
+                exit_signal(1, "signal ctrl+D")
 
         #select player names
         for i in range (0, self.playerAmmount):
@@ -57,7 +62,10 @@ class BlackJack:
 
             x = 0
             while x == 0:
-                name = input(f"Enter the player {i+1} name: ")
+                try:
+                    name = input(f"Enter the player {i+1} name: ")
+                except EOFError as e:
+                    exit_signal(1, "signal ctrl+D")
                 
                 if(name in names):
                     print("NAMES MUST BE UNIQUE, PICK ANOTHER NAME")
@@ -248,6 +256,8 @@ class BlackJack:
                         raise ValueError
                 except ValueError:
                     print("YOU MUST ENTER A NUMBER BETWEEN 1 AND 4")
+                except EOFError as e:
+                    exit_signal(1, "signal ctrl+D")
 
             if decision == HIT:
                 player.hand.append(self.takeCard())
@@ -368,10 +378,14 @@ class BlackJack:
 
             #after the round is finished you can choose to end the round 
             # or to play another
-            decision = input(
-                            "IF YOU DON'T WANT TO PLAY ANOTHER ROUND "
-                            "PRESS 'Q' TO EXIT, "
-                            "OTHERWISE PRESS ANY KEY: ")
+            try:
+                decision = input(
+                                "IF YOU DON'T WANT TO PLAY ANOTHER ROUND "
+                                "PRESS 'Q' TO EXIT, "
+                                "OTHERWISE PRESS ANY KEY: ")
+            except EOFError as e:
+                exit_signal(1, "signal ctrl+D")
+
             if decision.upper() == 'Q':
                 print("GAME ENDED")
                 return
