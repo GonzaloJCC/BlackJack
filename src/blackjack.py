@@ -138,6 +138,7 @@ class BlackJack:
             score = "BUSTED"
         print(f"DEALER SCORE: {score}: ")
         self.dealer.show()
+        print("")
         
 
 
@@ -300,7 +301,7 @@ class BlackJack:
                     self.printPlayers(self.players, self.bets)
                     continue
                 
-
+                print("NOT IMPLEMENTED YET")
                 t.sleep(1.2)
                 self.cls()
                 self.printPlayers(self.players, self.bets)

@@ -1,5 +1,6 @@
 from deck import *
 from const import *
+from utils import exit_signal
 import sys
 
 class Person:
@@ -80,7 +81,7 @@ class Dealer(Person):
                 print("[X]", end=" ")
             else:
                 print(self.hand[i], end=" ")
-        print("")
+        print("\n")
 
 
         
