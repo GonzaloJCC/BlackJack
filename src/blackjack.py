@@ -1,6 +1,5 @@
 from person import *
 from deck import *
-import random as r
 import os
 import time as t
 from const import *
