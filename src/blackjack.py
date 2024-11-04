@@ -10,6 +10,15 @@ def cls():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 
+def print_player(player: Player, bet: float) -> None:
+    score = player.get_score()
+    if score == BUSTED:
+        score = "BUSTED"
+    print(f"{player.name.upper()} (BET: {bet})  SCORE: {score}: ")
+    player.show()
+    print("")
+
+
 class BlackJack:
     def __init__(self) -> None:
         self.player_amount: int = 0
@@ -142,20 +151,10 @@ class BlackJack:
         self.dealer.show()
         print("")
 
-
-
-    def print_player(self, player: Player, bet: float) -> None:
-        score = player.get_score()
-        if score == BUSTED:
-            score = "BUSTED"
-        print(f"{player.name.upper()} (BET: {bet})  SCORE: {score}: ")
-        player.show()
-        print("")
-
     def print_players(self, players: list[Player], bets: list[float]):
         self.dealer.show_first()
         for i, player in enumerate(players):
-            self.print_player(player, bets[i])
+            print_player(player, bets[i])
             
             
 
@@ -225,7 +224,7 @@ class BlackJack:
             self.print_dealer()
             self.dealer.hand.append(self.take_card())
             for i, player in enumerate(self.players):
-                self.print_player(player, self.bets[i])
+                print_player(player, self.bets[i])
 
             score = self.dealer.get_score()
             t.sleep(1.2)
@@ -235,7 +234,7 @@ class BlackJack:
         cls()
         self.print_dealer()
         for i, player in enumerate(self.players):
-            self.print_player(player, self.bets[i])
+            print_player(player, self.bets[i])
         t.sleep(4)
         # self.cls()
 
