@@ -15,12 +15,12 @@ class Person:
     def empty(self) -> None:
         self.hand.clear()
 
-    def hasBlackjack(self) -> bool:
+    def has_blackjack(self) -> bool:
         if len(self.hand) != 2:
             return False
         return self.hand[0].numericalValue[1] + self.hand[1].numericalValue[1] == OBJECTIVE
 
-    def getScore(self) -> int:
+    def get_score(self) -> int:
         score = 0
         aces = []
         others = []
@@ -74,7 +74,7 @@ class Dealer(Person):
     def __init__(self):
         super().__init__()
 
-    def showFirst(self) -> None:
+    def show_first(self) -> None:
         print("DEALER SCORE: ?")
         for i in range(len(self.hand)):
             if i == 1:

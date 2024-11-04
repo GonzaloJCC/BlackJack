@@ -1,23 +1,23 @@
 import random
 from typing import Tuple
 
-def getNumericalValue(value) -> Tuple[int, int]:
+def get_numerical_value(value) -> Tuple[int, int]:
     if value == "A":
-        return (1, 11)
+        return 1, 11
     
     if value == "J" or value == "Q" or value == "K":
-        return (10, 10)
+        return 10, 10
     
     aux = int(value)
 
-    return (aux, aux)
+    return aux, aux
 
 #class card
 class Card:
-    def __init__(self, value, suit, numericalValue):
+    def __init__(self, value, suit, numerical_value):
         self.value = value
+        self.numericalValue = numerical_value
         self.suit = suit
-        self.numericalValue = numericalValue
 
     def __str__(self) -> str:
         return f"{self.value}{self.suit}"
@@ -33,8 +33,8 @@ class Deck:
 
         for suit in suits:
             for value in values:
-                numericalValue = getNumericalValue(value)
-                card = Card(value, suit, numericalValue)
+                numerical_value = get_numerical_value(value)
+                card = Card(value, suit, numerical_value)
                 self.deck.append(card)
 
     def __str__(self) -> str:
@@ -43,7 +43,7 @@ class Deck:
     def shuffle(self) -> None:
         random.shuffle(self.deck)
 
-    def takeCard(self) -> Card:
+    def take_card(self) -> Card:
         if self.deck == []:
             return Card("-1", "-1", -1)
         return self.deck.pop()

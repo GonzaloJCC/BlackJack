@@ -3,6 +3,11 @@
 __pycache__
 tempCodeRunnerFile.py
 
+#pycharm folder
+.idea/
+
 #file for future implementations
 notes.txt
 test
+
+

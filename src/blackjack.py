@@ -5,47 +5,49 @@ import time as t
 from const import *
 from utils import exit_signal
 
+
+def cls():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+
 class BlackJack:
     def __init__(self) -> None:
-        self.playerAmmount: int = 0
+        self.player_amount: int = 0
         self.players: list[Player] = []
         self.bets: list[float] = []
         self.resetDeckCount: int = 0
         self.decks: list[Deck] = []
         self.dealer: Dealer = Dealer()
-    
-    def cls(self):
-        os.system('cls' if os.name == 'nt' else 'clear')
 
-    def initialBets(self):
+    def initial_bets(self):
         print("PLACE YOUR BETS")
         for i in range(len(self.players)):
             while 1:
                 try:
                     bet = int(input(f"PLAYER {self.players[i].name.upper()} ({self.players[i].chips} Chips), bet: "))
-                    if(bet < 0 or bet > self.players[i].chips):
+                    if bet < 0 or bet > self.players[i].chips:
                         raise ValueError("")
                     break
                 except ValueError as e:
                     print("You must enter a valid number, "
-                          "between 1 and the ammount of chips you have")
+                          "between 1 and the amount of chips you have")
                 except EOFError as e:
                     exit_signal(1, "signal ctrl+D")
 
             self.bets[i] = (self.players[i].bet(bet))
-        self.cls()
+        cls()
         t.sleep(0.5)
 
         print("STARTING TO DEAL")
         t.sleep(2)
-        self.cls()
+        cls()
 
     def startGame(self) -> None:
         #the user selects the number of players
         while True:
             try:
-                self.playerAmmount = int(input("Enter the amount of players (1-4): "))
-                if self.playerAmmount < 1 or self.playerAmmount > 4:
+                self.player_amount = int(input("Enter the amount of players (1-4): "))
+                if self.player_amount < 1 or self.player_amount > 4:
                     raise ValueError("")
                 break
             except ValueError as e:
@@ -54,19 +56,20 @@ class BlackJack:
                 exit_signal(1, "signal ctrl+D")
 
         #select player names
-        for i in range (0, self.playerAmmount):
+        for i in range (0, self.player_amount):
             names = []
             for player in self.players:
                 names.append(player.name)
 
             x = 0
             while x == 0:
+                name = ""
                 try:
                     name = input(f"Enter the player {i+1} name: ")
                 except EOFError as e:
                     exit_signal(1, "signal ctrl+D")
                 
-                if(name in names):
+                if name in names:
                     print("NAMES MUST BE UNIQUE, PICK ANOTHER NAME")
                 else:
                     x = 1
@@ -75,35 +78,35 @@ class BlackJack:
             self.bets.append(0)
 
         #every player makes the initial bet
-        self.cls()
+        cls()
 
     #cleans the player and dealer cards
-    def endGame(self) -> None:
-        dealerScore = self.dealer.getScore()
+    def end_game(self) -> None:
+        dealer_score = self.dealer.get_score()
 
         for i, player in enumerate(self.players):
-            playerScore = player.getScore()
+            player_score = player.get_score()
             
-            if playerScore == BUSTED:
+            if player_score == BUSTED:
                 print(f"{player.name.upper()} loses {self.bets[i]}")
 
-            elif player.hasBlackjack():
-                if self.dealer.hasBlackjack():
+            elif player.has_blackjack():
+                if self.dealer.has_blackjack():
                     player.chips += self.bets[i]
                     print(f"{player.name.upper()} wins 0")
                 else:
                     player.chips += BLACKJACK_WIN_RATIO * self.bets[i]
                     print(f"{player.name} wins {BLACKJACK_WIN_RATIO * self.bets[i]}")
 
-            elif self.dealer.hasBlackjack():
+            elif self.dealer.has_blackjack():
                 #dealer wins
                 print(f"{player.name.upper()} loses {self.bets[i]}")
 
-            elif playerScore > dealerScore:
+            elif player_score > dealer_score:
                 player.chips += WIN_RATIO * self.bets[i]
                 print(f"{player.name.upper()} wins {WIN_RATIO * self.bets[i]}")
 
-            elif playerScore == dealerScore:
+            elif player_score == dealer_score:
                 player.chips += self.bets[i]
                 print(f"{player.name.upper()} wins 0")
             
@@ -131,8 +134,8 @@ class BlackJack:
         
 
     
-    def printDealer(self) -> None:
-        score = self.dealer.getScore()
+    def print_dealer(self) -> None:
+        score = self.dealer.get_score()
         if score == BUSTED:
             score = "BUSTED"
         print(f"DEALER SCORE: {score}: ")
@@ -141,106 +144,106 @@ class BlackJack:
         
 
 
-    def printPlayer(self, player: Player, bet: float) -> None:
-        score = player.getScore()
+    def print_player(self, player: Player, bet: float) -> None:
+        score = player.get_score()
         if score == BUSTED:
             score = "BUSTED"
         print(f"{player.name.upper()} (BET: {bet})  SCORE: {score}: ")
         player.show()
         print("")
 
-    def printPlayers(self, players: list[Player], bets: list[float]):
-        self.dealer.showFirst()
+    def print_players(self, players: list[Player], bets: list[float]):
+        self.dealer.show_first()
         for i, player in enumerate(players):
-            self.printPlayer(player, bets[i])
+            self.print_player(player, bets[i])
             
             
 
 
-    #recives true if the card is going to be dealed to the dealer or false if its 
-    # going to be dealed to all players
+    #recives true if the card is going to be dealt to the dealer or false if its
+    # going to be dealt to all players
     def deal(self, x: bool) -> None:
-        if x == True:
-            self.dealer.hand.append(self.takeCard())
-            self.cls()
-            self.printPlayers(self.players, self.bets)
+        if x is True:
+            self.dealer.hand.append(self.take_card())
+            cls()
+            self.print_players(self.players, self.bets)
             t.sleep(1.2)
             
             
         
         else:
-            self.cls()
-            self.printPlayers(self.players, self.bets)
-            for player in (self.players):
-                player.hand.append(self.takeCard())
-                self.cls()
-                self.printPlayers(self.players, self.bets)
+            cls()
+            self.print_players(self.players, self.bets)
+            for player in self.players:
+                player.hand.append(self.take_card())
+                cls()
+                self.print_players(self.players, self.bets)
                 t.sleep(1.2)
                 
 
     #DECK MANAGEMENT
-    def randomDecks(self) -> None:
+    def random_decks(self) -> None:
         if self.resetDeckCount == RESET_DECK_COUNT:
-            self.resetDeckCount = 0;
-        
+            self.resetDeckCount = 0
+
         if self.resetDeckCount == 0:
             self.decks.clear()
             for i in range (0, NUMBER_OF_DECKS):
                 self.decks.append(Deck())
             self.shuffle()
-        self.cls()
+        cls()
 
     def shuffle(self) -> None:
         for deck in self.decks:
             deck.shuffle()
 
-    def takeCard(self) -> None:
+    def take_card(self) -> None:
         card = Card("-1", "-1", -1)
         while card.numericalValue == -1:
-            auxDeck = random.choice(self.decks)
-            card = auxDeck.takeCard()
+            aux_deck = random.choice(self.decks)
+            card = aux_deck.take_card()
         return card
     
-    def dealersTurn(self) -> None:
-        score = self.dealer.getScore()
+    def dealers_turn(self) -> None:
+        score = self.dealer.get_score()
 
-        bestPlayerScore = -1
+        best_player_score = -1
         #get the best score without blackjack
         for player in self.players:
-            if player.hasBlackjack():
+            if player.has_blackjack():
                 continue
-            tempScore = player.getScore()
-            if tempScore > bestPlayerScore:
-                bestPlayerScore = tempScore
+            temp_score = player.get_score()
+            if temp_score > best_player_score:
+                best_player_score = temp_score
 
         #the dealer takes cards 
         while score < int(DEALER_STOP) and score != int(BUSTED) \
-            and score <= bestPlayerScore:
+            and score <= best_player_score:
             
-            self.cls()
+            cls()
             
-            self.printDealer()
-            self.dealer.hand.append(self.takeCard())
+            self.print_dealer()
+            self.dealer.hand.append(self.take_card())
             for i, player in enumerate(self.players):
-                self.printPlayer(player, self.bets[i])
+                self.print_player(player, self.bets[i])
 
-            score = self.dealer.getScore()
+            score = self.dealer.get_score()
             t.sleep(1.2)
 
         #the final board is printed
         # t.sleep(1.2)
-        self.cls()
-        self.printDealer()
+        cls()
+        self.print_dealer()
         for i, player in enumerate(self.players):
-            self.printPlayer(player, self.bets[i])
+            self.print_player(player, self.bets[i])
         t.sleep(4)
         # self.cls()
 
 
-    def chooseMove(self, player: Player, bet: float) -> None:
-        canDouble = True
-        while player.getScore() <= int(OBJECTIVE) \
-            and player.getScore() != int(BUSTED):
+    def choose_move(self, player: Player, bet: float) -> None:
+        can_double = True
+        while player.get_score() <= int(OBJECTIVE) \
+            and player.get_score() != int(BUSTED):
 
             decision = 0
             while decision not in [HIT, DOUBLE, SPLIT, STAND]:
@@ -260,35 +263,35 @@ class BlackJack:
                     exit_signal(1, "signal ctrl+D")
 
             if decision == HIT:
-                player.hand.append(self.takeCard())
-                canDouble = False
+                player.hand.append(self.take_card())
+                can_double = False
 
             elif decision == DOUBLE:
                 
-                if canDouble == False:
+                if can_double is False:
                     print("\nYOU CAN NOT DOUBLE AFTER A HIT OR A SPLIT")
                     t.sleep(2)
-                    self.cls()
-                    self.printPlayers(self.players, self.bets)
+                    cls()
+                    self.print_players(self.players, self.bets)
                     continue
 
                 if player.chips < bet:
                     print("NOT ENOUGH CHIPS")
                     t.sleep(1.2)
-                    self.cls()
-                    self.printPlayers(self.players, self.bets)
+                    cls()
+                    self.print_players(self.players, self.bets)
                     continue
                 bet += player.bet(bet)
-                for i in range(0, self.playerAmmount):
+                for i in range(0, self.player_amount):
                     if player == self.players[i]:
                         self.bets[i] = bet
   
-                player.hand.append(self.takeCard())
+                player.hand.append(self.take_card())
                 
 
                 t.sleep(1.2)
-                self.cls()
-                self.printPlayers(self.players, self.bets)
+                cls()
+                self.print_players(self.players, self.bets)
  
                 break
 
@@ -296,52 +299,52 @@ class BlackJack:
                 if len(player.hand) != 2 or player.hand[0].value != player.hand[1].value:
                     print("YOU CAN NOT SPLIT THIS HAND")
                     t.sleep(1.2)
-                    self.cls()
-                    self.printPlayers(self.players, self.bets)
+                    cls()
+                    self.print_players(self.players, self.bets)
                     continue
                 
                 print("NOT IMPLEMENTED YET")
                 t.sleep(1.2)
-                self.cls()
-                self.printPlayers(self.players, self.bets)
+                cls()
+                self.print_players(self.players, self.bets)
 
             elif decision == STAND:
                 t.sleep(1.2)
-                self.cls()
-                self.printPlayers(self.players, self.bets)
+                cls()
+                self.print_players(self.players, self.bets)
 
                 break
 
             t.sleep(1.2)
-            self.cls()
-            self.printPlayers(self.players, self.bets)
+            cls()
+            self.print_players(self.players, self.bets)
    
 
 
 
-    def playersTurn(self) -> None:
+    def players_turn(self) -> None:
         for i, player in enumerate(self.players):
-            if player.hasBlackjack():
+            if player.has_blackjack():
                 print(f"PLAYER {player.name.upper()} HAS BLACKJACK")
                 t.sleep(1.2)
                 continue
-            self.chooseMove(player, self.bets[i])
+            self.choose_move(player, self.bets[i])
             
         
-    def gameLoop(self) -> None:
+    def game_loop(self) -> None:
         
         self.startGame()
 
-        while(1):
+        while 1:
 
             #the players place their bets for this game
-            self.initialBets()
+            self.initial_bets()
 
             #the decks are shuffled and initialized
-            self.randomDecks()
+            self.random_decks()
 
             #prints the table status
-            self.printPlayers(self.players, self.bets)
+            self.print_players(self.players, self.bets)
             t.sleep(1.2)
             
             #Deal card 1 to players
@@ -359,17 +362,17 @@ class BlackJack:
 
             #if dealer has BlackJack all the players without BJ will lose their bets
             # and the ones with BJ will get their bet returned
-            if self.dealer.hasBlackjack():
-                self.dealersTurn()
+            if self.dealer.has_blackjack():
+                self.dealers_turn()
                 print("DEALER HAS BLACKJACK")
-                self.endGame()
+                self.end_game()
             else:
                 #player decide their actions
-                self.playersTurn()
+                self.players_turn()
 
                 #the dealer gets the cards
-                self.dealersTurn()
-                self.endGame()
+                self.dealers_turn()
+                self.end_game()
 
             if len(self.players) == 0:  
                 t.sleep(3)
@@ -389,7 +392,7 @@ class BlackJack:
             if decision.upper() == 'Q':
                 print("GAME ENDED")
                 return
-            self.cls()
+            cls()
                 
 
     
