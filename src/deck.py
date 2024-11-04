@@ -14,7 +14,7 @@ def get_numerical_value(value) -> Tuple[int, int]:
 
 #class card
 class Card:
-    def __init__(self, value, suit, numerical_value):
+    def __init__(self, value: str, suit: str, numerical_value: Tuple[int, int]):
         self.value = value
         self.numericalValue = numerical_value
         self.suit = suit
@@ -39,13 +39,14 @@ class Deck:
 
     def __str__(self) -> str:
         return ', '.join(str(card) for card in self.deck)
-    
+
     def shuffle(self) -> None:
         random.shuffle(self.deck)
 
+    #If there are no cards left we return the card -1 -1 -1
     def take_card(self) -> Card:
-        if self.deck == []:
-            return Card("-1", "-1", -1)
+        if not self.deck:
+            return Card("-1", "-1", (-1,-1))
         return self.deck.pop()
 
 

@@ -28,10 +28,10 @@ class BlackJack:
                     if bet < 0 or bet > self.players[i].chips:
                         raise ValueError("")
                     break
-                except ValueError as e:
+                except ValueError as _:
                     print("You must enter a valid number, "
                           "between 1 and the amount of chips you have")
-                except EOFError as e:
+                except EOFError as _:
                     exit_signal(1, "signal ctrl+D")
 
             self.bets[i] = (self.players[i].bet(bet))
@@ -42,7 +42,7 @@ class BlackJack:
         t.sleep(2)
         cls()
 
-    def startGame(self) -> None:
+    def start_game(self) -> None:
         #the user selects the number of players
         while True:
             try:
@@ -50,9 +50,9 @@ class BlackJack:
                 if self.player_amount < 1 or self.player_amount > 4:
                     raise ValueError("")
                 break
-            except ValueError as e:
+            except ValueError as _:
                 print("You must enter a number between 1 and 4, both included")
-            except EOFError as e:
+            except EOFError as _:
                 exit_signal(1, "signal ctrl+D")
 
         #select player names
@@ -62,11 +62,11 @@ class BlackJack:
                 names.append(player.name)
 
             x = 0
+            name = ""
             while x == 0:
-                name = ""
                 try:
                     name = input(f"Enter the player {i+1} name: ")
-                except EOFError as e:
+                except EOFError as _:
                     exit_signal(1, "signal ctrl+D")
                 
                 if name in names:
@@ -141,7 +141,7 @@ class BlackJack:
         print(f"DEALER SCORE: {score}: ")
         self.dealer.show()
         print("")
-        
+
 
 
     def print_player(self, player: Player, bet: float) -> None:
@@ -160,7 +160,7 @@ class BlackJack:
             
 
 
-    #recives true if the card is going to be dealt to the dealer or false if its
+    #recives true if the card is going to be dealt to the dealer or false if isn't
     # going to be dealt to all players
     def deal(self, x: bool) -> None:
         if x is True:
@@ -198,8 +198,8 @@ class BlackJack:
             deck.shuffle()
 
     def take_card(self) -> None:
-        card = Card("-1", "-1", -1)
-        while card.numericalValue == -1:
+        card = Card("-1", "-1", (-1,-1))
+        while card.numericalValue == (-1, -1):
             aux_deck = random.choice(self.decks)
             card = aux_deck.take_card()
         return card
@@ -259,7 +259,7 @@ class BlackJack:
                         raise ValueError
                 except ValueError:
                     print("YOU MUST ENTER A NUMBER BETWEEN 1 AND 4")
-                except EOFError as e:
+                except EOFError as _:
                     exit_signal(1, "signal ctrl+D")
 
             if decision == HIT:
@@ -333,7 +333,7 @@ class BlackJack:
         
     def game_loop(self) -> None:
         
-        self.startGame()
+        self.start_game()
 
         while 1:
 
@@ -386,7 +386,7 @@ class BlackJack:
                                 "IF YOU DON'T WANT TO PLAY ANOTHER ROUND "
                                 "PRESS 'Q' TO EXIT, "
                                 "OTHERWISE PRESS ANY KEY: ")
-            except EOFError as e:
+            except EOFError as _:
                 exit_signal(1, "signal ctrl+D")
 
             if decision.upper() == 'Q':

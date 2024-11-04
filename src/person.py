@@ -1,7 +1,5 @@
-from deck import *
 from const import *
 from utils import exit_signal
-import sys
 
 class Person:
     def __init__(self):
@@ -63,7 +61,7 @@ class Player(Person):
             print("You don't have enough chips to bet, enter a valid number")
             try:
                 amount = int(input("Bet: "))
-            except EOFError as e:
+            except EOFError as _:
                 exit_signal(1, "signal ctrl+D")
 
         self.chips -= amount
