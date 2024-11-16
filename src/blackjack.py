@@ -167,9 +167,7 @@ class BlackJack:
             cls()
             self.print_players(self.players, self.bets)
             t.sleep(1.2)
-            
-            
-        
+
         else:
             cls()
             self.print_players(self.players, self.bets)
@@ -196,10 +194,10 @@ class BlackJack:
         for deck in self.decks:
             deck.shuffle()
 
-    def take_card(self) -> None:
+    def take_card(self) -> Card:
         card = Card("-1", "-1", (-1,-1))
         while card.numericalValue == (-1, -1):
-            aux_deck = random.choice(self.decks)
+            aux_deck: Deck = random.choice(self.decks)
             card = aux_deck.take_card()
         return card
     

@@ -41,10 +41,19 @@ class Deck:
         return ', '.join(str(card) for card in self.deck)
 
     def shuffle(self) -> None:
+        """
+        Shuffles the deck.
+        :return: None
+        """
         random.shuffle(self.deck)
 
     #If there are no cards left we return the card -1 -1 -1
     def take_card(self) -> Card:
+        """
+        Removes a card from the deck and returns it..
+        :return: The card taken, or a card with value: -1, suit: -1, numerical_value: (-1, -1)
+                 if there are no cards left.
+        """
         if not self.deck:
             return Card("-1", "-1", (-1,-1))
         return self.deck.pop()
