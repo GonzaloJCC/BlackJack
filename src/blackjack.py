@@ -7,10 +7,20 @@ from utils import exit_signal
 
 
 def cls():
+    """
+    Clears the console screen.
+    :return: None
+    """
     os.system('cls' if os.name == 'nt' else 'clear')
 
 
 def print_player(player: Player, bet: float) -> None:
+    """
+    Prints the player's current hand and score.
+    :param player: The player whose hand and score are to be printed.
+    :param bet: The player's current bet.
+    :return: None
+    """
     score = player.get_score()
     if score == BUSTED:
         score = "BUSTED"
@@ -21,6 +31,10 @@ def print_player(player: Player, bet: float) -> None:
 
 class BlackJack:
     def __init__(self) -> None:
+        """
+        Initializes the BlackJack game with default values.
+        :return: None
+        """
         self.player_amount: int = 0
         self.players: list[Player] = []
         self.bets: list[float] = []
@@ -29,6 +43,10 @@ class BlackJack:
         self.dealer: Dealer = Dealer()
 
     def initial_bets(self):
+        """
+        Allows players to place their initial bets for the game.
+        :return: None
+        """
         print("PLACE YOUR BETS")
         for i in range(len(self.players)):
             while 1:
@@ -52,7 +70,11 @@ class BlackJack:
         cls()
 
     def start_game(self) -> None:
-        #the user selects the number of players
+        """
+        Starts the game by allowing the user to select the number of players
+        and their names.
+        :return: None
+        """
         while True:
             try:
                 self.player_amount = int(input("Enter the amount of players (1-4): "))
@@ -91,11 +113,15 @@ class BlackJack:
 
     #cleans the player and dealer cards
     def end_game(self) -> None:
+        """
+        Ends the current game round, calculates results, and updates player chips.
+        :return: None
+        """
         dealer_score = self.dealer.get_score()
 
         for i, player in enumerate(self.players):
             player_score = player.get_score()
-            
+
             if player_score == BUSTED:
                 print(f"{player.name.upper()} loses {self.bets[i]}")
 
@@ -118,12 +144,11 @@ class BlackJack:
             elif player_score == dealer_score:
                 player.chips += self.bets[i]
                 print(f"{player.name.upper()} wins 0")
-            
+
             else:
                 #dealer wins
                 print(f"{player.name.upper()} loses {self.bets[i]}")
 
-            
         print("")
         t.sleep(1.2)
         aux = []
@@ -136,14 +161,15 @@ class BlackJack:
             else:
                 aux.append(player)
             print("")
-            
+
         self.players = aux
         self.dealer.hand = []
-        
-        
 
-    
     def print_dealer(self) -> None:
+        """
+        Prints the dealer's hand and score.
+        :return: None
+        """
         score = self.dealer.get_score()
         if score == BUSTED:
             score = "BUSTED"
@@ -152,22 +178,27 @@ class BlackJack:
         print("")
 
     def print_players(self, players: list[Player], bets: list[float]):
+        """
+        Prints the current state of all players' hands and bets.
+        :param players: List of players.
+        :param bets: List of bets corresponding to the players.
+        :return: None
+        """
         self.dealer.show_first()
         for i, player in enumerate(players):
             print_player(player, bets[i])
-            
-            
 
-
-    #recives true if the card is going to be dealt to the dealer or false if isn't
-    # going to be dealt to all players
     def deal(self, x: bool) -> None:
-        if x is True:
+        """
+        Deals a card to the dealer or all players.
+        :param x: True if the card is dealt to the dealer, False otherwise.
+        :return: None
+        """
+        if x:
             self.dealer.hand.append(self.take_card())
             cls()
             self.print_players(self.players, self.bets)
             t.sleep(1.2)
-
         else:
             cls()
             self.print_players(self.players, self.bets)
@@ -180,32 +211,48 @@ class BlackJack:
 
     #DECK MANAGEMENT
     def random_decks(self) -> None:
+        """
+        Initializes and shuffles the decks for the game.
+        :return: None
+        """
         if self.resetDeckCount == RESET_DECK_COUNT:
             self.resetDeckCount = 0
 
         if self.resetDeckCount == 0:
             self.decks.clear()
-            for i in range (0, NUMBER_OF_DECKS):
+            for i in range(NUMBER_OF_DECKS):
                 self.decks.append(Deck())
             self.shuffle()
         cls()
 
     def shuffle(self) -> None:
+        """
+        Shuffles all decks in the game.
+        :return: None
+        """
         for deck in self.decks:
             deck.shuffle()
 
     def take_card(self) -> Card:
-        card = Card("-1", "-1", (-1,-1))
+        """
+        Draws a card from a random deck.
+        :return: A card object.
+        """
+        card = Card("-1", "-1", (-1, -1))
         while card.numericalValue == (-1, -1):
             aux_deck: Deck = random.choice(self.decks)
             card = aux_deck.take_card()
         return card
-    
+
     def dealers_turn(self) -> None:
+        """
+        Executes the dealer's turn, where the dealer draws cards until
+        reaching a stopping condition.
+        :return: None
+        """
         score = self.dealer.get_score()
 
         best_player_score = -1
-        #get the best score without blackjack
         for player in self.players:
             if player.has_blackjack():
                 continue
@@ -215,10 +262,8 @@ class BlackJack:
 
         #the dealer takes cards 
         while score < int(DEALER_STOP) and score != int(BUSTED) \
-            and score <= best_player_score:
-            
+                and score <= best_player_score:
             cls()
-            
             self.print_dealer()
             self.dealer.hand.append(self.take_card())
             for i, player in enumerate(self.players):
@@ -234,13 +279,17 @@ class BlackJack:
         for i, player in enumerate(self.players):
             print_player(player, self.bets[i])
         t.sleep(4)
-        # self.cls()
-
 
     def choose_move(self, player: Player, bet: float) -> None:
+        """
+        Allows a player to choose their move during their turn.
+        :param player: The player making the move.
+        :param bet: The player's current bet.
+        :return: None
+        """
         can_double = True
         while player.get_score() <= int(OBJECTIVE) \
-            and player.get_score() != int(BUSTED):
+                and player.get_score() != int(BUSTED):
 
             decision = 0
             while decision not in [HIT, DOUBLE, SPLIT, STAND]:
@@ -264,8 +313,7 @@ class BlackJack:
                 can_double = False
 
             elif decision == DOUBLE:
-                
-                if can_double is False:
+                if not can_double:
                     print("\nYOU CAN NOT DOUBLE AFTER A HIT OR A SPLIT")
                     t.sleep(2)
                     cls()
@@ -279,17 +327,14 @@ class BlackJack:
                     self.print_players(self.players, self.bets)
                     continue
                 bet += player.bet(bet)
-                for i in range(0, self.player_amount):
+                for i in range(self.player_amount):
                     if player == self.players[i]:
                         self.bets[i] = bet
-  
-                player.hand.append(self.take_card())
-                
 
+                player.hand.append(self.take_card())
                 t.sleep(1.2)
                 cls()
                 self.print_players(self.players, self.bets)
- 
                 break
 
             elif decision == SPLIT:
@@ -299,7 +344,7 @@ class BlackJack:
                     cls()
                     self.print_players(self.players, self.bets)
                     continue
-                
+
                 print("NOT IMPLEMENTED YET")
                 t.sleep(1.2)
                 cls()
@@ -309,30 +354,32 @@ class BlackJack:
                 t.sleep(1.2)
                 cls()
                 self.print_players(self.players, self.bets)
-
                 break
 
             t.sleep(1.2)
             cls()
             self.print_players(self.players, self.bets)
-   
-
-
 
     def players_turn(self) -> None:
+        """
+        Executes each player's turn, allowing them to make their moves.
+        :return: None
+        """
         for i, player in enumerate(self.players):
             if player.has_blackjack():
                 print(f"PLAYER {player.name.upper()} HAS BLACKJACK")
                 t.sleep(1.2)
                 continue
             self.choose_move(player, self.bets[i])
-            
-        
+
     def game_loop(self) -> None:
-        
+        """
+        Main game loop that handles the flow of the game.
+        :return: None
+        """
         self.start_game()
 
-        while 1:
+        while True:
 
             #the players place their bets for this game
             self.initial_bets()
@@ -380,9 +427,9 @@ class BlackJack:
             # or to play another
             try:
                 decision = input(
-                                "IF YOU DON'T WANT TO PLAY ANOTHER ROUND "
-                                "PRESS 'Q' TO EXIT, "
-                                "OTHERWISE PRESS ANY KEY: ")
+                    "IF YOU DON'T WANT TO PLAY ANOTHER ROUND "
+                    "PRESS 'Q' TO EXIT, "
+                    "OTHERWISE PRESS ANY KEY: ")
             except EOFError as _:
                 exit_signal(1, "signal ctrl+D")
 
@@ -390,6 +437,3 @@ class BlackJack:
                 print("GAME ENDED")
                 return
             cls()
-                
-
-    
