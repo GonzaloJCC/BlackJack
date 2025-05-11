@@ -127,6 +127,7 @@ class BlackJack:
         dealer_score = self.dealer.get_score()
         
         for i, player in enumerate(self.players):
+            extra_chips = 0
             if player.name == "&":
                 continue
             player_score = player.get_score()
@@ -136,10 +137,10 @@ class BlackJack:
 
             elif player.has_blackjack():
                 if self.dealer.has_blackjack():
-                    player.chips += self.bets[i]
+                    extra_chips = self.bets[i]
                     print(f"{player.name.upper()} wins 0")
                 else:
-                    player.chips += BLACKJACK_WIN_RATIO * self.bets[i]
+                    extra_chips = BLACKJACK_WIN_RATIO * self.bets[i]
                     print(f"{player.name} wins {BLACKJACK_WIN_RATIO * self.bets[i]}")
 
             elif self.dealer.has_blackjack():
@@ -147,11 +148,11 @@ class BlackJack:
                 print(f"{player.name.upper()} loses {self.bets[i]}")
 
             elif player_score > dealer_score:
-                player.chips += WIN_RATIO * self.bets[i]
+                extra_chips = WIN_RATIO * self.bets[i]
                 print(f"{player.name.upper()} wins {WIN_RATIO * self.bets[i]}")
 
             elif player_score == dealer_score:
-                player.chips += self.bets[i]
+                extra_chips = self.bets[i]
                 print(f"{player.name.upper()} wins 0")
 
             else:
@@ -160,8 +161,8 @@ class BlackJack:
 
             true_name = player.name.split("&")[0]
             for p in self.players_copy:
-                if true_name in p.name:
-                    p.chips = player.chips
+                if true_name in p.name:   
+                    p.chips = (player.chips + extra_chips)
 
         self.players = deepcopy(self.players_copy)
 
@@ -202,6 +203,8 @@ class BlackJack:
         """
         self.dealer.show_first()
         for i, player in enumerate(players):
+            if player.name == "&":
+                continue
             print_player(player, bets[i])
 
     def deal(self, x: bool) -> None:
