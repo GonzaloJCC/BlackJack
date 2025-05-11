@@ -56,7 +56,7 @@ class BlackJack:
                         raise ValueError("")
                     break
                 except ValueError as _:
-                    print("You must enter a valid number, "
+                    print("You must enter a valid integer number, "
                           "between 1 and the amount of chips you have")
                 except EOFError as _:
                     exit_signal(1, "signal ctrl+D")
@@ -66,7 +66,7 @@ class BlackJack:
         t.sleep(0.5)
 
         print("STARTING TO DEAL")
-        t.sleep(2)
+        t.sleep(1)
         cls()
 
     def start_game(self) -> None:
@@ -102,6 +102,8 @@ class BlackJack:
                 
                 if name in names:
                     print("NAMES MUST BE UNIQUE, PICK ANOTHER NAME")
+                elif "&" in name:
+                    print("'&' CHARACTER NOT ALLOWED")
                 else:
                     x = 1
                     
@@ -150,7 +152,7 @@ class BlackJack:
                 print(f"{player.name.upper()} loses {self.bets[i]}")
 
         print("")
-        t.sleep(1.2)
+        t.sleep(0.5)
         aux = []
         for player in self.players:
             print(f"{player.name.upper()}'S CHIPS: {player.chips}")
@@ -198,7 +200,7 @@ class BlackJack:
             self.dealer.hand.append(self.take_card())
             cls()
             self.print_players(self.players, self.bets)
-            t.sleep(1.2)
+            t.sleep(0.5)
         else:
             cls()
             self.print_players(self.players, self.bets)
@@ -206,7 +208,7 @@ class BlackJack:
                 player.hand.append(self.take_card())
                 cls()
                 self.print_players(self.players, self.bets)
-                t.sleep(1.2)
+                t.sleep(0.5)
                 
 
     #DECK MANAGEMENT
@@ -270,15 +272,15 @@ class BlackJack:
                 print_player(player, self.bets[i])
 
             score = self.dealer.get_score()
-            t.sleep(1.2)
+            t.sleep(0.5)
 
         #the final board is printed
-        # t.sleep(1.2)
+        # t.sleep(0.5)
         cls()
         self.print_dealer()
         for i, player in enumerate(self.players):
             print_player(player, self.bets[i])
-        t.sleep(4)
+        t.sleep(3)
 
     def choose_move(self, player: Player, bet: float) -> None:
         """
@@ -314,15 +316,22 @@ class BlackJack:
 
             elif decision == DOUBLE:
                 if not can_double:
-                    print("\nYOU CAN NOT DOUBLE AFTER A HIT OR A SPLIT")
-                    t.sleep(2)
+                    print("\nYOU CAN NOT DOUBLE AFTER A HIT")
+                    t.sleep(1)
+                    cls()
+                    self.print_players(self.players, self.bets)
+                    continue
+                
+                if "&" in player.name:
+                    print("\nYOU CAN NOT DOUBLE AFTER A SPLIT")
+                    t.sleep(1)
                     cls()
                     self.print_players(self.players, self.bets)
                     continue
 
                 if player.chips < bet:
                     print("NOT ENOUGH CHIPS")
-                    t.sleep(1.2)
+                    t.sleep(0.5)
                     cls()
                     self.print_players(self.players, self.bets)
                     continue
@@ -332,31 +341,46 @@ class BlackJack:
                         self.bets[i] = bet
 
                 player.hand.append(self.take_card())
-                t.sleep(1.2)
+                t.sleep(0.5)
                 cls()
                 self.print_players(self.players, self.bets)
                 break
 
             elif decision == SPLIT:
+
+                if "&" in player.name:
+                    print("\nYOU CAN NOT SPLIT AFTER A SPLIT")
+                    t.sleep(1)
+                    cls()
+                    self.print_players(self.players, self.bets)
+                    continue
+                 
                 if len(player.hand) != 2 or player.hand[0].value != player.hand[1].value:
                     print("YOU CAN NOT SPLIT THIS HAND")
-                    t.sleep(1.2)
+                    t.sleep(0.5)
+                    cls()
+                    self.print_players(self.players, self.bets)
+                    continue
+                    
+                if player.chips < bet:
+                    print("NOT ENOUGH CHIPS TO SPLIT THE HAND")
+                    t.sleep(0.5)
                     cls()
                     self.print_players(self.players, self.bets)
                     continue
 
                 print("NOT IMPLEMENTED YET")
-                t.sleep(1.2)
+                t.sleep(0.5)
                 cls()
                 self.print_players(self.players, self.bets)
 
             elif decision == STAND:
-                t.sleep(1.2)
+                t.sleep(0.5)
                 cls()
                 self.print_players(self.players, self.bets)
                 break
 
-            t.sleep(1.2)
+            t.sleep(0.5)
             cls()
             self.print_players(self.players, self.bets)
 
@@ -368,7 +392,7 @@ class BlackJack:
         for i, player in enumerate(self.players):
             if player.has_blackjack():
                 print(f"PLAYER {player.name.upper()} HAS BLACKJACK")
-                t.sleep(1.2)
+                t.sleep(0.5)
                 continue
             self.choose_move(player, self.bets[i])
 
@@ -389,7 +413,7 @@ class BlackJack:
 
             #prints the table status
             self.print_players(self.players, self.bets)
-            t.sleep(1.2)
+            t.sleep(0.5)
             
             #Deal card 1 to players
             self.deal(False)
