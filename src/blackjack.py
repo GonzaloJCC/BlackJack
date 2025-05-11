@@ -4,6 +4,7 @@ import os
 import time as t
 from const import *
 from utils import exit_signal
+from copy import deepcopy
 
 
 def cls():
@@ -37,6 +38,7 @@ class BlackJack:
         """
         self.player_amount: int = 0
         self.players: list[Player] = []
+        self.players_copy: list[Player] = []
         self.bets: list[float] = []
         self.resetDeckCount: int = 0
         self.decks: list[Deck] = []
@@ -104,10 +106,13 @@ class BlackJack:
                     print("NAMES MUST BE UNIQUE, PICK ANOTHER NAME")
                 elif "&" in name:
                     print("'&' CHARACTER NOT ALLOWED")
+                elif name in ["", "", '', ' '] or len(name) == 0:
+                    print("NAME MUST NOT BE EMPTY")
                 else:
                     x = 1
                     
             self.players.append(Player(name))
+            self.players_copy = deepcopy(self.players)
             self.bets.append(0)
 
         #every player makes the initial bet
@@ -120,8 +125,10 @@ class BlackJack:
         :return: None
         """
         dealer_score = self.dealer.get_score()
-
+        
         for i, player in enumerate(self.players):
+            if player.name == "&":
+                continue
             player_score = player.get_score()
 
             if player_score == BUSTED:
@@ -150,6 +157,13 @@ class BlackJack:
             else:
                 #dealer wins
                 print(f"{player.name.upper()} loses {self.bets[i]}")
+
+            true_name = player.name.split("&")[0]
+            for p in self.players_copy:
+                if true_name in p.name:
+                    p.chips = player.chips
+
+        self.players = deepcopy(self.players_copy)
 
         print("")
         t.sleep(0.5)
@@ -369,10 +383,50 @@ class BlackJack:
                     self.print_players(self.players, self.bets)
                     continue
 
-                print("NOT IMPLEMENTED YET")
+                # print("NOT IMPLEMENTED YET")
+                # t.sleep(0.5)
+                # cls()
+                # self.print_players(self.players, self.bets)
+                
+                # remove the chips from the player
+                player.bet(bet)
+                # create 2 new players: player.name&1 and player.name&2
+                new_name_1 = player.name + "&1"
+                new_name_2 = player.name + "&2"
+                p1 = Player(new_name_1)
+                p2 = Player(new_name_2)
+
+                # give them one card each
+                p1.hand.append(player.hand[0])
+                p2.hand.append(player.hand[1])
+
+                # create 2 new list: new_players and new_bets
+                new_players = []
+                new_bets = []
+
+                # append all players except the original, in its place append the 2 new players
+                for i, aux in enumerate(self.players):
+                    if aux.name == player.name:
+                        new_players.append(Player("&"))
+                        new_players.append(p1)
+                        new_players.append(p2)
+
+                        new_bets.append(0)
+                        new_bets.append(bet)
+                        new_bets.append(bet)
+                        continue
+                    new_players.append(aux)
+                    new_bets.append(self.bets[i])
+                
+                # change the original lists
+                self.players = deepcopy(new_players)
+                self.bets = deepcopy(new_bets)
+
+                # append all the bets except the one of the original player, in its place the same bet twice
                 t.sleep(0.5)
                 cls()
                 self.print_players(self.players, self.bets)
+                break
 
             elif decision == STAND:
                 t.sleep(0.5)
@@ -389,12 +443,18 @@ class BlackJack:
         Executes each player's turn, allowing them to make their moves.
         :return: None
         """
-        for i, player in enumerate(self.players):
-            if player.has_blackjack():
-                print(f"PLAYER {player.name.upper()} HAS BLACKJACK")
-                t.sleep(0.5)
-                continue
-            self.choose_move(player, self.bets[i])
+        i = 0
+        while True:
+            try:
+                if self.players[i].has_blackjack():
+                    print(f"PLAYER {self.players[i].name.upper()} HAS BLACKJACK")
+                    t.sleep(0.5)
+                    i += 1
+                    continue
+                self.choose_move(self.players[i], self.bets[i])
+            except:
+                break
+            i += 1
 
     def game_loop(self) -> None:
         """
