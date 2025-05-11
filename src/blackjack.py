@@ -161,7 +161,10 @@ class BlackJack:
 
             true_name = player.name.split("&")[0]
             for p in self.players_copy:
-                if true_name in p.name:   
+                if "&2" in player.name:
+                    p.chips += extra_chips
+                
+                elif true_name in p.name:   
                     p.chips = (player.chips + extra_chips)
 
         self.players = deepcopy(self.players_copy)
@@ -181,6 +184,7 @@ class BlackJack:
 
         self.players = aux
         self.dealer.hand = []
+        # self.players_copy = deepcopy(self.players)
 
     def print_dealer(self) -> None:
         """
