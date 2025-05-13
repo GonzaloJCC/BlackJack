@@ -53,12 +53,12 @@ class BlackJack:
         for i in range(len(self.players)):
             while 1:
                 try:
-                    bet = int(input(f"PLAYER {self.players[i].name.upper()} ({self.players[i].chips} Chips), bet: "))
+                    bet = float(input(f"PLAYER {self.players[i].name.upper()} ({self.players[i].chips} Chips), bet: "))
                     if bet < 0 or bet > self.players[i].chips:
                         raise ValueError("")
                     break
                 except ValueError as _:
-                    print("You must enter a valid integer number, "
+                    print("You must enter a valid number, "
                           "between 1 and the amount of chips you have")
                 except EOFError as _:
                     exit_signal(1, "signal ctrl+D")
@@ -134,6 +134,7 @@ class BlackJack:
 
             if player_score == BUSTED:
                 print(f"{player.name.upper()} loses {self.bets[i]}")
+                extra_chips = -1*self.bets[i]
 
             elif player.has_blackjack():
                 if self.dealer.has_blackjack():
@@ -146,29 +147,28 @@ class BlackJack:
             elif self.dealer.has_blackjack():
                 #dealer wins
                 print(f"{player.name.upper()} loses {self.bets[i]}")
+                extra_chips = -1*self.bets[i]
 
             elif player_score > dealer_score:
                 extra_chips = WIN_RATIO * self.bets[i]
                 print(f"{player.name.upper()} wins {WIN_RATIO * self.bets[i]}")
 
             elif player_score == dealer_score:
-                extra_chips = self.bets[i]
+                extra_chips = 0
                 print(f"{player.name.upper()} wins 0")
 
             else:
                 #dealer wins
                 print(f"{player.name.upper()} loses {self.bets[i]}")
+                extra_chips = -1*self.bets[i]
 
             true_name = player.name.split("&")[0]
             for p in self.players_copy:
-                if "&2" in player.name:
+                if true_name == p.name:   
                     p.chips += extra_chips
-                
-                elif true_name in p.name:   
-                    p.chips = (player.chips + extra_chips)
 
         self.players = deepcopy(self.players_copy)
-
+        print("")
         t.sleep(0.5)
         aux = []
         for player in self.players:
@@ -289,6 +289,8 @@ class BlackJack:
             self.print_dealer()
             self.dealer.hand.append(self.take_card())
             for i, player in enumerate(self.players):
+                if player.name == "&":
+                    continue
                 print_player(player, self.bets[i])
 
             score = self.dealer.get_score()
@@ -299,6 +301,8 @@ class BlackJack:
         cls()
         self.print_dealer()
         for i, player in enumerate(self.players):
+            if player.name == "&":
+                    continue
             print_player(player, self.bets[i])
         t.sleep(3)
 

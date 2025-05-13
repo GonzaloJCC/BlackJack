@@ -8,9 +8,11 @@ OBJECTIVE = 21
 BUSTED = -1
 
 #the constant your bets multiply by if you win
-BLACKJACK_WIN_RATIO = 2.5
-WIN_RATIO = 2
+# BLACKJACK_WIN_RATIO = 2.5
+# WIN_RATIO = 2
 
+BLACKJACK_WIN_RATIO = 1.5
+WIN_RATIO = 1
 #actions
 HIT = 1
 DOUBLE = 2
