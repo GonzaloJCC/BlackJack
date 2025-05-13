@@ -169,7 +169,6 @@ class BlackJack:
 
         self.players = deepcopy(self.players_copy)
 
-        print("")
         t.sleep(0.5)
         aux = []
         for player in self.players:

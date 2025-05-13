@@ -36,34 +36,25 @@ class Person:
         :return: The score of the person, or -1 if score > 21.
         """
         score = 0
-        aces = []
-        others = []
+        ace_count = 0
 
         if not self.hand:
             return 0
 
-        # Filter the cards by ace or other
         for card in self.hand:
-            if card.numericalValue[1] == 11:
-                aces.append(card)
+            value = card.numericalValue
+            if value == (1, 11):
+                ace_count += 1
             else:
-                others.append(card)
+                score += value[0]
 
-        for card in others:
-            score += card.numericalValue[0]
-            if score > OBJECTIVE:
-                # busted
-                return BUSTED
+        score += ace_count * 11
 
-        for card in aces:
-            score += card.numericalValue[1]
-            if score > OBJECTIVE:
-                score -= card.numericalValue[1]
-                score += card.numericalValue[0]
-                if score > OBJECTIVE:
-                    return BUSTED
+        while score > OBJECTIVE and ace_count > 0:
+            score -= 10
+            ace_count -= 1
 
-        return score
+        return score if score <= OBJECTIVE else BUSTED
 
 
 class Player(Person):
@@ -85,7 +76,7 @@ class Player(Person):
             except EOFError as _:
                 exit_signal(1, "signal ctrl+D")
 
-        self.chips -= amount
+        # self.chips -= amount
         return amount
 
 
