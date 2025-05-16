@@ -25,7 +25,7 @@ def print_player(player: Player, bet: float) -> None:
     score = player.get_score()
     if score == BUSTED:
         score = "BUSTED"
-    print(f"{player.name.upper()} (BET: {bet})  SCORE: {score}: ")
+    print(f"{player.name.upper()} (BET: {bet:.2f})  SCORE: {score}: ")
     player.show()
     print("")
 
@@ -53,7 +53,7 @@ class BlackJack:
         for i in range(len(self.players)):
             while 1:
                 try:
-                    bet = float(input(f"PLAYER {self.players[i].name.upper()} ({self.players[i].chips} Chips), bet: "))
+                    bet = round(float(input(f"PLAYER {self.players[i].name.upper()} ({self.players[i].chips} Chips), bet: ")), 2)
                     if bet < 0 or bet > self.players[i].chips:
                         raise ValueError("")
                     break
@@ -133,7 +133,7 @@ class BlackJack:
             player_score = player.get_score()
 
             if player_score == BUSTED:
-                print(f"{player.name.upper()} loses {self.bets[i]}")
+                print(f"{player.name.upper()} loses {self.bets[i]:.2f}")
                 extra_chips = -1*self.bets[i]
 
             elif player.has_blackjack():
@@ -142,16 +142,16 @@ class BlackJack:
                     print(f"{player.name.upper()} wins 0")
                 else:
                     extra_chips = BLACKJACK_WIN_RATIO * self.bets[i]
-                    print(f"{player.name} wins {BLACKJACK_WIN_RATIO * self.bets[i]}")
+                    print(f"{player.name} wins {BLACKJACK_WIN_RATIO * self.bets[i]:.2f}")
 
             elif self.dealer.has_blackjack():
                 #dealer wins
-                print(f"{player.name.upper()} loses {self.bets[i]}")
+                print(f"{player.name.upper()} loses {self.bets[i]:.2f}")
                 extra_chips = -1*self.bets[i]
 
             elif player_score > dealer_score:
                 extra_chips = WIN_RATIO * self.bets[i]
-                print(f"{player.name.upper()} wins {WIN_RATIO * self.bets[i]}")
+                print(f"{player.name.upper()} wins {WIN_RATIO * self.bets[i]:.2f}")
 
             elif player_score == dealer_score:
                 extra_chips = 0
@@ -159,7 +159,7 @@ class BlackJack:
 
             else:
                 #dealer wins
-                print(f"{player.name.upper()} loses {self.bets[i]}")
+                print(f"{player.name.upper()} loses {self.bets[i]:.2f}")
                 extra_chips = -1*self.bets[i]
 
             true_name = player.name.split("&")[0]
@@ -172,7 +172,7 @@ class BlackJack:
         t.sleep(0.5)
         aux = []
         for player in self.players:
-            print(f"{player.name.upper()}'S CHIPS: {player.chips}")
+            print(f"{player.name.upper()}'S CHIPS: {player.chips:.2f}")
             self.bets[i] = 0
             player.hand = []
             if player.chips <= 0:
