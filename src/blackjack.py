@@ -314,7 +314,7 @@ class BlackJack:
         :return: None
         """
         can_double = True
-        while player.get_score() <= int(OBJECTIVE) \
+        while player.get_score() < int(OBJECTIVE) \
                 and player.get_score() != int(BUSTED):
 
             decision = 0
@@ -353,7 +353,7 @@ class BlackJack:
                     self.print_players(self.players, self.bets)
                     continue
 
-                if player.chips < bet:
+                if player.chips - bet < bet:
                     print("NOT ENOUGH CHIPS")
                     t.sleep(0.5)
                     cls()
@@ -386,7 +386,7 @@ class BlackJack:
                     self.print_players(self.players, self.bets)
                     continue
                     
-                if player.chips < bet:
+                if player.chips - bet < bet:
                     print("NOT ENOUGH CHIPS TO SPLIT THE HAND")
                     t.sleep(0.5)
                     cls()

@@ -72,7 +72,7 @@ class Player(Person):
         while amount > self.chips or amount < 1:
             print("You don't have enough chips to bet, enter a valid number")
             try:
-                amount = int(input("Bet: "))
+                amount = float(input("Bet: "))
             except EOFError as _:
                 exit_signal(1, "signal ctrl+D")
 
