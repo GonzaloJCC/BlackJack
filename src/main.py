@@ -1,16 +1,17 @@
-from blackjack import BlackJack
-from blackjack import cls
-from const import *
+from src.blackjack import BlackJack
+from src.blackjack import cls
+from src.const import *
 import pygame
 import sys
 
 def start_gui():
-    pygame.init
+    pygame.init()
+    cls()
     pygame.display.set_caption(TITLE)
     icon = pygame.image.load("./assets/icon/icon.png")
     pygame.display.set_icon(icon)
 
-    screen = pygame.display.set_mode((1920, 1000))
+    screen = pygame.display.set_mode((HEIGHT, WIDTH))
 
     clock = pygame.time.Clock()
 
@@ -45,7 +46,7 @@ def game_rules():
 def main() -> None:
     cls()
     while True:
-        start_gui()
+        # start_gui()
         print("WELCOME!")
         print("IF YOU WANT TO KNOW THE RULES TYPE 'R'")
         print("IF YOU WANT TO PLAY TYPE 'P'")

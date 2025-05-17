@@ -1,9 +1,9 @@
-from person import *
-from deck import *
+from src.person import *
+from src.deck import *
 import os
 import time as t
-from const import *
-from utils import exit_signal
+from src.const import *
+from src.utils import exit_signal
 from copy import deepcopy
 
 

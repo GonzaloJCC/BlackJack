@@ -1,5 +1,5 @@
-from const import *
-from utils import exit_signal
+from src.const import *
+from src.utils import exit_signal
 
 class Person:
     def __init__(self):

@@ -36,6 +36,7 @@ class Card:
         self.value = value
         self.numericalValue = numerical_value
         self.suit = suit
+        self.img = f"./assets/cards/{self.suit}/{self.value}.png"
 
     def __str__(self) -> str:
         """
