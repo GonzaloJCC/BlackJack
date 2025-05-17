@@ -1,9 +1,30 @@
 from blackjack import BlackJack
 from blackjack import cls
+from const import *
+import pygame
+import sys
+
+def start_gui():
+    pygame.init
+    pygame.display.set_caption(TITLE)
+    icon = pygame.image.load("./assets/icon/icon.png")
+    pygame.display.set_icon(icon)
+
+    screen = pygame.display.set_mode((1920, 1000))
+
+    clock = pygame.time.Clock()
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+        pygame.display.update()
+        clock.tick(FPS)
 
 
-#TODO - make a menu BLACKJACK, press any key to start
-    # input("PRESS ANY KEY TO START: ")
+    
 
 
 def game_rules():
@@ -24,6 +45,7 @@ def game_rules():
 def main() -> None:
     cls()
     while True:
+        start_gui()
         print("WELCOME!")
         print("IF YOU WANT TO KNOW THE RULES TYPE 'R'")
         print("IF YOU WANT TO PLAY TYPE 'P'")

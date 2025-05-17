@@ -18,3 +18,14 @@ HIT = 1
 DOUBLE = 2
 SPLIT = 3
 STAND = 4
+
+
+# GUI
+from screeninfo import get_monitors
+monitor = get_monitors()[0]
+HEIGHT = monitor.width
+WIDTH= monitor.height
+    
+FPS = 60
+
+TITLE = "BlackJack"
