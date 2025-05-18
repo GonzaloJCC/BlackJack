@@ -6,12 +6,12 @@ import sys
 
 def start_gui():
     pygame.init()
-    cls()
+    # cls()
     pygame.display.set_caption(TITLE)
     icon = pygame.image.load("./assets/icon/icon.png")
     pygame.display.set_icon(icon)
 
-    screen = pygame.display.set_mode((HEIGHT, WIDTH))
+    screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
     clock = pygame.time.Clock()
 
@@ -23,7 +23,7 @@ def start_gui():
 
         pygame.display.update()
         clock.tick(FPS)
-
+    pygame.quit()
 
     
 
@@ -46,7 +46,8 @@ def game_rules():
 def main() -> None:
     cls()
     while True:
-        # start_gui()
+        if GUI_FLAG:
+            start_gui()
         print("WELCOME!")
         print("IF YOU WANT TO KNOW THE RULES TYPE 'R'")
         print("IF YOU WANT TO PLAY TYPE 'P'")

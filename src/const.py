@@ -21,11 +21,15 @@ STAND = 4
 
 
 # GUI
-from screeninfo import get_monitors
-monitor = get_monitors()[0]
-HEIGHT = monitor.width
-WIDTH= monitor.height
-    
+# from screeninfo import get_monitors
+# monitor = get_monitors()[0]
+# HEIGHT = monitor.height
+# WIDTH= monitor.width
+
+GUI_FLAG = False
+# GUI_FLAG = True
+WIDTH = 1280
+HEIGHT = 720    
 FPS = 60
 
 TITLE = "BlackJack"
