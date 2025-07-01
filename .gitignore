@@ -10,4 +10,5 @@ tempCodeRunnerFile.py
 notes.txt
 test/
 
-
+# virtual enviroment
+venv/
