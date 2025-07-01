@@ -28,8 +28,8 @@ STAND = 4
 
 GUI_FLAG = False
 # GUI_FLAG = True
-WIDTH = 1280
-HEIGHT = 720    
+WIDTH = 1920
+HEIGHT = 1030
 FPS = 60
 
 TITLE = "BlackJack"
