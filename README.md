@@ -37,7 +37,6 @@ BlackJack/
 │   ├── person.py       # Player and dealer classes
 │   └── utils.py        # Utility functions
 ├── assets/             # Game assets (icons, sounds, cards)
-├── test/               # Unit tests
 ├── README.md           # Project documentation
 └── requirements.txt    # Python dependencies
 ```
