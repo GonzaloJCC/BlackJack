@@ -12,17 +12,49 @@ A blackjack game built in Python. Featuring almost the same functionalities of a
 
 ## Installation and Running the Project
 
-1. Clone the repository
- 
-2. Navigate to the project folder
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
+   ```
 
-3. Create a virtual environment: `python3 -m venv venv`
-   
-4. Activate the virtual environment: `source venv/bin/activate`
+2. Navigate to the project folder:
+   ```bash
+   cd BlackJack
+   ```
 
-5. Install the required modules: `python3 -m pip install -r requirements.txt`
+### Option 1: Using `make`
+If you have `make` installed, simply run the following commands:
 
-6. Start the game: `python3 -m src.main`
+```bash
+# Create the virtual environment and install dependencies
+make install
+
+# Run the game
+make run
+```
+
+### Option 2: Manual Setup
+If you don't have `make`, follow these steps:
+
+3. Create a virtual environment:
+   ```bash
+   python3 -m venv venv
+   ```
+
+4. Activate the virtual environment:
+   ```bash
+   source venv/bin/activate
+   ```
+
+5. Install the required modules:
+   ```bash
+   python3 -m pip install -r requirements.txt
+   ```
+
+6. Start the game:
+   ```bash
+   python3 -m src.main
+   ```
 
 ---
 

@@ -25,7 +25,7 @@ def start_gui():
         clock.tick(FPS)
     pygame.quit()
 
-    
+
 
 
 def game_rules():
