@@ -1,0 +1,4 @@
+[ZoneTransfer]
+ZoneId=3
+ReferrerUrl=https://github.com/microsoft/cascadia-code/releases/tag/v1911.21
+HostUrl=https://objects.githubusercontent.com/github-production-release-asset-2e65be/196284711/af0c6e80-0d25-11ea-9b46-67a3365d261f?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20231102%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20231102T205803Z&X-Amz-Expires=300&X-Amz-Signature=6a0ec41523bbdc17a8d079a239ecba48be436e82b7b27d04f3c981b331614c48&X-Amz-SignedHeaders=host&actor_id=0&key_id=0&repo_id=196284711&response-content-disposition=attachment%3B%20filename%3DCascadia.ttf&response-content-type=application%2Foctet-stream
