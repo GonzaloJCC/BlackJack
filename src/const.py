@@ -20,6 +20,11 @@ DOUBLE = 2
 SPLIT = 3
 STAND = 4
 
+SPEED = 1
+SPEED_FAST = 1.5
+SPEED_ULTRA_FAST = 2
+
+
 
 # GUI
 # from screeninfo import get_monitors
