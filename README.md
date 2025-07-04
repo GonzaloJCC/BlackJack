@@ -3,7 +3,7 @@ A blackjack game built in Python. Featuring almost the same functionalities of a
 
 ---
 
-# Requirements
+## Requirements
 - Python 3.10 or higher
 - [Optional] `make` (to simplify running commands)
 
