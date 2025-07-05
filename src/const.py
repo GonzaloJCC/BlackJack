@@ -32,8 +32,6 @@ SPEED_ULTRA_FAST = 2
 # HEIGHT = monitor.height
 # WIDTH= monitor.width
 
-# GUI_FLAG = False
-GUI_FLAG = True
 WIDTH = 1920
 HEIGHT = 1030
 FPS = 60

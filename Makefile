@@ -7,6 +7,9 @@ install:
 run:
 	@. venv/bin/activate && python3 -m src.main
 
+# Execute the game without a graphic interface
+run-nogui:
+	@. venv/bin/activate && python3 -m src.main --no-gui
 
 # Remove the virtual environment and the pycache folder
 clean:

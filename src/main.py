@@ -1,7 +1,7 @@
 from src.blackjack import BlackJack
 from src.blackjack import cls
-from src.const import *
 from src.graphics import start_gui
+import argparse
 
 
 def game_rules():
@@ -19,10 +19,12 @@ def game_rules():
     x = input("Type anything to exit this menu: ")
     cls()
 
-def main() -> None:
+def main(no_gui=False) -> None:
+
+
     cls()
     while True:
-        if GUI_FLAG:
+        if no_gui is False:
             start_gui()
         print("WELCOME!")
         print("IF YOU WANT TO KNOW THE RULES TYPE 'R'")
@@ -48,4 +50,11 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description="Main program, optionally disables graphic interface")
+    parser.add_argument(
+        "--no-gui",
+        action="store_true",
+        help="Executes the program without graphic interface"
+    )
+    args = parser.parse_args()
+    main(no_gui=args.no_gui)
