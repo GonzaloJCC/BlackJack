@@ -57,16 +57,21 @@ def start_gui():
     pygame.quit()
     sys.exit()
 
-# Function to choose the font to use
-def use_font(font_name: str=None, font_size: int=40, bold: bool=False, italic:bool =False):
-    return pygame.font.SysFont(font_name, font_size, bold, italic)
 
-# Function used to draw a text
-def draw_text(pos_x, pos_y, screen, text, font_name, font_size, text_color=COLOR_WHITE) -> None:
-    img = use_font(font_name, font_size).render(text, True, text_color)
-    screen.blit(img, (pos_x, pos_y))
 
-def menu():
+
+###########
+# SCREENS #
+###########
+
+def play():         # TODO: Complete the play function
+    print("TEST")
+    set_screen(MENU_SCREEN)
+
+def menu() -> None:
+    """
+    Displays the buttons of the main menu
+    """
     global BUTTONS
     if not BUTTONS:  # Only create buttons if they don't exist
         play_button = Button(pos_x=700, pos_y=300, width=500, height=150, button_color=COLOR_BLACK,
@@ -75,30 +80,57 @@ def menu():
                                text="GAME RULES", text_color=COLOR_WHITE, font=FONT_IMPACT, font_size=100, sound=BUTTON_SOUND, callback=lambda: set_screen(RULES_SCREEN))
         BUTTONS.extend([play_button, rules_button])
 
-def play():
-    print("TEST")
-    set_screen(MENU_SCREEN)
+def show_game_rules(screen) -> None:
+    """
+    Displays the game rules.
+    """
+    draw_text(600, 50, screen, "            GAME RULES", FONT_VERDANA, 50, text_color=COLOR_WHITE)
 
-def set_screen(screen_name):
+    pygame.draw.line(screen, COLOR_WHITE, (550, 120), (1350, 120), 3)
+
+    # The game rules
+    rules = [
+        "Dealer must stand on all 17",
+        "A split after another split is not allowed",
+        "A double after a split is not allowed",
+        "The game is played with 6 decks",
+        "Every 15 rounds the decks will be swapped with 6 new ones",
+        "A win with blackjack will multiply the bet by 2.5",
+        "A win without blackjack will multiply the bet by 2"
+    ]
+
+    # Draw each rule
+    y_offset = 150
+    for rule in rules:
+        draw_text(600, y_offset, screen, f"- {rule}", FONT_VERDANA, 30, text_color=COLOR_WHITE)
+        y_offset += 50
+
+    pygame.draw.rect(screen, COLOR_WHITE, (550, y_offset + 20, 800, 3))
+    draw_text(545, y_offset + 70, screen, "PRESS ESC TO RETURN TO THE MAIN MENU.", FONT_VERDANA, 50, text_color=COLOR_WHITE)
+
+
+######################
+# AUXILIAR FUNCTIONS #
+######################
+
+def set_screen(screen_name) -> None:
+    """
+    Sets the screen to be displayed
+    """
     global CURRENT_SCREEN
     CURRENT_SCREEN = screen_name
     global BUTTONS
     BUTTONS = []
 
-def go_to_rules():
-    global CURRENT_SCREEN
-    CURRENT_SCREEN = RULES_SCREEN
-    global BUTTONS
-    BUTTONS = []
+def use_font(font_name: str=None, font_size: int=40, bold: bool=False, italic:bool =False):
+    """
+    Loads a font and returns it
+    """
+    return pygame.font.SysFont(font_name, font_size, bold, italic)
 
-def show_game_rules(screen) -> None:
-
-    draw_text(600, 100, screen, "GAME RULES:", FONT_VERDANA, 40)
-    draw_text(600, 200, screen, "Dealer must stand on all 17", FONT_VERDANA, 30)
-    draw_text(600, 250, screen, "A split after another split is not allowed", FONT_VERDANA, 30)
-    draw_text(600, 300, screen, "A double after a split is not allowed", FONT_VERDANA, 30)
-    draw_text(600, 350, screen, "The game is played with 6 decks,", FONT_VERDANA, 30)
-    draw_text(600, 390, screen, "     every 15 rounds the decks will be swapped with 6 new ones", FONT_VERDANA, 30)
-    draw_text(600, 440, screen, "A win with blackjack will multiply the bet by 2.5", FONT_VERDANA, 30)
-    draw_text(600, 490, screen, "A win without blackjack will multiply the bet by 2", FONT_VERDANA, 30)
-    draw_text(600, 540, screen, "PRESS ESC TO RETURN TO MAIN MENU", FONT_VERDANA, 30)
+def draw_text(pos_x, pos_y, screen, text, font_name, font_size, text_color=COLOR_WHITE) -> None:
+    """
+    Draws the input text with the giving parameters
+    """
+    img = use_font(font_name, font_size).render(text, True, text_color)
+    screen.blit(img, (pos_x, pos_y))
