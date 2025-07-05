@@ -33,6 +33,12 @@ FPS = 60
 
 TITLE = "BlackJack"
 
+# Screen options
+MENU_SCREEN = "Menu"
+RULES_SCREEN = "Rules"
+PLAY_SCREEN = "Play"
+
+
 # Color options
 COLOR_BLACK   = (0, 0, 0)
 COLOR_WHITE   = (255, 255, 255)
@@ -66,3 +72,7 @@ FONT_TREBUCHET = 'trebuchetms'
 FONT_LUCIDA_CONSOLE = 'lucidaconsole'
 FONT_TAHOMA = 'tahoma'
 FONT_CALIBRI = 'calibri'
+
+# Sounds
+BUTTON_SOUND = './assets/sounds/button_click.wav'
+
