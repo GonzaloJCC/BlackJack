@@ -14,7 +14,7 @@ def game_rules():
     print("\t-> The game is played with 6 decks, every 15 rounds the decks will be swapped with" \
     "\n\t   6 new ones")
     print("\t-> A win with blackjack will multiply the bet by 2.5")
-    print("\t-> A win withoyt blackjack will multyply the bet by 2")
+    print("\t-> A win without blackjack will multiply the bet by 2")
     print("\n\n\n")
     x = input("Type anything to exit this menu: ")
     cls()
