@@ -1,6 +1,6 @@
 from src.blackjack import BlackJack
 from src.blackjack import cls
-from src.graphics import start_gui
+from src.graphics import Graphics
 import argparse
 
 
@@ -23,9 +23,14 @@ def main(no_gui=False) -> None:
 
 
     cls()
+    print("Game Running...")
+    if no_gui is False:
+            gr = Graphics()
+            gr.start_gui()
+            return
     while True:
-        if no_gui is False:
-            start_gui()
+        
+        
         print("WELCOME!")
         print("IF YOU WANT TO KNOW THE RULES TYPE 'R'")
         print("IF YOU WANT TO PLAY TYPE 'P'")

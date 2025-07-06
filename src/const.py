@@ -37,7 +37,8 @@ TITLE = "BlackJack"
 MENU_SCREEN = "Menu"
 RULES_SCREEN = "Rules"
 PLAY_SCREEN = "Play"
-SELECT_PLAYERS_SCREEN = "Select"
+SELECT_PLAYER_AMOUNT_SCREEN = "Select_amount"
+SELECT_PLAYERS_NAMES_SCREEN = "Select_names"
 
 
 # Color options

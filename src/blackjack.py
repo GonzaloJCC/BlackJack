@@ -71,12 +71,19 @@ class BlackJack:
         t.sleep(SPEED*1)
         cls()
 
-    def start_game(self) -> None:
+    def start_game(self, amount=None, names=None) -> None:
         """
         Starts the game by allowing the user to select the number of players
         and their names.
         :return: None
         """
+        if amount and names: # GUI enabled
+            self.player_amount = amount
+            for name in names:
+                self.players.append(Player(name))
+            return
+        
+        # No GUI
         while True:
             try:
                 self.player_amount = int(input("Enter the amount of players (1-4): "))
@@ -89,11 +96,8 @@ class BlackJack:
                 exit_signal(1, "signal ctrl+D")
 
         #select player names
+        names = []
         for i in range (0, self.player_amount):
-            names = []
-            for player in self.players:
-                names.append(player.name)
-
             x = 0
             name = ""
             while x == 0:
