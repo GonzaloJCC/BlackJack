@@ -4,13 +4,14 @@ from src.blackjack import BlackJack
 import pygame
 import sys
 
-class Graphics():
+class Graphics(BlackJack):
     # GUI variables
 
     def __init__(self) -> None:
+        super().__init__()
         self.buttons = []
         self.current_screen = MENU_SCREEN
-        self.player_amount: int = 0
+
 
     # Function in charge of the graphic section
     def start_gui(self):
@@ -24,7 +25,6 @@ class Graphics():
 
         clock = pygame.time.Clock()
 
-        bj = BlackJack()
         RUNNING = True
         while RUNNING:
 
@@ -75,14 +75,30 @@ class Graphics():
         """
         Returns the ammount of players and their names
         """
+        
         self.draw_text(600, 50, screen, "Enter the amount of players", FONT_VERDANA, 50, text_color=COLOR_WHITE)
 
-        one_button = Button(pos_x=700, pos_y=300, width=500, height=150, button_color=COLOR_BLACK,
-                                text="1", text_color=COLOR_WHITE, font=FONT_IMPACT, font_size=100, sound=BUTTON_SOUND)
-        
+        one_button = Button(pos_x=700, pos_y=300, width=150, height=150, button_color=COLOR_BLACK,
+                                text="1", text_color=COLOR_WHITE, font=FONT_IMPACT, font_size=100, sound=BUTTON_SOUND, callback=lambda: self.set_player_amount(1))
+        two_button = Button(pos_x=1000, pos_y=300, width=150, height=150, button_color=COLOR_BLACK,
+                                text="2", text_color=COLOR_WHITE, font=FONT_IMPACT, font_size=100, sound=BUTTON_SOUND, callback=lambda: self.set_player_amount(2))
+        three_button = Button(pos_x=700, pos_y=600, width=150, height=150, button_color=COLOR_BLACK,
+                                text="3", text_color=COLOR_WHITE, font=FONT_IMPACT, font_size=100, sound=BUTTON_SOUND, callback=lambda: self.set_player_amount(3))
+        four_button = Button(pos_x=1000, pos_y=600, width=150, height=150, button_color=COLOR_BLACK,
+                                text="4", text_color=COLOR_WHITE, font=FONT_IMPACT, font_size=100, sound=BUTTON_SOUND, callback=lambda: self.set_player_amount(4))
+
+        self.buttons.extend([one_button, two_button, three_button, four_button])
+
+    def set_player_amount(self, amount: int):
+            self.player_amount = amount
+            self.set_screen(SELECT_PLAYERS_NAMES_SCREEN)
+
 
     def select_player_names(self, screen):
-        pass
+        print("Number of players:")
+        print(self.player_amount)
+        pygame.quit()
+        sys.exit()
 
 
     def play(self):         # TODO: Complete the play function
