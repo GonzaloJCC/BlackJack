@@ -27,8 +27,8 @@ SPEED_ULTRA_FAST = 2
 # GUI #
 #######
 
-WIDTH = 1920
-HEIGHT = 1030
+WIDTH = 1900
+HEIGHT = 1020
 FPS = 60
 
 TITLE = "BlackJack"
