@@ -44,7 +44,7 @@ def start_gui():
             menu()
         elif CURRENT_SCREEN == RULES_SCREEN:
             show_game_rules(screen)
-        elif CURRENT_SCREEN == PLAY_SCREEN:
+        elif CURRENT_SCREEN == SELECT_PLAYERS_SCREEN:
             play()
 
         # Draw buttons
@@ -75,7 +75,7 @@ def menu() -> None:
     global BUTTONS
     if not BUTTONS:  # Only create buttons if they don't exist
         play_button = Button(pos_x=700, pos_y=300, width=500, height=150, button_color=COLOR_BLACK,
-                              text="PLAY", text_color=COLOR_WHITE, font=FONT_IMPACT, font_size=100, sound=BUTTON_SOUND, callback=lambda: set_screen(PLAY_SCREEN))
+                              text="PLAY", text_color=COLOR_WHITE, font=FONT_IMPACT, font_size=100, sound=BUTTON_SOUND, callback=lambda: set_screen(SELECT_PLAYERS_SCREEN))
         rules_button = Button(pos_x=700, pos_y=500, width=500, height=150, button_color=COLOR_BLACK,
                                text="GAME RULES", text_color=COLOR_WHITE, font=FONT_IMPACT, font_size=100, sound=BUTTON_SOUND, callback=lambda: set_screen(RULES_SCREEN))
         BUTTONS.extend([play_button, rules_button])
@@ -128,7 +128,7 @@ def use_font(font_name: str=None, font_size: int=40, bold: bool=False, italic:bo
     """
     return pygame.font.SysFont(font_name, font_size, bold, italic)
 
-def draw_text(pos_x, pos_y, screen, text, font_name, font_size, text_color=COLOR_WHITE) -> None:
+def draw_text(pos_x, pos_y, screen, text, font_name: str=None, font_size: int=40, text_color=COLOR_WHITE) -> None:
     """
     Draws the input text with the giving parameters
     """
