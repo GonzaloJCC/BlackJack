@@ -1,14 +1,17 @@
-#not needed folder
+# not needed folder
 .vscode
 __pycache__
 tempCodeRunnerFile.py
 
-#pycharm folder
+# pycharm folder
 .idea/
 
-#file for future implementations
+# file for future implementations
 notes.txt
 test/
 
 # virtual enviroment
 venv/
+
+# fonts and sounds not needed files
+*:[Zz]one.Identifier
