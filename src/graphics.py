@@ -13,7 +13,6 @@ class Graphics(BlackJack):
         self.buttons = []
         self.current_screen = MENU_SCREEN
 
-
     # Function in charge of the graphic section
     def start_gui(self):
 
@@ -66,11 +65,48 @@ class Graphics(BlackJack):
         sys.exit()
 
 
-
-
     ###########
     # SCREENS #
     ###########
+
+    def menu(self) -> None:
+        """
+        Displays the self.buttons of the main menu
+        """
+        if not self.buttons:  # Only create self.buttons if they don't exist
+            play_button = Button(pos_x=700, pos_y=300, width=500, height=150, button_color=COLOR_BLACK,
+                                text="PLAY", text_color=COLOR_WHITE, font=FONT_IMPACT, font_size=100, sound=BUTTON_SOUND, callback=lambda: self.set_screen(SELECT_PLAYER_AMOUNT_SCREEN))
+            rules_button = Button(pos_x=700, pos_y=500, width=500, height=150, button_color=COLOR_BLACK,
+                                text="GAME RULES", text_color=COLOR_WHITE, font=FONT_IMPACT, font_size=100, sound=BUTTON_SOUND, callback=lambda: self.set_screen(RULES_SCREEN))
+            self.buttons.extend([play_button, rules_button])
+
+    def show_game_rules(self, screen) -> None:
+        """
+        Displays the game rules.
+        """
+        self.draw_text(600, 50, screen, "            GAME RULES", FONT_VERDANA, 50, text_color=COLOR_WHITE)
+
+        pygame.draw.line(screen, COLOR_WHITE, (550, 120), (1350, 120), 3)
+
+        # The game rules
+        rules = [
+            "Dealer must stand on all 17",
+            "A split after another split is not allowed",
+            "A double after a split is not allowed",
+            "The game is played with 6 decks",
+            "Every 15 rounds the decks will be swapped with 6 new ones",
+            "A win with blackjack will multiply the bet by 2.5",
+            "A win without blackjack will multiply the bet by 2"
+        ]
+
+        # Draw each rule
+        y_offset = 150
+        for rule in rules:
+            self.draw_text(600, y_offset, screen, f"- {rule}", FONT_VERDANA, 30, text_color=COLOR_WHITE)
+            y_offset += 50
+
+        pygame.draw.rect(screen, COLOR_WHITE, (550, y_offset + 20, 800, 3))
+        self.draw_text(545, y_offset + 70, screen, "PRESS ESC TO RETURN TO THE MAIN MENU.", FONT_VERDANA, 50, text_color=COLOR_WHITE)
 
     def select_player_amount(self, screen):
         """
@@ -93,7 +129,6 @@ class Graphics(BlackJack):
     def set_player_amount(self, amount: int):
             self.player_amount = amount
             self.set_screen(SELECT_PLAYERS_NAMES_SCREEN)
-
 
     def select_player_names(self, screen):
         names = []
@@ -208,47 +243,6 @@ class Graphics(BlackJack):
             # self.deal(True)
 
         
-
-    def menu(self) -> None:
-        """
-        Displays the self.buttons of the main menu
-        """
-        if not self.buttons:  # Only create self.buttons if they don't exist
-            play_button = Button(pos_x=700, pos_y=300, width=500, height=150, button_color=COLOR_BLACK,
-                                text="PLAY", text_color=COLOR_WHITE, font=FONT_IMPACT, font_size=100, sound=BUTTON_SOUND, callback=lambda: self.set_screen(SELECT_PLAYER_AMOUNT_SCREEN))
-            rules_button = Button(pos_x=700, pos_y=500, width=500, height=150, button_color=COLOR_BLACK,
-                                text="GAME RULES", text_color=COLOR_WHITE, font=FONT_IMPACT, font_size=100, sound=BUTTON_SOUND, callback=lambda: self.set_screen(RULES_SCREEN))
-            self.buttons.extend([play_button, rules_button])
-
-    def show_game_rules(self, screen) -> None:
-        """
-        Displays the game rules.
-        """
-        self.draw_text(600, 50, screen, "            GAME RULES", FONT_VERDANA, 50, text_color=COLOR_WHITE)
-
-        pygame.draw.line(screen, COLOR_WHITE, (550, 120), (1350, 120), 3)
-
-        # The game rules
-        rules = [
-            "Dealer must stand on all 17",
-            "A split after another split is not allowed",
-            "A double after a split is not allowed",
-            "The game is played with 6 decks",
-            "Every 15 rounds the decks will be swapped with 6 new ones",
-            "A win with blackjack will multiply the bet by 2.5",
-            "A win without blackjack will multiply the bet by 2"
-        ]
-
-        # Draw each rule
-        y_offset = 150
-        for rule in rules:
-            self.draw_text(600, y_offset, screen, f"- {rule}", FONT_VERDANA, 30, text_color=COLOR_WHITE)
-            y_offset += 50
-
-        pygame.draw.rect(screen, COLOR_WHITE, (550, y_offset + 20, 800, 3))
-        self.draw_text(545, y_offset + 70, screen, "PRESS ESC TO RETURN TO THE MAIN MENU.", FONT_VERDANA, 50, text_color=COLOR_WHITE)
-
-
     ######################
     # AUXILIAR FUNCTIONS #
     ######################
