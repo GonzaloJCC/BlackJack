@@ -53,7 +53,7 @@ class Graphics(BlackJack):
             elif self.current_screen == SELECT_PLAYERS_NAMES_SCREEN:
                 self.select_player_names(screen)
             elif self.current_screen == PLAY_SCREEN:
-                self.play()
+                self.play(screen)
 
             # Draw self.buttons
             for button in self.buttons:
@@ -135,11 +135,79 @@ class Graphics(BlackJack):
         self.start_game(self.player_amount, names)
         self.set_screen(PLAY_SCREEN)
 
+    def select_bets(self, screen):
+        bets = []
+        tb = Text_box(pos_x=750, pos_y=400, width=400, height=70)
+        current_player = 0
+        error_message = ""
 
-    def play(self):         # TODO: Complete the play function
-        print("TEST")
-        
+        while current_player < self.player_amount:
+            screen.fill(COLOR_DARK_GRAY)
+            self.draw_text(600, 300, screen, f"PLAYER {self.players[current_player].name.upper()} ({self.players[current_player].chips} Chips), bet: ", FONT_VERDANA, 40, text_color=COLOR_WHITE)
+            tb.draw(screen)
+            if error_message:
+                self.draw_text(600, 500, screen, error_message, FONT_VERDANA, 40, text_color=COLOR_RED)
+
+            pygame.display.update()
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+                result = tb.handle_event(event)
+                if result is not None:
+                    try:
+                        bet = round(float(result), 2)
+                        if bet <= 0:
+                            error_message = "BET MUST BE GREATER THAN 0"
+                            tb.clear()
+                        elif bet > self.players[current_player].chips:
+                            error_message = "BET MUST NOT EXCEED AVAILABLE CHIPS"
+                            tb.clear()
+                        else:
+                            bets.append(bet)
+                            current_player += 1
+                            tb.clear()
+                            error_message = ""
+                    except ValueError:
+                        error_message = "BET MUST BE A VALID NUMBER"
+                        tb.clear()
+
+        self.initial_bets(bets)
+        screen.fill(COLOR_DARK_GRAY)
+        #Delete after:
         self.set_screen(MENU_SCREEN)
+
+    def play(self, screen):         # TODO: Complete the play function
+        print("TEST")
+        while True:
+            #the players place their bets for this game
+            self.select_bets(screen)
+
+            #the decks are shuffled and initialized
+            self.random_decks(gui=True)
+            print("TEST2")
+            print(self.bets)
+            break
+
+            # #prints the table status
+            # self.print_players(self.players, self.bets) # call self.display board(screen)
+            # t.sleep(SPEED*0.5)
+            
+            # #Deal card 1 to players
+            # self.deal(False)
+            
+            # #Deal card 1 to dealer
+            # self.deal(True)
+            
+            # #Deal card 2 to players
+            # self.deal(False)
+            
+            # #Deal card 2 to dealer
+            # self.deal(True)
+
+        
 
     def menu(self) -> None:
         """

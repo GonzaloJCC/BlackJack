@@ -44,17 +44,21 @@ class BlackJack:
         self.decks: list[Deck] = []
         self.dealer: Dealer = Dealer()
 
-    def initial_bets(self):
+    def initial_bets(self, gui_bets=None):
         """
         Allows players to place their initial bets for the game.
         :return: None
         """
+        if gui_bets:
+            self.bets = deepcopy(gui_bets)
+            return
+
         print("PLACE YOUR BETS")
         for i in range(len(self.players)):
             while 1:
                 try:
                     bet = round(float(input(f"PLAYER {self.players[i].name.upper()} ({self.players[i].chips} Chips), bet: ")), 2)
-                    if bet < 0 or bet > self.players[i].chips:
+                    if bet <= 0 or bet > self.players[i].chips:
                         raise ValueError("")
                     break
                 except ValueError as _:
@@ -83,7 +87,6 @@ class BlackJack:
                 self.players.append(Player(name))
                 self.bets.append(0)
             self.players_copy = deepcopy(self.players)
-            
             return
         
         # No GUI
@@ -240,7 +243,7 @@ class BlackJack:
                 
 
     #DECK MANAGEMENT
-    def random_decks(self) -> None:
+    def random_decks(self, gui: bool =None) -> None:
         """
         Initializes and shuffles the decks for the game.
         :return: None
@@ -253,6 +256,8 @@ class BlackJack:
             for i in range(NUMBER_OF_DECKS):
                 self.decks.append(Deck())
             self.shuffle()
+        if gui:
+            return
         cls()
 
     def shuffle(self) -> None:
