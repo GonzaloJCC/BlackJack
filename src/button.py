@@ -26,7 +26,7 @@ class Button:
         text_rect = text_surface.get_rect(center=self.rect.center)
         surface.blit(text_surface, text_rect)
 
-    # What wil happen when the button is clicked TODO: create a pygame event for the button
+    # What wil happen when the button is clicked
     def clicked(self, event):                   
         if event.type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(event.pos):
             if self.sound:

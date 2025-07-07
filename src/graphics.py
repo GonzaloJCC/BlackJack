@@ -1,5 +1,6 @@
 from src.const import *
 from src.button import Button
+from src.text_box import Text_box
 from src.blackjack import BlackJack
 import pygame
 import sys
@@ -95,14 +96,49 @@ class Graphics(BlackJack):
 
 
     def select_player_names(self, screen):
-        print("Number of players:")
-        print(self.player_amount)
-        pygame.quit()
-        sys.exit()
+        names = []
+        tb = Text_box(pos_x=750, pos_y=400, width=400, height=70)
+        current_player = 0
+        error_message = ""
+
+        while current_player < self.player_amount:
+            screen.fill(COLOR_DARK_GRAY)
+            self.draw_text(600, 300, screen, f"Enter player {current_player + 1} name: (press enter to confirm)", FONT_VERDANA, 40, text_color=COLOR_WHITE)
+            tb.draw(screen)
+            if error_message:
+                self.draw_text(600, 500, screen, error_message, FONT_VERDANA, 40, text_color=COLOR_RED)
+
+            pygame.display.update()
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+                result = tb.handle_event(event)
+                if result is not None:
+                    if result in names:
+                        error_message = "NAMES MUST BE UNIQUE, PICK ANOTHER NAME"
+                        tb.clear()
+                    elif "&" in result:
+                        error_message = "'&' CHARACTER NOT ALLOWED"
+                        tb.clear()
+                    elif result.strip() == "":
+                        error_message = "NAME MUST NOT BE EMPTY"
+                        tb.clear()
+                    else:
+                        names.append(result)
+                        current_player += 1
+                        tb.clear()
+                        error_message = ""
+
+        self.start_game(self.player_amount, names)
+        self.set_screen(PLAY_SCREEN)
 
 
     def play(self):         # TODO: Complete the play function
         print("TEST")
+        
         self.set_screen(MENU_SCREEN)
 
     def menu(self) -> None:

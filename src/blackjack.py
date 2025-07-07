@@ -81,6 +81,9 @@ class BlackJack:
             self.player_amount = amount
             for name in names:
                 self.players.append(Player(name))
+                self.bets.append(0)
+            self.players_copy = deepcopy(self.players)
+            
             return
         
         # No GUI
@@ -112,13 +115,14 @@ class BlackJack:
                     print("'&' CHARACTER NOT ALLOWED")
                 elif name in ["", "", '', ' '] or len(name) == 0:
                     print("NAME MUST NOT BE EMPTY")
+                elif len(name) > 12:
+                    print("NAME MUST BE 12 CHARACTERS OR LESS")
                 else:
                     x = 1
                     
             self.players.append(Player(name))
-            self.players_copy = deepcopy(self.players)
             self.bets.append(0)
-
+        self.players_copy = deepcopy(self.players)
         #every player makes the initial bet
         cls()
 
