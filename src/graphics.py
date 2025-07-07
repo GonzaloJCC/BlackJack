@@ -143,7 +143,7 @@ class Graphics(BlackJack):
 
         while current_player < self.player_amount:
             screen.fill(COLOR_DARK_GRAY)
-            self.draw_text(600, 300, screen, f"PLAYER {self.players[current_player].name.upper()} ({self.players[current_player].chips} Chips), bet: ", FONT_VERDANA, 40, text_color=COLOR_WHITE)
+            self.draw_text(600, 300, screen, f"PLAYER '{self.players[current_player].name.upper()}' ({self.players[current_player].chips} Chips), bet: ", FONT_VERDANA, 40, text_color=COLOR_WHITE)
             tb.draw(screen)
             if error_message:
                 self.draw_text(600, 500, screen, error_message, FONT_VERDANA, 40, text_color=COLOR_RED)

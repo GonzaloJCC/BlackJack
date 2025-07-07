@@ -47,8 +47,13 @@ class Text_box:
             elif event.key == pygame.K_RETURN:
                 # If enter key is pressed return the string
                 return self.input
-            elif event.key == pygame.K_ESCAPE:
-                # esc character is not valid
+            elif event.key in [pygame.K_ESCAPE, pygame.K_INSERT, pygame.K_DELETE, pygame.K_HOME,
+                                pygame.K_END, pygame.K_PAGEUP, pygame.K_PAGEDOWN, pygame.K_PRINT,
+                                  pygame.K_CAPSLOCK, pygame.K_NUMLOCK, pygame.K_SCROLLLOCK,
+                                    pygame.K_F1, pygame.K_F2, pygame.K_F3, pygame.K_F4,
+                                      pygame.K_F5, pygame.K_F6, pygame.K_F7, pygame.K_F8,
+                                        pygame.K_F9, pygame.K_F10, pygame.K_F11, pygame.K_F12]:
+                # esc and other characters are not valid
                 pass
             else:
                 if len(self.input) >= self.max_length:
