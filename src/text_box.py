@@ -4,7 +4,7 @@ import os
 
 class Text_box:
 
-    def __init__(self, pos_x, pos_y, width=100, height=100, text_color=COLOR_WHITE, font="./assets/fonts/Cascadia.ttf", font_size=50, max_length=12):
+    def __init__(self, pos_x, pos_y, width=100, height=100, text_color=COLOR_WHITE, font="./assets/fonts/Cascadia.ttf", font_size=50, max_length=8):
         self.rect = pygame.Rect(pos_x, pos_y, width, height)
         self.text_color = text_color
         self.active = False
@@ -15,7 +15,7 @@ class Text_box:
             self.font = pygame.font.Font(font, font_size)
         else:
             self.font = pygame.font.SysFont(font, font_size)
-        self.max_length = 12
+        self.max_length = max_length
 
     def draw(self, surface):
         """

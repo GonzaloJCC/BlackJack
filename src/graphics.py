@@ -132,7 +132,7 @@ class Graphics(BlackJack):
 
     def select_player_names(self, screen):
         names = []
-        tb = Text_box(pos_x=750, pos_y=400, width=400, height=70)
+        tb = Text_box(pos_x=800, pos_y=400, width=400, height=70)
         current_player = 0
         error_message = ""
 
@@ -178,10 +178,10 @@ class Graphics(BlackJack):
 
         while current_player < self.player_amount:
             screen.fill(COLOR_DARK_GRAY)
-            self.draw_text(600, 300, screen, f"PLAYER '{self.players[current_player].name.upper()}' ({self.players[current_player].chips} Chips), bet: ", FONT_VERDANA, 40, text_color=COLOR_WHITE)
+            self.draw_text(700, 300, screen, f"PLAYER '{self.players[current_player].name.upper()}' ({self.players[current_player].chips} Chips), bet: ", FONT_VERDANA, 40, text_color=COLOR_WHITE)
             tb.draw(screen)
             if error_message:
-                self.draw_text(600, 500, screen, error_message, FONT_VERDANA, 40, text_color=COLOR_RED)
+                self.draw_text(700, 500, screen, error_message, FONT_VERDANA, 40, text_color=COLOR_RED)
 
             pygame.display.update()
 
@@ -214,7 +214,41 @@ class Graphics(BlackJack):
         #Delete after:
         self.set_screen(MENU_SCREEN)
 
-    def play(self, screen):         # TODO: Complete the play function
+    def print_actual_board(self, screen):  #TODO: buttons, etc.
+        screen.fill(COLOR_BOARD)
+        # print all players
+        for i, player in enumerate(self.players):
+            self.draw_text(40 + i * 250, 520, screen, f"{player.name.upper()} - {self.bets[i]}$", FONT_VERDANA, 25, text_color=COLOR_BLACK)
+            score= player.get_score()
+            score_string = f"SCORE: {score}" if score != -1 else "BUSTED"
+            self.draw_text(40 + i * 250+65, 580, screen, f"{score_string}", FONT_VERDANA, 25, text_color=COLOR_BLACK)
+            pygame.draw.rect(screen, COLOR_CARD_HOLDER, (40 + i * 250, 620, 230, 400))# (x, y, width, height)
+            if player.hand:
+                j=0
+                for card in player.hand:
+                    screen.blit(pygame.image.load(card.img), ((45 + i * 250)+j/3, 780-j))# (x, y)
+                    j+=30
+
+        # print the dealer
+        score = self.dealer.get_score()
+        score = score if score != -1 else "BUSTED"
+        self.draw_text(800, 10, screen, f"DEALER'S SCORE: {score}", FONT_VERDANA, 25, text_color=COLOR_BLACK)
+        pygame.draw.rect(screen, COLOR_CARD_HOLDER, (350, 50, 1300, 300))# (x, y, width, height)
+        if self.dealer.hand:
+            j=0
+            for card in self.dealer.hand:
+                if len(self.dealer.hand) == 2 and j == 80:
+                    screen.blit(pygame.image.load("./assets/cards/reverse.png"), ((300+160/2+j), 80))# (x, y)
+                else:
+                    screen.blit(pygame.image.load(card.img), ((300+160/2+j), 80))# (x, y)
+                j+=80
+
+        # print the deck
+        screen.blit(pygame.image.load("./assets/cards/deck.png"), (1700, 90))# (x, y)
+
+        pygame.display.update()
+
+    def play(self, screen):
         print("TEST")
         while True:
             #the players place their bets for this game
@@ -222,25 +256,32 @@ class Graphics(BlackJack):
 
             #the decks are shuffled and initialized
             self.random_decks(gui=True)
-            print("TEST2")
-            print(self.bets)
-            break
 
             # #prints the table status
-            # self.print_players(self.players, self.bets) # call self.display board(screen)
+            self.print_players(self.players, self.bets) # call self.display board(screen)
             # t.sleep(SPEED*0.5)
             
-            # #Deal card 1 to players
-            # self.deal(False)
+            #Deal card 1 to players
+            self.deal(False)
             
-            # #Deal card 1 to dealer
-            # self.deal(True)
+            #Deal card 1 to dealer
+            self.deal(True)
             
-            # #Deal card 2 to players
-            # self.deal(False)
+            #Deal card 2 to players
+            self.deal(False)
+            self.deal(False)
+            self.deal(False)
+            self.deal(False)
             
-            # #Deal card 2 to dealer
-            # self.deal(True)
+            #Deal card 2 to dealer
+            self.deal(True)
+            self.deal(True)
+            self.deal(True)
+            self.deal(True)
+            self.print_actual_board(screen)
+
+            while True:
+                ...
 
         
     ######################

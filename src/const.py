@@ -61,6 +61,9 @@ COLOR_LIME    = (0, 255, 0)
 COLOR_NAVY    = (0, 0, 128)
 COLOR_GOLD    = (255, 215, 0)
 
+COLOR_BOARD   = (0, 128, 0)
+COLOR_CARD_HOLDER = (0, 64, 0)
+
 # Font options
 FONT_ARIAL = 'arial'
 FONT_ARIAL_BLACK = 'arialblack'
