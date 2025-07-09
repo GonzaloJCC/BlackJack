@@ -262,7 +262,7 @@ class Graphics(BlackJack):
         pygame.display.update()
 
     def play(self, screen):
-        print("TEST")
+        clock = pygame.time.Clock()
         while True:
             #the players place their bets for this game
             self.select_bets(screen)
@@ -298,6 +298,7 @@ class Graphics(BlackJack):
 
 
             for i, player in enumerate(self.players):
+                self.buttons = []
                 while player.get_score() < int(OBJECTIVE) and player.get_score() != int(BUSTED):
                     self.bet_buttons(player, i)
                     for event in pygame.event.get():
@@ -318,28 +319,30 @@ class Graphics(BlackJack):
                     if self.STAND_FLAG:
                         self.STAND_FLAG = False
                         break
+                    pygame.display.update()
+                    clock.tick(FPS)
 
             #the dealer gets the cards
             # self.dealers_turn()
             # self.end_game()
         
     def bet_buttons(self, player, i): #TODO: speed button
-        self.buttons = []
-        hit_button = Button(40 + i * 250, 440, 50, 30, COLOR_CYAN, "HIT", COLOR_BLACK, font_size=10, callback=lambda: self.choose_move_gui(player, self.bets[i], HIT))
-        stand_button = Button(100 + i * 250, 440, 50, 30, COLOR_CYAN, "STAND", COLOR_BLACK, font_size=10, callback=lambda: self.choose_move_gui(player, self.bets[i], STAND))
-        self.buttons.append(hit_button)
-        self.buttons.append(stand_button)
+        if not self.buttons:
+            hit_button = Button(40 + i * 250, 440, 50, 30, COLOR_CYAN, "HIT", COLOR_BLACK, font_size=10, callback=lambda: self.choose_move_gui(player, self.bets[i], HIT))
+            stand_button = Button(100 + i * 250, 440, 50, 30, COLOR_CYAN, "STAND", COLOR_BLACK, font_size=10, callback=lambda: self.choose_move_gui(player, self.bets[i], STAND))
+            self.buttons.append(hit_button)
+            self.buttons.append(stand_button)
 
-        if len(player.hand) != 2 or "&" in player.name or (player.chips - self.bets[i] < self.bets[i]):
-            return
+            if len(player.hand) != 2 or "&" in player.name or (player.chips - self.bets[i] < self.bets[i]):
+                return
 
-        double_button = Button(40 + i * 250, 480, 50, 30, COLOR_CYAN, "DOUBLE", COLOR_BLACK, font_size=10, callback=lambda: self.choose_move_gui(player, self.bets[i], DOUBLE))
-        self.buttons.append(double_button)
+            double_button = Button(40 + i * 250, 480, 50, 30, COLOR_CYAN, "DOUBLE", COLOR_BLACK, font_size=10, callback=lambda: self.choose_move_gui(player, self.bets[i], DOUBLE))
+            self.buttons.append(double_button)
 
-        if player.hand[0].value != player.hand[1].value:
-            return
-        split_button = Button(100 + i * 250, 480, 50, 30, COLOR_CYAN, "SPLIT", COLOR_BLACK, font_size=10, callback=lambda: self.choose_move_gui(player, self.bets[i], SPLIT))
-        self.buttons.append(split_button)
+            if player.hand[0].value != player.hand[1].value:
+                return
+            split_button = Button(100 + i * 250, 480, 50, 30, COLOR_CYAN, "SPLIT", COLOR_BLACK, font_size=10, callback=lambda: self.choose_move_gui(player, self.bets[i], SPLIT))
+            self.buttons.append(split_button)
 
     ######################
     # AUXILIAR FUNCTIONS #
@@ -443,3 +446,4 @@ class Graphics(BlackJack):
 
         elif decision == STAND:
             self.STAND_FLAG = True
+        self.buttons = []

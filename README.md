@@ -87,3 +87,4 @@ BlackJack/
 
 ## Known Issues:
 - Players cannot bet when their chips are between 0 and 1.
+- Action buttons blink a lot.
