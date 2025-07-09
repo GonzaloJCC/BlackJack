@@ -224,8 +224,9 @@ class Graphics(BlackJack):
         for i, player in enumerate(self.players):
             self.draw_text(40 + i * 250, 520, screen, f"{player.name.upper()} - {self.bets[i]}$", FONT_VERDANA, 25, text_color=COLOR_BLACK)
             score = player.get_score()
-            if score == int(OBJECTIVE):
-                score = "BLACKJACK!"
+            score_string = ""
+            if score == int(OBJECTIVE) and len(player.hand) == 2:
+                score_string = "BLACKJACK!"
             else:
                 score_string = f"SCORE: {score}" if score != -1 else "BUSTED"
             
@@ -285,6 +286,17 @@ class Graphics(BlackJack):
             #Deal card 2 to dealer
             self.deal_gui(True, screen)
 
+            # #if dealer has BlackJack all the players without BJ will lose their bets
+            # # and the ones with BJ will get their bet returned
+            # if self.dealer.has_blackjack():
+            #     self.dealers_turn()
+            #     screen.fill(COLOR_BLACK)
+            #     self.draw_text(600, 50, screen, "DEALER HAS BLACKJACK", FONT_VERDANA, 50, text_color=COLOR_WHITE)
+            #     self.end_game()
+            #     t.sleep(SPEED)
+            #     continue # players bet in the new round
+
+
             for i, player in enumerate(self.players):
                 while player.get_score() < int(OBJECTIVE) and player.get_score() != int(BUSTED):
                     self.bet_buttons(player, i)
@@ -306,6 +318,10 @@ class Graphics(BlackJack):
                     if self.STAND_FLAG:
                         self.STAND_FLAG = False
                         break
+
+            #the dealer gets the cards
+            # self.dealers_turn()
+            # self.end_game()
         
     def bet_buttons(self, player, i): #TODO: speed button
         self.buttons = []
@@ -322,7 +338,7 @@ class Graphics(BlackJack):
 
         if player.hand[0].value != player.hand[1].value:
             return
-        split_button = Button(100 + i * 475, 480, 50, 30, COLOR_CYAN, "STAND", COLOR_BLACK, font_size=10, callback=lambda: self.choose_move_gui(player, self.bets[i], STAND))
+        split_button = Button(100 + i * 250, 480, 50, 30, COLOR_CYAN, "SPLIT", COLOR_BLACK, font_size=10, callback=lambda: self.choose_move_gui(player, self.bets[i], SPLIT))
         self.buttons.append(split_button)
 
     ######################
