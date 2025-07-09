@@ -1,4 +1,6 @@
 from src.const import *
+from src.person import *
+from copy import deepcopy
 from src.button import Button
 from src.text_box import Text_box
 from src.blackjack import BlackJack
@@ -13,6 +15,7 @@ class Graphics(BlackJack):
         super().__init__()
         self.buttons = []
         self.current_screen = MENU_SCREEN
+        self.STAND_FLAG = False
 
     # Function in charge of the graphic section
     def start_gui(self):
@@ -220,8 +223,12 @@ class Graphics(BlackJack):
         # print all players
         for i, player in enumerate(self.players):
             self.draw_text(40 + i * 250, 520, screen, f"{player.name.upper()} - {self.bets[i]}$", FONT_VERDANA, 25, text_color=COLOR_BLACK)
-            score= player.get_score()
-            score_string = f"SCORE: {score}" if score != -1 else "BUSTED"
+            score = player.get_score()
+            if score == int(OBJECTIVE):
+                score = "BLACKJACK!"
+            else:
+                score_string = f"SCORE: {score}" if score != -1 else "BUSTED"
+            
             self.draw_text(40 + i * 250+65, 580, screen, f"{score_string}", FONT_VERDANA, 25, text_color=COLOR_BLACK)
             pygame.draw.rect(screen, COLOR_CARD_HOLDER, (40 + i * 250, 620, 230, 400))# (x, y, width, height)
             if player.hand:
@@ -232,7 +239,11 @@ class Graphics(BlackJack):
 
         # print the dealer
         score = self.dealer.get_score()
-        score = score if score != -1 else "BUSTED"
+        if score == -1:
+            score = "BUSTED"
+        elif len(self.dealer.hand) == 2:
+            score = "???"
+
         self.draw_text(800, 10, screen, f"DEALER'S SCORE: {score}", FONT_VERDANA, 25, text_color=COLOR_BLACK)
         pygame.draw.rect(screen, COLOR_CARD_HOLDER, (350, 50, 1300, 300))# (x, y, width, height)
         if self.dealer.hand:
@@ -273,14 +284,10 @@ class Graphics(BlackJack):
             
             #Deal card 2 to dealer
             self.deal_gui(True, screen)
-            
-            while True:
-                ...
 
             for i, player in enumerate(self.players):
-                self.buttons = []
-                self.bet_buttons(player, i)
-                while True:
+                while player.get_score() < int(OBJECTIVE) and player.get_score() != int(BUSTED):
+                    self.bet_buttons(player, i)
                     for event in pygame.event.get():
                         if event.type == pygame.QUIT:
                             pygame.quit()
@@ -290,35 +297,33 @@ class Graphics(BlackJack):
                         for button in self.buttons:
                             button.clicked(event) 
 
+                    self.display_board(screen)
                     # Draw self.buttons
                     for button in self.buttons:
                         button.draw(screen)
 
                     pygame.display.update()
+                    if self.STAND_FLAG:
+                        self.STAND_FLAG = False
+                        break
         
-    def bet_buttons(self, player, i):
-        if not self.buttons:  # Only create self.buttons if they don't exist
-            play_button = Button(pos_x=700, pos_y=300, width=500, height=150, button_color=COLOR_BLACK,
-                                text="PLAY", text_color=COLOR_WHITE, font=FONT_IMPACT, font_size=100, sound=BUTTON_SOUND, callback=lambda: self.set_screen(SELECT_PLAYER_AMOUNT_SCREEN))
-            rules_button = Button(pos_x=700, pos_y=500, width=500, height=150, button_color=COLOR_BLACK,
-                                text="GAME RULES", text_color=COLOR_WHITE, font=FONT_IMPACT, font_size=100, sound=BUTTON_SOUND, callback=lambda: self.set_screen(RULES_SCREEN))
-            
+    def bet_buttons(self, player, i): #TODO: speed button
+        self.buttons = []
+        hit_button = Button(40 + i * 250, 440, 50, 30, COLOR_CYAN, "HIT", COLOR_BLACK, font_size=10, callback=lambda: self.choose_move_gui(player, self.bets[i], HIT))
+        stand_button = Button(100 + i * 250, 440, 50, 30, COLOR_CYAN, "STAND", COLOR_BLACK, font_size=10, callback=lambda: self.choose_move_gui(player, self.bets[i], STAND))
+        self.buttons.append(hit_button)
+        self.buttons.append(stand_button)
 
-            hit_button = Button()
-            stand_button = Button()
-            self.buttons.append(hit_button)
-            self.buttons.append(stand_button)
+        if len(player.hand) != 2 or "&" in player.name or (player.chips - self.bets[i] < self.bets[i]):
+            return
 
-            if len(player.hand) != 2 or "&" in player.name or (player.chips - self.bets[i] < self.bets[i]):
-                return
+        double_button = Button(40 + i * 250, 480, 50, 30, COLOR_CYAN, "DOUBLE", COLOR_BLACK, font_size=10, callback=lambda: self.choose_move_gui(player, self.bets[i], DOUBLE))
+        self.buttons.append(double_button)
 
-            double_button = Button()
-            self.buttons.append(double_button)
-
-            if player.hand[0].value != player.hand[1].value:
-                return
-            split_button = Button()
-            self.buttons.extend([play_button, rules_button])
+        if player.hand[0].value != player.hand[1].value:
+            return
+        split_button = Button(100 + i * 475, 480, 50, 30, COLOR_CYAN, "STAND", COLOR_BLACK, font_size=10, callback=lambda: self.choose_move_gui(player, self.bets[i], STAND))
+        self.buttons.append(split_button)
 
     ######################
     # AUXILIAR FUNCTIONS #
@@ -348,19 +353,77 @@ class Graphics(BlackJack):
     # Rewrite
 
     def deal_gui(self, x: bool, screen) -> None:
-            """
-            Deals a card to the dealer or all players.
-            :param x: True if the card is dealt to the dealer, False otherwise.
-            :return: None
-            """
-            if x:
-                self.dealer.hand.append(self.take_card())
+        """
+        Deals a card to the dealer or all players.
+        :param x: True if the card is dealt to the dealer, False otherwise.
+        :return: None
+        """
+        if x:
+            self.dealer.hand.append(self.take_card())
+            self.display_board(screen)
+            t.sleep(SPEED*0.5)
+        else:
+            self.display_board(screen)
+            for player in self.players:
+                player.hand.append(self.take_card())
+
                 self.display_board(screen)
                 t.sleep(SPEED*0.5)
-            else:
-                self.display_board(screen)
-                for player in self.players:
-                    player.hand.append(self.take_card())
 
-                    self.display_board(screen)
-                    t.sleep(SPEED*0.5)
+    def choose_move_gui(self, player: Player, bet,  decision) -> None:
+        """
+        Allows a player to choose their move during their turn.
+        :param player: The player making the move.
+        :param bet: The player's current bet.
+        :return: None
+        """
+        if decision == HIT:
+            player.hand.append(self.take_card())
+
+        elif decision == DOUBLE:
+            bet += player.bet(bet)
+            for i in range(self.player_amount):
+                if player == self.players[i]:
+                    self.bets[i] = bet
+
+            player.hand.append(self.take_card())
+        elif decision == SPLIT:
+            print(f"{player.name} SPLIT")
+            # remove the chips from the player
+            player.bet(bet)
+            # create 2 new players: player.name&1 and player.name&2
+            new_name_1 = player.name + "&1"
+            new_name_2 = player.name + "&2"
+            p1 = Player(new_name_1)
+            p2 = Player(new_name_2)
+
+            # give them one card each
+            p1.hand.append(player.hand[0])
+            p2.hand.append(player.hand[1])
+
+            # create 2 new list: new_players and new_bets
+            new_players = []
+            new_bets = []
+
+            # append all players except the original, in its place append the 2 new players
+            for i, aux in enumerate(self.players):
+                if aux.name == player.name:
+                    new_players.append(Player("&"))
+                    new_players.append(p1)
+                    new_players.append(p2)
+
+                    new_bets.append(0)
+                    new_bets.append(bet)
+                    new_bets.append(bet)
+                    continue
+                new_players.append(aux)
+                new_bets.append(self.bets[i])
+            
+            # change the original lists
+            self.players = deepcopy(new_players)
+            self.bets = deepcopy(new_bets)
+
+            # append all the bets except the one of the original player, in its place the same bet twice
+
+        elif decision == STAND:
+            self.STAND_FLAG = True
