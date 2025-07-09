@@ -2,6 +2,7 @@ from src.const import *
 from src.button import Button
 from src.text_box import Text_box
 from src.blackjack import BlackJack
+import time as t
 import pygame
 import sys
 
@@ -214,7 +215,7 @@ class Graphics(BlackJack):
         #Delete after:
         self.set_screen(MENU_SCREEN)
 
-    def print_actual_board(self, screen):  #TODO: buttons, etc.
+    def display_board(self, screen):  #TODO: buttons, etc.
         screen.fill(COLOR_BOARD)
         # print all players
         for i, player in enumerate(self.players):
@@ -258,32 +259,67 @@ class Graphics(BlackJack):
             self.random_decks(gui=True)
 
             # #prints the table status
-            self.print_players(self.players, self.bets) # call self.display board(screen)
-            # t.sleep(SPEED*0.5)
+            self.display_board(screen)
+            t.sleep(SPEED*0.5)
             
             #Deal card 1 to players
-            self.deal(False)
+            self.deal_gui(False, screen)
             
             #Deal card 1 to dealer
-            self.deal(True)
-            
+            self.deal_gui(True,screen)
+
             #Deal card 2 to players
-            self.deal(False)
-            self.deal(False)
-            self.deal(False)
-            self.deal(False)
+            self.deal_gui(False, screen)
             
             #Deal card 2 to dealer
-            self.deal(True)
-            self.deal(True)
-            self.deal(True)
-            self.deal(True)
-            self.print_actual_board(screen)
-
+            self.deal_gui(True, screen)
+            
             while True:
                 ...
 
+            for i, player in enumerate(self.players):
+                self.buttons = []
+                self.bet_buttons(player, i)
+                while True:
+                    for event in pygame.event.get():
+                        if event.type == pygame.QUIT:
+                            pygame.quit()
+                            sys.exit()
+
+                        # Handle button clicks
+                        for button in self.buttons:
+                            button.clicked(event) 
+
+                    # Draw self.buttons
+                    for button in self.buttons:
+                        button.draw(screen)
+
+                    pygame.display.update()
         
+    def bet_buttons(self, player, i):
+        if not self.buttons:  # Only create self.buttons if they don't exist
+            play_button = Button(pos_x=700, pos_y=300, width=500, height=150, button_color=COLOR_BLACK,
+                                text="PLAY", text_color=COLOR_WHITE, font=FONT_IMPACT, font_size=100, sound=BUTTON_SOUND, callback=lambda: self.set_screen(SELECT_PLAYER_AMOUNT_SCREEN))
+            rules_button = Button(pos_x=700, pos_y=500, width=500, height=150, button_color=COLOR_BLACK,
+                                text="GAME RULES", text_color=COLOR_WHITE, font=FONT_IMPACT, font_size=100, sound=BUTTON_SOUND, callback=lambda: self.set_screen(RULES_SCREEN))
+            
+
+            hit_button = Button()
+            stand_button = Button()
+            self.buttons.append(hit_button)
+            self.buttons.append(stand_button)
+
+            if len(player.hand) != 2 or "&" in player.name or (player.chips - self.bets[i] < self.bets[i]):
+                return
+
+            double_button = Button()
+            self.buttons.append(double_button)
+
+            if player.hand[0].value != player.hand[1].value:
+                return
+            split_button = Button()
+            self.buttons.extend([play_button, rules_button])
+
     ######################
     # AUXILIAR FUNCTIONS #
     ######################
@@ -307,3 +343,24 @@ class Graphics(BlackJack):
         """
         img = self.use_font(font_name, font_size).render(text, True, text_color)
         screen.blit(img, (pos_x, pos_y))
+
+
+    # Rewrite
+
+    def deal_gui(self, x: bool, screen) -> None:
+            """
+            Deals a card to the dealer or all players.
+            :param x: True if the card is dealt to the dealer, False otherwise.
+            :return: None
+            """
+            if x:
+                self.dealer.hand.append(self.take_card())
+                self.display_board(screen)
+                t.sleep(SPEED*0.5)
+            else:
+                self.display_board(screen)
+                for player in self.players:
+                    player.hand.append(self.take_card())
+
+                    self.display_board(screen)
+                    t.sleep(SPEED*0.5)
