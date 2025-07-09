@@ -57,6 +57,7 @@ class Graphics(BlackJack):
                 self.select_player_names(screen)
             elif self.current_screen == PLAY_SCREEN:
                 self.play(screen)
+                break
 
             # Draw self.buttons
             for button in self.buttons:
@@ -261,6 +262,8 @@ class Graphics(BlackJack):
 
         pygame.display.update()
 
+    def show_results(self, screen):
+        pass
     def play(self, screen):
         clock = pygame.time.Clock()
         while True:
@@ -288,13 +291,13 @@ class Graphics(BlackJack):
 
             # #if dealer has BlackJack all the players without BJ will lose their bets
             # # and the ones with BJ will get their bet returned
-            # if self.dealer.has_blackjack():
-            #     self.dealers_turn()
-            #     screen.fill(COLOR_BLACK)
-            #     self.draw_text(600, 50, screen, "DEALER HAS BLACKJACK", FONT_VERDANA, 50, text_color=COLOR_WHITE)
-            #     self.end_game()
-            #     t.sleep(SPEED)
-            #     continue # players bet in the new round
+            if self.dealer.has_blackjack():
+                self.dealers_turn()
+                screen.fill(COLOR_BLACK)
+                self.draw_text(600, 50, screen, "DEALER HAS BLACKJACK", FONT_VERDANA, 50, text_color=COLOR_WHITE)
+                self.end_game()
+                t.sleep(5)
+                continue # players bet in the new round
 
 
             for i, player in enumerate(self.players):
@@ -323,8 +326,8 @@ class Graphics(BlackJack):
                     clock.tick(FPS)
 
             #the dealer gets the cards
-            # self.dealers_turn()
-            # self.end_game()
+            self.dealers_turn()
+            self.end_game()
         
     def bet_buttons(self, player, i): #TODO: speed button
         if not self.buttons:
@@ -406,6 +409,8 @@ class Graphics(BlackJack):
                     self.bets[i] = bet
 
             player.hand.append(self.take_card())
+            self.STAND_FLAG = True
+            self.buttons = []
         elif decision == SPLIT:
             print(f"{player.name} SPLIT")
             # remove the chips from the player
