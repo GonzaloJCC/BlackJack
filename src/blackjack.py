@@ -194,7 +194,6 @@ class BlackJack:
 
         self.players = aux
         self.dealer.hand = []
-        # self.players_copy = deepcopy(self.players)
 
     def print_dealer(self) -> None:
         """
