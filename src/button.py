@@ -14,7 +14,6 @@ class Button:
         else:
             self.font = pygame.font.SysFont(font, font_size)
 
-        self.callback = callback
         self.sound = pygame.mixer.Sound(sound) if sound else None
         self.callback = callback
         

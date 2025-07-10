@@ -57,7 +57,6 @@ class Graphics(BlackJack):
                 self.select_player_names(screen)
             elif self.current_screen == PLAY_SCREEN:
                 self.play(screen)
-                break
 
             # Draw self.buttons
             for button in self.buttons:
