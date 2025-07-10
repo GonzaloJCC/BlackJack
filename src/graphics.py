@@ -344,7 +344,7 @@ class Graphics(BlackJack):
                     if button.clicked(event):
                         aux = []
                         j=0
-                        for player in self.players:
+                        for i, player in enumerate(self.players):
                             self.bets[i] = 0
                             player.hand = []
                             if player.chips <= 0:

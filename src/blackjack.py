@@ -182,7 +182,7 @@ class BlackJack:
         print("")
         t.sleep(SPEED*0.5)
         aux = []
-        for player in self.players:
+        for i, player in enumerate(self.players):
             print(f"{player.name.upper()}'S CHIPS: {player.chips:.2f}")
             self.bets[i] = 0
             player.hand = []
