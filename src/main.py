@@ -1,31 +1,7 @@
 from src.blackjack import BlackJack
 from src.blackjack import cls
-from src.const import *
-import pygame
-import sys
-
-def start_gui():
-    pygame.init()
-    # cls()
-    pygame.display.set_caption(TITLE)
-    icon = pygame.image.load("./assets/icon/icon.png")
-    pygame.display.set_icon(icon)
-
-    screen = pygame.display.set_mode((WIDTH, HEIGHT))
-
-    clock = pygame.time.Clock()
-
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-
-        pygame.display.update()
-        clock.tick(FPS)
-    pygame.quit()
-
-
+from src.graphics import Graphics
+import argparse
 
 
 def game_rules():
@@ -38,16 +14,23 @@ def game_rules():
     print("\t-> The game is played with 6 decks, every 15 rounds the decks will be swapped with" \
     "\n\t   6 new ones")
     print("\t-> A win with blackjack will multiply the bet by 2.5")
-    print("\t-> A win withoyt blackjack will multyply the bet by 2")
+    print("\t-> A win without blackjack will multiply the bet by 2")
     print("\n\n\n")
     x = input("Type anything to exit this menu: ")
     cls()
 
-def main() -> None:
+def main(no_gui=False) -> None:
+
+
     cls()
+    print("Game Running...")
+    if no_gui is False:
+            gr = Graphics()
+            gr.start_gui()
+            return
     while True:
-        if GUI_FLAG:
-            start_gui()
+        
+        
         print("WELCOME!")
         print("IF YOU WANT TO KNOW THE RULES TYPE 'R'")
         print("IF YOU WANT TO PLAY TYPE 'P'")
@@ -72,4 +55,11 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description="Main program, optionally disables graphic interface")
+    parser.add_argument(
+        "--no-gui",
+        action="store_true",
+        help="Executes the program without graphic interface"
+    )
+    args = parser.parse_args()
+    main(no_gui=args.no_gui)

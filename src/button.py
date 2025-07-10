@@ -1,4 +1,5 @@
 import pygame
+import os
 
 class Button:
 
@@ -7,7 +8,12 @@ class Button:
         self.button_color = button_color
         self.text = text
         self.text_color = text_color
-        self.font = pygame.font.Font(font, font_size)
+        # If to check if the font is a default one or a file
+        if os.path.isfile(font):
+            self.font = pygame.font.Font(font, font_size)
+        else:
+            self.font = pygame.font.SysFont(font, font_size)
+
         self.callback = callback
         self.sound = pygame.mixer.Sound(sound) if sound else None
         self.callback = callback
@@ -20,7 +26,7 @@ class Button:
         text_rect = text_surface.get_rect(center=self.rect.center)
         surface.blit(text_surface, text_rect)
 
-    # What wil happen when the button is clicked TODO: create a pygame event for the button
+    # What wil happen when the button is clicked
     def clicked(self, event):                   
         if event.type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(event.pos):
             if self.sound:

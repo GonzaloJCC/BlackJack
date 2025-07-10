@@ -44,17 +44,21 @@ class BlackJack:
         self.decks: list[Deck] = []
         self.dealer: Dealer = Dealer()
 
-    def initial_bets(self):
+    def initial_bets(self, gui_bets=None):
         """
         Allows players to place their initial bets for the game.
         :return: None
         """
+        if gui_bets:
+            self.bets = deepcopy(gui_bets)
+            return
+
         print("PLACE YOUR BETS")
         for i in range(len(self.players)):
             while 1:
                 try:
                     bet = round(float(input(f"PLAYER {self.players[i].name.upper()} ({self.players[i].chips} Chips), bet: ")), 2)
-                    if bet < 0 or bet > self.players[i].chips:
+                    if bet <= 0 or bet > self.players[i].chips:
                         raise ValueError("")
                     break
                 except ValueError as _:
@@ -65,18 +69,27 @@ class BlackJack:
 
             self.bets[i] = (self.players[i].bet(bet))
         cls()
-        t.sleep(0.5)
+        t.sleep(SPEED*0.5)
 
         print("STARTING TO DEAL")
-        t.sleep(1)
+        t.sleep(SPEED*1)
         cls()
 
-    def start_game(self) -> None:
+    def start_game(self, amount=None, names=None) -> None:
         """
         Starts the game by allowing the user to select the number of players
         and their names.
         :return: None
         """
+        if amount and names: # GUI enabled
+            self.player_amount = amount
+            for name in names:
+                self.players.append(Player(name))
+                self.bets.append(0)
+            self.players_copy = deepcopy(self.players)
+            return
+        
+        # No GUI
         while True:
             try:
                 self.player_amount = int(input("Enter the amount of players (1-4): "))
@@ -89,11 +102,8 @@ class BlackJack:
                 exit_signal(1, "signal ctrl+D")
 
         #select player names
+        names = []
         for i in range (0, self.player_amount):
-            names = []
-            for player in self.players:
-                names.append(player.name)
-
             x = 0
             name = ""
             while x == 0:
@@ -108,13 +118,14 @@ class BlackJack:
                     print("'&' CHARACTER NOT ALLOWED")
                 elif name in ["", "", '', ' '] or len(name) == 0:
                     print("NAME MUST NOT BE EMPTY")
+                elif len(name) > 12:
+                    print("NAME MUST BE 12 CHARACTERS OR LESS")
                 else:
                     x = 1
                     
             self.players.append(Player(name))
-            self.players_copy = deepcopy(self.players)
             self.bets.append(0)
-
+        self.players_copy = deepcopy(self.players)
         #every player makes the initial bet
         cls()
 
@@ -169,9 +180,9 @@ class BlackJack:
 
         self.players = deepcopy(self.players_copy)
         print("")
-        t.sleep(0.5)
+        t.sleep(SPEED*0.5)
         aux = []
-        for player in self.players:
+        for i, player in enumerate(self.players):
             print(f"{player.name.upper()}'S CHIPS: {player.chips:.2f}")
             self.bets[i] = 0
             player.hand = []
@@ -183,7 +194,6 @@ class BlackJack:
 
         self.players = aux
         self.dealer.hand = []
-        # self.players_copy = deepcopy(self.players)
 
     def print_dealer(self) -> None:
         """
@@ -220,7 +230,7 @@ class BlackJack:
             self.dealer.hand.append(self.take_card())
             cls()
             self.print_players(self.players, self.bets)
-            t.sleep(0.5)
+            t.sleep(SPEED*0.5)
         else:
             cls()
             self.print_players(self.players, self.bets)
@@ -228,11 +238,11 @@ class BlackJack:
                 player.hand.append(self.take_card())
                 cls()
                 self.print_players(self.players, self.bets)
-                t.sleep(0.5)
+                t.sleep(SPEED*0.5)
                 
 
     #DECK MANAGEMENT
-    def random_decks(self) -> None:
+    def random_decks(self, gui: bool =None) -> None:
         """
         Initializes and shuffles the decks for the game.
         :return: None
@@ -245,6 +255,8 @@ class BlackJack:
             for i in range(NUMBER_OF_DECKS):
                 self.decks.append(Deck())
             self.shuffle()
+        if gui:
+            return
         cls()
 
     def shuffle(self) -> None:
@@ -294,17 +306,17 @@ class BlackJack:
                 print_player(player, self.bets[i])
 
             score = self.dealer.get_score()
-            t.sleep(0.5)
+            t.sleep(SPEED*0.5)
 
         #the final board is printed
-        # t.sleep(0.5)
+        # t.sleep(SPEED*0.5)
         cls()
         self.print_dealer()
         for i, player in enumerate(self.players):
             if player.name == "&":
                     continue
             print_player(player, self.bets[i])
-        t.sleep(3)
+        t.sleep(SPEED*3)
 
     def choose_move(self, player: Player, bet: float) -> None:
         """
@@ -341,21 +353,21 @@ class BlackJack:
             elif decision == DOUBLE:
                 if not can_double:
                     print("\nYOU CAN NOT DOUBLE AFTER A HIT")
-                    t.sleep(1)
+                    t.sleep(SPEED*1)
                     cls()
                     self.print_players(self.players, self.bets)
                     continue
                 
                 if "&" in player.name:
                     print("\nYOU CAN NOT DOUBLE AFTER A SPLIT")
-                    t.sleep(1)
+                    t.sleep(SPEED*1)
                     cls()
                     self.print_players(self.players, self.bets)
                     continue
 
                 if player.chips - bet < bet:
                     print("NOT ENOUGH CHIPS")
-                    t.sleep(0.5)
+                    t.sleep(SPEED*0.5)
                     cls()
                     self.print_players(self.players, self.bets)
                     continue
@@ -365,7 +377,7 @@ class BlackJack:
                         self.bets[i] = bet
 
                 player.hand.append(self.take_card())
-                t.sleep(0.5)
+                t.sleep(SPEED*0.5)
                 cls()
                 self.print_players(self.players, self.bets)
                 break
@@ -374,27 +386,27 @@ class BlackJack:
 
                 if "&" in player.name:
                     print("\nYOU CAN NOT SPLIT AFTER A SPLIT")
-                    t.sleep(1)
+                    t.sleep(SPEED*1)
                     cls()
                     self.print_players(self.players, self.bets)
                     continue
                  
                 if len(player.hand) != 2 or player.hand[0].value != player.hand[1].value:
                     print("YOU CAN NOT SPLIT THIS HAND")
-                    t.sleep(0.5)
+                    t.sleep(SPEED*0.5)
                     cls()
                     self.print_players(self.players, self.bets)
                     continue
                     
                 if player.chips - bet < bet:
                     print("NOT ENOUGH CHIPS TO SPLIT THE HAND")
-                    t.sleep(0.5)
+                    t.sleep(SPEED*0.5)
                     cls()
                     self.print_players(self.players, self.bets)
                     continue
 
                 # print("NOT IMPLEMENTED YET")
-                # t.sleep(0.5)
+                # t.sleep(SPEED*0.5)
                 # cls()
                 # self.print_players(self.players, self.bets)
                 
@@ -433,18 +445,18 @@ class BlackJack:
                 self.bets = deepcopy(new_bets)
 
                 # append all the bets except the one of the original player, in its place the same bet twice
-                t.sleep(0.5)
+                t.sleep(SPEED*0.5)
                 cls()
                 self.print_players(self.players, self.bets)
                 break
 
             elif decision == STAND:
-                t.sleep(0.5)
+                t.sleep(SPEED*0.5)
                 cls()
                 self.print_players(self.players, self.bets)
                 break
 
-            t.sleep(0.5)
+            t.sleep(SPEED*0.5)
             cls()
             self.print_players(self.players, self.bets)
 
@@ -458,7 +470,7 @@ class BlackJack:
             try:
                 if self.players[i].has_blackjack():
                     print(f"PLAYER {self.players[i].name.upper()} HAS BLACKJACK")
-                    t.sleep(0.5)
+                    t.sleep(SPEED*0.5)
                     i += 1
                     continue
                 self.choose_move(self.players[i], self.bets[i])
@@ -483,7 +495,7 @@ class BlackJack:
 
             #prints the table status
             self.print_players(self.players, self.bets)
-            t.sleep(0.5)
+            t.sleep(SPEED*0.5)
             
             #Deal card 1 to players
             self.deal(False)
@@ -513,7 +525,7 @@ class BlackJack:
                 self.end_game()
 
             if len(self.players) == 0:  
-                t.sleep(3)
+                t.sleep(SPEED*3)
                 print("ALL PLAYERS HAVE 0 CHIPS")
                 return
 
