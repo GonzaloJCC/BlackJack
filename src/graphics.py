@@ -263,7 +263,7 @@ class Graphics(BlackJack):
 
         pygame.display.update()
 
-    def display_results(self, screen):
+    def display_results(self, screen, has_bj=False):
         """
         Displays the results of the round, including the chips won and current chips for each player.
         """
@@ -318,6 +318,8 @@ class Graphics(BlackJack):
         while True:
             screen.fill(COLOR_BOARD)
             self.draw_text(600, 50, screen, "ROUND RESULTS", FONT_VERDANA, 50, text_color=COLOR_WHITE)
+            if has_bj:
+                self.draw_text(600, 100, screen, "DEALER HAS BLACKJACK", FONT_VERDANA, 50, text_color=COLOR_WHITE) 
 
             y_offset = 150
             
@@ -383,11 +385,7 @@ class Graphics(BlackJack):
             # #if dealer has BlackJack all the players without BJ will lose their bets
             # # and the ones with BJ will get their bet returned
             if self.dealer.has_blackjack():
-                self.dealers_turn_gui(screen)
-                screen.fill(COLOR_BLACK)
-                self.draw_text(600, 50, screen, "DEALER HAS BLACKJACK", FONT_VERDANA, 50, text_color=COLOR_WHITE)
-                self.end_game()
-                t.sleep(5)
+                self.dealers_turn_gui(screen, has_bj=True)
                 continue # players bet in the new round
 
 
@@ -544,7 +542,7 @@ class Graphics(BlackJack):
             self.STAND_FLAG = True
         self.buttons = []
 
-    def dealers_turn_gui(self, screen) -> None:
+    def dealers_turn_gui(self, screen, has_bj=False) -> None:
         """
         Executes the dealer's turn, where the dealer draws cards until
         reaching a stopping condition.
@@ -569,6 +567,6 @@ class Graphics(BlackJack):
             t.sleep(SPEED)
         self.display_board(screen, end=True)
         t.sleep(4)
-        self.display_results(screen)
+        self.display_results(screen, has_bj)
 
 
