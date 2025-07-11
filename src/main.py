@@ -23,8 +23,8 @@ def main(no_gui=False) -> None:
 
 
     cls()
-    print("Game Running...")
     if no_gui is False:
+            print("Game Running...")
             gr = Graphics()
             gr.start_gui()
             return
