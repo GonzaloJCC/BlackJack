@@ -319,7 +319,7 @@ class Graphics(BlackJack):
             screen.fill(COLOR_BOARD)
             self.draw_text(600, 50, screen, "ROUND RESULTS", FONT_VERDANA, 50, text_color=COLOR_WHITE)
             if has_bj:
-                self.draw_text(600, 100, screen, "DEALER HAS BLACKJACK", FONT_VERDANA, 50, text_color=COLOR_WHITE) 
+                self.draw_text(600, 100, screen, "DEALER HAS BLACKJACK", FONT_VERDANA, 40, text_color=COLOR_WHITE) 
 
             y_offset = 150
             
