@@ -44,6 +44,18 @@ class BlackJack:
         self.decks: list[Deck] = []
         self.dealer: Dealer = Dealer()
 
+    def __str__(self) -> str:
+        return (
+            f"BlackJack object:\n"
+            f"  player_amount: {self.player_amount}\n"
+            f"  players: {[str(p) for p in self.players]}\n"
+            f"  players_copy: {[str(p) for p in self.players_copy]}\n"
+            f"  bets: {self.bets}\n"
+            f"  resetDeckCount: {self.resetDeckCount}\n"
+            f"  dealer: {str(self.dealer)}\n"
+            f"  decks: {[str(d) for d in self.decks]}\n"
+        )
+
     def initial_bets(self, gui_bets=None):
         """
         Allows players to place their initial bets for the game.
@@ -529,6 +541,7 @@ class BlackJack:
                 print("ALL PLAYERS HAVE 0 CHIPS")
                 return
 
+            print(self)
             #after the round is finished you can choose to end the round 
             # or to play another
             try:
