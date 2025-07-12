@@ -94,5 +94,4 @@ BlackJack/
 ## Known Issues:
 - Players cannot bet when their chips are between 0 and 1.
 - Action buttons blink a lot.
-- Sometimes dealer doesn't get cards until 17 (aces?)
 - Game result doesn't show more than 4 player names
