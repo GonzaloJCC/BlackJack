@@ -227,6 +227,13 @@ class Graphics(BlackJack):
         #Delete after:
         self.set_screen(MENU_SCREEN)
 
+    def display_no_players(self, screen):
+        screen.fill(COLOR_NAVY)
+        self.draw_text(700, 450, screen, f"        GAME OVER", FONT_IMPACT, 60, text_color=COLOR_WHITE)
+        self.draw_text(700, 530, screen, f"ALL PLAYERS HAVE 0 CHIPS", FONT_IMPACT, 60, text_color=COLOR_WHITE)
+        
+        pygame.display.update()
+
     def display_board(self, screen, end=False):
         screen.fill(COLOR_BOARD)
         # print all players
@@ -367,6 +374,12 @@ class Graphics(BlackJack):
     def play(self, screen):
         clock = pygame.time.Clock()
         while True:
+
+            if not self.players:
+                self.display_no_players(screen)
+                self.set_screen(MENU_SCREEN)
+                t.sleep(SPEED*4)
+                return
             #the players place their bets for this game
             self.select_bets(screen)
 
@@ -572,7 +585,7 @@ class Graphics(BlackJack):
             score = self.dealer.get_score()
             t.sleep(SPEED)
         self.display_board(screen, end=True)
-        t.sleep(4)
+        t.sleep(SPEED*4)
         self.display_results(screen, has_bj)
 
 
