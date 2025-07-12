@@ -541,7 +541,6 @@ class BlackJack:
                 print("ALL PLAYERS HAVE 0 CHIPS")
                 return
 
-            print(self)
             #after the round is finished you can choose to end the round 
             # or to play another
             try:
