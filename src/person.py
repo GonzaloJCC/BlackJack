@@ -80,7 +80,7 @@ class Player(Person):
         return amount
     
     def __str__(self):
-        return f"Player {self.name} has {self.chips}. Player's hand: {self.hand}"
+        return f"Player '{self.name}' has {self.chips} chips. Player's hand: {self.hand}"
 
 
 class Dealer(Person):
