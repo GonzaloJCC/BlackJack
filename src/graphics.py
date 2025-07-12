@@ -286,9 +286,8 @@ class Graphics(BlackJack):
         """
         Displays the results of the round, including the chips won and current chips for each player.
         """
-        print(self)
         self.buttons = []  # Reinicia los botones
-        continue_button = Button(pos_x=800, pos_y=600, width=300, height=100, button_color=COLOR_CYAN,
+        continue_button = Button(pos_x=1200, pos_y=800, width=300, height=100, button_color=COLOR_CYAN,
                                   text="CONTINUE", text_color=COLOR_BLACK, font=FONT_VERDANA, font_size=40,
                                   callback=lambda: self.set_screen(MENU_SCREEN))
         self.buttons.append(continue_button)
@@ -330,6 +329,7 @@ class Graphics(BlackJack):
                 if true_name == p.name:
                     p.chips += chips_won
             result_messages.append(result_message)
+        temp_players = self.players
         self.players = deepcopy(self.players_copy)
         while True:
             screen.fill(COLOR_BOARD)
@@ -337,14 +337,23 @@ class Graphics(BlackJack):
             if has_bj:
                 self.draw_text(600, 100, screen, "DEALER HAS BLACKJACK", FONT_VERDANA, 40, text_color=COLOR_WHITE) 
 
-            y_offset = 100
+            y_offset = 80
             
-            for i, player in enumerate(self.players):
-                y_offset += 25
+            for i, player in enumerate(temp_players):
+                y_offset += 35
                 self.draw_text(600, y_offset, screen,
-                               f"{result_messages[i]} | CURRENT CHIPS: {player.chips:.2f}",
+                               f"{result_messages[i]}",
                                FONT_VERDANA, 30, text_color=COLOR_WHITE)
-                y_offset += 25
+                y_offset += 35
+
+            self.draw_text(500, y_offset, screen, "----------------------------------------------------------------------------------------",
+                           FONT_VERDANA, 30, text_color=COLOR_WHITE)
+            for i, player in enumerate(self.players):
+                y_offset += 35
+                self.draw_text(600, y_offset, screen,
+                               f"{player.name.upper()}'s CURRENT CHIPS: {player.chips:.2f}",
+                               FONT_VERDANA, 30, text_color=COLOR_WHITE)
+                y_offset += 35
 
             
             for button in self.buttons:
@@ -362,7 +371,6 @@ class Graphics(BlackJack):
                         aux = []
                         j=0
                         for i, player in enumerate(self.players):
-                            self.bets[i] = 0
                             player.hand = []
                             if player.chips <= 0:
                                 self.draw_text(600, 900 + j, screen, f"{player.name.upper()} HAS 0 CHIPS, HE CAN NO LONGER PLAY", FONT_VERDANA, 30, text_color=COLOR_RED)
