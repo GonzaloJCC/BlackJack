@@ -16,6 +16,15 @@ class Graphics(BlackJack):
         self.buttons = []
         self.current_screen = MENU_SCREEN
         self.STAND_FLAG = False
+    
+    def __str__(self) -> str:
+        return (
+            super().__str__() +
+            f"Graphics object:\n"
+            f"  buttons: {[str(b) for b in self.buttons]}\n"
+            f"  current_screen: {self.current_screen}\n"
+            f"  STAND_FLAG: {self.STAND_FLAG}\n"
+        )
 
     # Function in charge of the graphic section
     def start_gui(self):
@@ -301,8 +310,6 @@ class Graphics(BlackJack):
                 result_message = f"{player.name.upper()} wins {WIN_RATIO * self.bets[i]:.2f}"
             elif player_score == dealer_score:
                 chips_won = 0
-                print(f"{player.name} Opcion2")
-                print(f"Dealer Score: {dealer_score}, Player Score: {player_score}")
                 result_message = f"{player.name.upper()} wins 0"
             else:
                 chips_won = -1 * self.bets[i]
@@ -501,7 +508,6 @@ class Graphics(BlackJack):
             self.STAND_FLAG = True
             self.buttons = []
         elif decision == SPLIT:
-            print(f"{player.name} SPLIT")
             # remove the chips from the player
             player.bet(bet)
             # create 2 new players: player.name&1 and player.name&2
