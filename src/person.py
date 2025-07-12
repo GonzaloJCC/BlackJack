@@ -101,7 +101,7 @@ class Dealer(Person):
         print("\n")
 
     def __str__(self):
-        return f"Dealer has {self.chips}. Dealer's hand: {self.hand}"
+        return f"Dealer's hand: {self.hand}"
 
         
         
