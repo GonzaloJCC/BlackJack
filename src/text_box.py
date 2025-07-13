@@ -7,7 +7,7 @@ class Text_box:
     def __init__(self, pos_x, pos_y, width=100, height=100, text_color=COLOR_WHITE, font="./assets/fonts/Cascadia.ttf", font_size=50, max_length=8):
         self.rect = pygame.Rect(pos_x, pos_y, width, height)
         self.text_color = text_color
-        self.active = False
+        self.active = True
         self.input = ""
 
         # Check if the font is a file or a default system font
