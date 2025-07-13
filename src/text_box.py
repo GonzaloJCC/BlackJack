@@ -44,7 +44,7 @@ class Text_box:
             if event.key == pygame.K_BACKSPACE:
                 # Remove the last character from the input
                 self.input = self.input[:-1]
-            elif event.key == pygame.K_RETURN:
+            elif event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
                 # If enter key is pressed return the string
                 return self.input
             elif event.key in [pygame.K_ESCAPE, pygame.K_INSERT, pygame.K_DELETE, pygame.K_HOME,
