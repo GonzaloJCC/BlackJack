@@ -19,6 +19,7 @@ SPLIT = 3
 STAND = 4
 
 SPEED = 2
+# SPEED = 0.2
 SPEED_FAST = 1
 SPEED_ULTRA_FAST = 0.5
 
@@ -80,4 +81,5 @@ FONT_CALIBRI = 'calibri'
 
 # Sounds
 BUTTON_SOUND = './assets/sounds/button_click.wav'
+ACTION_SOUND = './assets/sounds/action_button_click.wav'
 

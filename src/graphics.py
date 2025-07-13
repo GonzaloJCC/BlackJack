@@ -456,20 +456,20 @@ class Graphics(BlackJack):
                     
     def bet_buttons(self, player, i): #TODO: speed button
         if not self.buttons:
-            hit_button = Button(40 + i * 250, 440, 50, 30, COLOR_CYAN, "HIT", COLOR_BLACK, font_size=10, callback=lambda: self.choose_move_gui(player, self.bets[i], HIT))
-            stand_button = Button(100 + i * 250, 440, 50, 30, COLOR_CYAN, "STAND", COLOR_BLACK, font_size=10, callback=lambda: self.choose_move_gui(player, self.bets[i], STAND))
+            hit_button = Button(40 + i * 250, 440, 50, 30, COLOR_CYAN, "HIT", COLOR_BLACK, font_size=10, sound=ACTION_SOUND, callback=lambda: self.choose_move_gui(player, self.bets[i], HIT))
+            stand_button = Button(100 + i * 250, 440, 50, 30, COLOR_CYAN, "STAND", COLOR_BLACK, font_size=10, sound=ACTION_SOUND, callback=lambda: self.choose_move_gui(player, self.bets[i], STAND))
             self.buttons.append(hit_button)
             self.buttons.append(stand_button)
 
             if len(player.hand) != 2 or "&" in player.name or (player.chips - self.bets[i] < self.bets[i]):
                 return
 
-            double_button = Button(40 + i * 250, 480, 50, 30, COLOR_CYAN, "DOUBLE", COLOR_BLACK, font_size=10, callback=lambda: self.choose_move_gui(player, self.bets[i], DOUBLE))
+            double_button = Button(40 + i * 250, 480, 50, 30, COLOR_CYAN, "DOUBLE", COLOR_BLACK, font_size=10, sound=ACTION_SOUND, callback=lambda: self.choose_move_gui(player, self.bets[i], DOUBLE))
             self.buttons.append(double_button)
 
             if player.hand[0].value != player.hand[1].value:
                 return
-            split_button = Button(100 + i * 250, 480, 50, 30, COLOR_CYAN, "SPLIT", COLOR_BLACK, font_size=10, callback=lambda: self.choose_move_gui(player, self.bets[i], SPLIT))
+            split_button = Button(100 + i * 250, 480, 50, 30, COLOR_CYAN, "SPLIT", COLOR_BLACK, font_size=10, sound=ACTION_SOUND, callback=lambda: self.choose_move_gui(player, self.bets[i], SPLIT))
             self.buttons.append(split_button)
 
     ######################
