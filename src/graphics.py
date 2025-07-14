@@ -16,6 +16,7 @@ class Graphics(BlackJack):
         self.buttons = []
         self.current_screen = MENU_SCREEN
         self.STAND_FLAG = False
+        self.speed = SPEED
     
     def __str__(self) -> str:
         return (
@@ -24,6 +25,7 @@ class Graphics(BlackJack):
             f"  buttons: {[str(b) for b in self.buttons]}\n"
             f"  current_screen: {self.current_screen}\n"
             f"  STAND_FLAG: {self.STAND_FLAG}\n"
+            f"  speed: {self.speed}\n"
         )
 
     # Function in charge of the graphic section
@@ -388,7 +390,7 @@ class Graphics(BlackJack):
             if not self.players:
                 self.display_no_players(screen)
                 self.set_screen(MENU_SCREEN)
-                t.sleep(SPEED*4)
+                t.sleep(self.speed*4)
                 return
             #the players place their bets for this game
             self.select_bets(screen)
@@ -398,7 +400,7 @@ class Graphics(BlackJack):
 
             # #prints the table status
             self.display_board(screen)
-            t.sleep(SPEED*0.5)
+            t.sleep(self.speed*0.5)
             
             #Deal card 1 to players
             self.deal_gui(False, screen)
@@ -508,14 +510,14 @@ class Graphics(BlackJack):
         if x:
             self.dealer.hand.append(self.take_card())
             self.display_board(screen)
-            t.sleep(SPEED*0.5)
+            t.sleep(self.speed*0.5)
         else:
             self.display_board(screen)
             for player in self.players:
                 player.hand.append(self.take_card())
 
                 self.display_board(screen)
-                t.sleep(SPEED*0.5)
+                t.sleep(self.speed*0.5)
 
     def choose_move_gui(self, player: Player, bet, decision) -> None:
         """
@@ -598,9 +600,9 @@ class Graphics(BlackJack):
             self.display_board(screen)
             self.dealer.hand.append(self.take_card())
             score = self.dealer.get_score()
-            t.sleep(SPEED)
+            t.sleep(self.speed)
         self.display_board(screen, end=True)
-        t.sleep(SPEED*4)
+        t.sleep(self.speed*4)
         self.display_results(screen, has_bj)
 
 
