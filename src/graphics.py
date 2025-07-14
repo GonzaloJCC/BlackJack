@@ -238,7 +238,6 @@ class Graphics(BlackJack):
 
     def display_board(self, screen, end=False):
         screen.fill(COLOR_BOARD)
-
         # print all players
         i = 0
         for player in self.players:
@@ -457,22 +456,25 @@ class Graphics(BlackJack):
             self.dealers_turn_gui(screen)
                     
     def bet_buttons(self, player, i):
-        if not self.buttons:
-            hit_button = Button(40 + i * 250, 440, 85, 30, COLOR_CYAN, "HIT", COLOR_BLACK, font_size=22, sound=ACTION_SOUND, callback=lambda: self.choose_move_gui(player, self.bets[i], HIT))
-            stand_button = Button(150 + i * 250, 440, 85, 30, COLOR_CYAN, "STAND", COLOR_BLACK, font_size=22, sound=ACTION_SOUND, callback=lambda: self.choose_move_gui(player, self.bets[i], STAND))
-            self.buttons.append(hit_button)
-            self.buttons.append(stand_button)
 
-            if len(player.hand) != 2 or "&" in player.name or (player.chips - self.bets[i] < self.bets[i]):
-                return
+        speed_button = Button(50, 50, 160, 100, COLOR_CYAN, "CHANGE SPEED", COLOR_BLACK, font_size=22, sound=ACTION_SOUND, callback=lambda: self.change_speed())
+        self.buttons.append(speed_button)
 
-            double_button = Button(40 + i * 250, 480, 85, 30, COLOR_CYAN, "DOUBLE", COLOR_BLACK, font_size=22, sound=ACTION_SOUND, callback=lambda: self.choose_move_gui(player, self.bets[i], DOUBLE))
-            self.buttons.append(double_button)
+        hit_button = Button(40 + i * 250, 440, 85, 30, COLOR_CYAN, "HIT", COLOR_BLACK, font_size=22, sound=ACTION_SOUND, callback=lambda: self.choose_move_gui(player, self.bets[i], HIT))
+        stand_button = Button(150 + i * 250, 440, 85, 30, COLOR_CYAN, "STAND", COLOR_BLACK, font_size=22, sound=ACTION_SOUND, callback=lambda: self.choose_move_gui(player, self.bets[i], STAND))
+        self.buttons.append(hit_button)
+        self.buttons.append(stand_button)
 
-            if player.hand[0].value != player.hand[1].value:
-                return
-            split_button = Button(150 + i * 250, 480, 85, 30, COLOR_CYAN, "SPLIT", COLOR_BLACK, font_size=22, sound=ACTION_SOUND, callback=lambda: self.choose_move_gui(player, self.bets[i], SPLIT))
-            self.buttons.append(split_button)
+        if len(player.hand) != 2 or "&" in player.name or (player.chips - self.bets[i] < self.bets[i]):
+            return
+
+        double_button = Button(40 + i * 250, 480, 85, 30, COLOR_CYAN, "DOUBLE", COLOR_BLACK, font_size=22, sound=ACTION_SOUND, callback=lambda: self.choose_move_gui(player, self.bets[i], DOUBLE))
+        self.buttons.append(double_button)
+
+        if player.hand[0].value != player.hand[1].value:
+            return
+        split_button = Button(150 + i * 250, 480, 85, 30, COLOR_CYAN, "SPLIT", COLOR_BLACK, font_size=22, sound=ACTION_SOUND, callback=lambda: self.choose_move_gui(player, self.bets[i], SPLIT))
+        self.buttons.append(split_button)
 
     ######################
     # AUXILIAR FUNCTIONS #
@@ -498,6 +500,14 @@ class Graphics(BlackJack):
         img = self.use_font(font_name, font_size).render(text, True, text_color)
         screen.blit(img, (pos_x, pos_y))
 
+    def change_speed(self) -> None:
+        if self.speed == 0.2:
+            self.speed = 2
+            return
+        elif self.speed == 0.5:
+            self.speed = 0.2
+            return
+        self.speed -= 0.5
 
     # Rewrite
 
