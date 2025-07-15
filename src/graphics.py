@@ -256,9 +256,6 @@ class Graphics(BlackJack):
             if player.hand:
                 j=0
                 for card in player.hand:
-                    if card == player.hand[-1]:
-                        # self.display_card(screen, player)
-                        continue
                     screen.blit(pygame.image.load(card.img), ((45 + i * 250)+j/3, 780-j))# (x, y)
                     j+=30
             i += 1
@@ -516,7 +513,7 @@ class Graphics(BlackJack):
         """
         Animates the movement of the last card in player.hand from (1700, 90) to its final position.
         """
-        self.display_board(screen)
+        # self.display_board(screen)
         if not player.hand:
             return
 
@@ -537,11 +534,11 @@ class Graphics(BlackJack):
             curr_x = start_x + (end_x - start_x) * t_frac
             curr_y = start_y + (end_y - start_y) * t_frac
 
-            self.display_board(screen)
             img = pygame.image.load(card.img)
             screen.blit(img, (curr_x, curr_y))
             pygame.display.update()
             pygame.time.delay(int(1000 / 60))
+        self.display_board(screen)
 
     # Rewrite
 
@@ -556,7 +553,6 @@ class Graphics(BlackJack):
             self.display_board(screen)
             t.sleep(self.speed*0.5)
         else:
-            self.display_board(screen)
             for player in self.players:
                 player.hand.append(self.take_card())
                 self.display_card(screen, player)
