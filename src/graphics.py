@@ -537,7 +537,7 @@ class Graphics(BlackJack):
             curr_x = start_x + (end_x - start_x) * t_frac
             curr_y = start_y + (end_y - start_y) * t_frac
 
-            # self.display_board(screen)
+            self.display_board(screen)
             img = pygame.image.load(card.img)
             screen.blit(img, (curr_x, curr_y))
             pygame.display.update()
