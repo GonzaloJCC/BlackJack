@@ -69,12 +69,15 @@ If you don't have `make`, follow these steps:
 BlackJack/
 ├── src/                # Source code
 │   ├── blackjack.py    # Game logic
+│   ├── button.py       # Button class for the GUI
 │   ├── const.py        # Constants
 │   ├── deck.py         # Deck and card management
+│   ├── graphics.py     # GUI and game screens
 │   ├── main.py         # Entry point
 │   ├── person.py       # Player and dealer classes
+│   ├── text_box.py     # Text box class for the GUI
 │   └── utils.py        # Utility functions
-├── assets/             # Game assets (icons, sounds, cards)
+├── assets/             # Game assets (icons, sounds, cards, fonts)
 ├── README.md           # Project documentation
 └── requirements.txt    # Python dependencies
 ```
