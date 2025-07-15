@@ -456,8 +456,9 @@ class Graphics(BlackJack):
             self.dealers_turn_gui(screen)
                     
     def bet_buttons(self, screen, player, i):
-
-        speed_button = Button(50, 50, 160, 100, COLOR_CYAN, "CHANGE SPEED", COLOR_BLACK, font_size=22, sound=ACTION_SOUND, callback=lambda: self.change_speed())
+        
+        text = f"SPEED: {self.speed}"
+        speed_button = Button(50, 50, 160, 100, COLOR_CYAN, text, COLOR_BLACK, font_size=22, sound=ACTION_SOUND, callback=lambda: self.change_speed())
         self.buttons.append(speed_button)
 
         hit_button = Button(40 + i * 250, 440, 85, 30, COLOR_CYAN, "HIT", COLOR_BLACK, font_size=22, sound=ACTION_SOUND, callback=lambda: self.choose_move_gui(screen, player, self.bets[i], HIT))
