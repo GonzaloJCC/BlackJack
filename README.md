@@ -81,6 +81,12 @@ BlackJack/
 ├── README.md           # Project documentation
 └── requirements.txt    # Python dependencies
 ```
+---
+
+## Preview
+https://github.com/user-attachments/assets/4d24b136-3dd6-4071-b6a0-0054b458e664
+
+
 
 ---
 
