@@ -75,7 +75,7 @@ class Graphics(BlackJack):
             for button in self.buttons:
                 button.draw(screen)
 
-            pygame.display.update()
+            pygame.display.flip()
             clock.tick(FPS)
 
         pygame.quit()
@@ -160,7 +160,7 @@ class Graphics(BlackJack):
             if error_message:
                 self.draw_text(600, 500, screen, error_message, FONT_VERDANA, 40, text_color=COLOR_RED)
 
-            pygame.display.update()
+            pygame.display.flip()
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -200,7 +200,7 @@ class Graphics(BlackJack):
             if error_message:
                 self.draw_text(700, 500, screen, error_message, FONT_VERDANA, 40, text_color=COLOR_RED)
 
-            pygame.display.update()
+            pygame.display.flip()
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -236,7 +236,7 @@ class Graphics(BlackJack):
         self.draw_text(700, 450, screen, f"        GAME OVER", FONT_IMPACT, 60, text_color=COLOR_WHITE)
         self.draw_text(700, 530, screen, f"ALL PLAYERS HAVE 0 CHIPS", FONT_IMPACT, 60, text_color=COLOR_WHITE)
         
-        pygame.display.update()
+        pygame.display.flip()
 
     def display_board(self, screen, end=False):
         screen.fill(COLOR_BOARD)
@@ -283,7 +283,7 @@ class Graphics(BlackJack):
         # print the deck
         screen.blit(pygame.image.load("./assets/cards/deck.png"), (1700, 90))# (x, y)
 
-        pygame.display.update()
+        pygame.display.flip()
 
     def display_results(self, screen, has_bj=False):
         """
@@ -362,7 +362,7 @@ class Graphics(BlackJack):
             for button in self.buttons:
                 button.draw(screen)
 
-            pygame.display.update()
+            pygame.display.flip()
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -396,8 +396,6 @@ class Graphics(BlackJack):
             j = 80 * (len(self.dealer.hand) - 1)
             end_x = (300 + 160/2 + j)
             end_y = 80
-            
-            # Use reverse.png if dealer has only 2 cards and it's the second card
             use_reverse = len(self.dealer.hand) == 2
         else:
             if not player or not player.hand:
@@ -412,27 +410,34 @@ class Graphics(BlackJack):
             end_y = 780 - (30 * (len(player.hand) - 1))
             use_reverse = False
 
-        frames = 60 * self.speed
-        frame_delay = int((self.speed * 100) / frames)
+        frames = int(60 * self.speed)
+        frame_delay = int((self.speed * 1000) / frames)
         
-        for frame in range(int(frames + 1)):
+        # Pre-load image to avoid loading it every frame
+        if use_reverse:
+            card_img = pygame.image.load("./assets/cards/reverse.png")
+        else:
+            card_img = pygame.image.load(card.img)
+        
+        clock = pygame.time.Clock()
+        
+        for frame in range(frames + 1):
             t_frac = frame / frames
             curr_x = start_x + (end_x - start_x) * t_frac
             curr_y = start_y + (end_y - start_y) * t_frac
 
+            # Clear and redraw everything
             if is_dealer:
                 self.display_board_without_last_card(screen, None, is_dealer_moving=True)
             else:
                 self.display_board_without_last_card(screen, player)
             
-            # Use reverse.png for dealer's second card
-            if use_reverse:
-                img = pygame.image.load("./assets/cards/reverse.png")
-            else:
-                img = pygame.image.load(card.img)
-            screen.blit(img, (curr_x, curr_y))
-            pygame.display.update()
-            pygame.time.delay(frame_delay)
+            # Draw the moving card
+            screen.blit(card_img, (curr_x, curr_y))
+            
+            # Update display and control frame rate
+            pygame.display.flip()
+            clock.tick(60)
 
     def display_board_without_last_card(self, screen, moving_player=None, end=False, is_dealer_moving=False):
         screen.fill(COLOR_BOARD)
@@ -479,8 +484,6 @@ class Graphics(BlackJack):
                 j+=80
 
         screen.blit(pygame.image.load("./assets/cards/deck.png"), (1700, 90))
-
-        pygame.display.update()
 
     def play(self, screen):
         clock = pygame.time.Clock()
@@ -540,7 +543,7 @@ class Graphics(BlackJack):
                         self.display_board(screen)
                         for button in self.buttons:
                             button.draw(screen)
-                        pygame.display.update()
+                        pygame.display.flip()
                         self.action_done = False
                         self.button_locked = False
 
@@ -553,7 +556,7 @@ class Graphics(BlackJack):
                         for button in self.buttons:
                             button.clicked(event)
 
-                    pygame.display.update()
+                    pygame.display.flip()
                     if self.STAND_FLAG:
                         self.STAND_FLAG = False
                         break
