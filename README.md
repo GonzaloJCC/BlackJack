@@ -3,14 +3,13 @@ A blackjack game built in Python. Featuring almost the same functionalities of a
 
 ---
 
-## Requirements
+## 📋 Requirements
 - Python 3.10 or higher
 - [Optional] `make` (to simplify running commands)
 
 ---
 
-## Built with
-
+## 🛠️ Built with
 - `Python 3.10.12`
 - `Pygame 2.6.1`
 
@@ -64,7 +63,7 @@ If you don't have `make`, follow these steps:
 
 ---
 
-## Project Structure
+## 📁 Project Structure
 ```
 BlackJack/
 ├── src/                # Source code
@@ -81,16 +80,15 @@ BlackJack/
 ├── README.md           # Project documentation
 └── requirements.txt    # Python dependencies
 ```
+
 ---
 
-## Preview
+## 🎞️ Preview
 https://github.com/user-attachments/assets/4d24b136-3dd6-4071-b6a0-0054b458e664
 
-
-
 ---
 
-## Known Issues:
+## ⚠️ Known Issues:
 - Players cannot bet when their chips are between 0 and 1 in no gui mode.
 
 
