@@ -30,13 +30,15 @@ A blackjack game built in Python. Featuring almost the same functionalities of a
 ### Option 1: Using `make`
 If you have `make` installed, simply run the following commands:
 
-```bash
-# Create the virtual environment and install dependencies
-make install
+3. Create the virtual environment and install dependencies
+   ```bash
+   make install
+   ```
 
-# Run the game
-make run
-```
+4. Run the game
+   ```bash
+   make run
+   ```
 
 ### Option 2: Manual Setup
 If you don't have `make`, follow these steps:
