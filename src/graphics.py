@@ -18,6 +18,7 @@ class Graphics(BlackJack):
         self.STAND_FLAG = False
         self.speed = SPEED
         self.action_done = False
+        self.button_locked = False
     
     def __str__(self) -> str:
         return (
@@ -87,7 +88,7 @@ class Graphics(BlackJack):
 
     def menu(self) -> None:
         """
-        Displays the self.buttons of the main menu
+        Displays the buttons of the main menu
         """
         if not self.buttons:  # Only create self.buttons if they don't exist
             play_button = Button(pos_x=700, pos_y=300, width=500, height=150, button_color=COLOR_BLACK,
@@ -126,7 +127,7 @@ class Graphics(BlackJack):
 
     def select_player_amount(self, screen):
         """
-        Returns the ammount of players and their names
+        Returns the amount of players and their names
         """
         
         self.draw_text(600, 50, screen, "Enter the amount of players", FONT_VERDANA, 50, text_color=COLOR_WHITE)
@@ -443,6 +444,7 @@ class Graphics(BlackJack):
                             button.draw(screen)
                         pygame.display.update()
                         self.action_done = False
+                        self.button_locked = False
 
                     for event in pygame.event.get():
                         if event.type == pygame.QUIT:
@@ -451,7 +453,7 @@ class Graphics(BlackJack):
 
                         # Handle button clicks
                         for button in self.buttons:
-                            button.clicked(event) 
+                            button.clicked(event)
 
                     pygame.display.update()
                     if self.STAND_FLAG:
@@ -519,6 +521,9 @@ class Graphics(BlackJack):
         screen.blit(img, (pos_x, pos_y))
 
     def change_speed(self) -> None:
+        if self.button_locked:
+            return
+        
         if self.speed == SPEED_ULTRA_FAST:
             self.speed = SPEED_ULTRA_SLOW
         elif self.speed == SPEED_ULTRA_SLOW:
@@ -533,7 +538,6 @@ class Graphics(BlackJack):
         """
         Animates the movement of the last card in player.hand from (1700, 90) to its final position.
         """
-        # self.display_board(screen)
         if not player.hand:
             return
 
@@ -581,12 +585,11 @@ class Graphics(BlackJack):
                 t.sleep(self.speed*0.5)
 
     def choose_move_gui(self, screen, player: Player, bet, decision) -> None:
-        """
-        Allows a player to choose their move during their turn.
-        :param player: The player making the move.
-        :param bet: The player's current bet.
-        :return: None
-        """
+        if self.button_locked:
+            return
+        
+        self.button_locked = True
+        
         if decision == HIT:
             player.hand.append(self.take_card())
             self.display_card(screen, player)
@@ -602,27 +605,23 @@ class Graphics(BlackJack):
             self.display_card(screen, player)
 
         elif decision == SPLIT:
-            # Validation
             if "&" in player.name or len(player.hand) != 2 or player.hand[0].value != player.hand[1].value or player.chips - bet < bet:
                 self.buttons = []
+                self.button_locked = False
                 return
 
             player.bet(bet)
-            # create 2 new players: player.name&1 and player.name&2
             new_name_1 = player.name + "&1"
             new_name_2 = player.name + "&2"
             p1 = Player(new_name_1)
             p2 = Player(new_name_2)
 
-            # give them one card each
             p1.hand.append(player.hand[0])
             p2.hand.append(player.hand[1])
 
-            # create 2 new list: new_players and new_bets
             new_players = []
             new_bets = []
 
-            # append all players except the original, in its place append the 2 new players
             for i, aux in enumerate(self.players):
                 if aux.name == player.name:
                     new_players.append(p1)
@@ -640,6 +639,7 @@ class Graphics(BlackJack):
         elif decision == STAND:
             self.STAND_FLAG = True
             self.buttons = []
+        
         self.action_done = True
 
     def dealers_turn_gui(self, screen, has_bj=False) -> None:
