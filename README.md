@@ -90,16 +90,6 @@ https://github.com/user-attachments/assets/4d24b136-3dd6-4071-b6a0-0054b458e664
 
 ---
 
-## Game Rules
-- The dealer must stand on all 17.
-- A split after another split is not allowed.
-- A double after a split is not allowed.
-- The game is played with 6 decks, and every 15 rounds the decks are swapped with 6 new ones.
-- A win with Blackjack multiplies the bet by **2.5**.
-- A win without Blackjack multiplies the bet by **2**.
-
----
-
 ## Known Issues:
 - Players cannot bet when their chips are between 0 and 1 in no gui mode.
 
