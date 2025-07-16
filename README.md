@@ -77,7 +77,7 @@ BlackJack/
 │   ├── text_box.py     # Text box class for the GUI
 │   └── utils.py        # Utility functions
 ├── assets/             # Game assets (icons, sounds, cards, fonts)
-├── Makefile            # Buil automation
+├── Makefile            # Build automation
 ├── README.md           # Project documentation
 └── requirements.txt    # Python dependencies
 ```
