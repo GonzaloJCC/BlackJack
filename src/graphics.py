@@ -384,40 +384,57 @@ class Graphics(BlackJack):
                         self.dealer.hand = []
                         return
 
-    def display_card(self, screen, player: Player) -> None:
+    def display_card(self, screen, player: Player = None, is_dealer: bool = False) -> None:
         """
-        Animates the movement of the last card in player.hand from (1700, 90) to its final position.
+        Animates the movement of the last card from (1700, 90) to its final position.
         """
-        if not player.hand:
-            return
+        if is_dealer:
+            if not self.dealer.hand:
+                return
+            card = self.dealer.hand[-1]
+            start_x, start_y = 1700, 90
+            j = 80 * (len(self.dealer.hand) - 1)
+            end_x = (300 + 160/2 + j)
+            end_y = 80
+            
+            # Use reverse.png if dealer has only 2 cards and it's the second card
+            use_reverse = len(self.dealer.hand) == 2
+        else:
+            if not player or not player.hand:
+                return
+            try:
+                i = self.players.index(player)
+            except ValueError:
+                return
+            card = player.hand[-1]
+            start_x, start_y = 1700, 90
+            end_x = (45 + i * 250) + (30 * (len(player.hand) - 1)) / 3
+            end_y = 780 - (30 * (len(player.hand) - 1))
+            use_reverse = False
 
-        try:
-            i = self.players.index(player)
-        except ValueError:
-            return
-
-        card = player.hand[-1]
-        start_x, start_y = 1700, 90
-        end_x = (45 + i * 250) + (30 * (len(player.hand) - 1)) / 3
-        end_y = 780 - (30 * (len(player.hand) - 1))
-
-        frames = int(self.speed/2 * 60)
+        frames = 60
+        frame_delay = int((self.speed * 1000) / frames)
+        
         for frame in range(frames + 1):
             t_frac = frame / frames
             curr_x = start_x + (end_x - start_x) * t_frac
             curr_y = start_y + (end_y - start_y) * t_frac
 
-            # Clear screen and redraw everything except the moving card
-            self.display_board_without_last_card(screen, player)
+            if is_dealer:
+                self.display_board_without_last_card(screen, None, is_dealer_moving=True)
+            else:
+                self.display_board_without_last_card(screen, player)
             
-            # Draw the moving card at current position
-            img = pygame.image.load(card.img)
+            # Use reverse.png for dealer's second card
+            if use_reverse:
+                img = pygame.image.load("./assets/cards/reverse.png")
+            else:
+                img = pygame.image.load(card.img)
             screen.blit(img, (curr_x, curr_y))
             pygame.display.update()
-            pygame.time.delay(int(1000 / 60))
-        self.display_board(screen)
+            pygame.time.delay(frame_delay)
 
-    def display_board_without_last_card(self, screen, moving_player, end=False):
+    def display_board_without_last_card(self, screen, moving_player=None, end=False, is_dealer_moving=False):
         screen.fill(COLOR_BOARD)
         i = 0
         for player in self.players:
@@ -436,14 +453,12 @@ class Graphics(BlackJack):
             
             if player.hand:
                 j=0
-                # Don't draw the last card of the moving player
                 cards_to_draw = player.hand[:-1] if player == moving_player else player.hand
                 for card in cards_to_draw:
                     screen.blit(pygame.image.load(card.img), ((45 + i * 250)+j/3, 780-j))
                     j+=30
             i += 1
 
-        # Draw dealer
         score = self.dealer.get_score()
         if score == -1:
             score = "BUSTED"
@@ -452,10 +467,12 @@ class Graphics(BlackJack):
 
         self.draw_text(800, 10, screen, f"DEALER'S SCORE: {score}", FONT_VERDANA, 25, text_color=COLOR_BLACK)
         pygame.draw.rect(screen, COLOR_CARD_HOLDER, (350, 50, 1300, 300))
+        
         if self.dealer.hand:
             j=0
-            for card in self.dealer.hand:
-                if len(self.dealer.hand) == 2 and j == 80 and end is False:
+            cards_to_draw = self.dealer.hand[:-1] if is_dealer_moving else self.dealer.hand
+            for card in cards_to_draw:
+                if len(self.dealer.hand) == 2 and j == 80 and end is False and not is_dealer_moving:
                     screen.blit(pygame.image.load("./assets/cards/reverse.png"), ((300+160/2+j), 80))
                 else:
                     screen.blit(pygame.image.load(card.img), ((300+160/2+j), 80))
@@ -622,19 +639,15 @@ class Graphics(BlackJack):
     def deal_gui(self, x: bool, screen) -> None:
         """
         Deals a card to the dealer or all players.
-        :param x: True if the card is dealt to the dealer, False otherwise.
-        :return: None
         """
         if x:
             self.dealer.hand.append(self.take_card())
-            self.display_board(screen)
+            self.display_card(screen, is_dealer=True)
             t.sleep(self.speed*0.5)
         else:
             for player in self.players:
                 player.hand.append(self.take_card())
                 self.display_card(screen, player)
-
-                self.display_board(screen)
                 t.sleep(self.speed*0.5)
 
     def choose_move_gui(self, screen, player: Player, bet, decision) -> None:
@@ -697,9 +710,7 @@ class Graphics(BlackJack):
 
     def dealers_turn_gui(self, screen, has_bj=False) -> None:
         """
-        Executes the dealer's turn, where the dealer draws cards until
-        reaching a stopping condition.
-        :return: None
+        Executes the dealer's turn with card animations.
         """
         score = self.dealer.get_score()
 
@@ -711,13 +722,12 @@ class Graphics(BlackJack):
             if temp_score > best_player_score:
                 best_player_score = temp_score
 
-        #the dealer takes cards 
-        while score < int(DEALER_STOP) and score != int(BUSTED) \
-                and score <= best_player_score:
-            self.display_board(screen)
+        while score < int(DEALER_STOP) and score != int(BUSTED) and score <= best_player_score:
             self.dealer.hand.append(self.take_card())
+            self.display_card(screen, is_dealer=True)
             score = self.dealer.get_score()
-            t.sleep(self.speed)
+            t.sleep(self.speed*0.5)
+        
         self.display_board(screen, end=True)
         t.sleep(self.speed*4)
         self.display_results(screen, has_bj)
