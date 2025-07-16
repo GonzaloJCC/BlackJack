@@ -384,6 +384,87 @@ class Graphics(BlackJack):
                         self.dealer.hand = []
                         return
 
+    def display_card(self, screen, player: Player) -> None:
+        """
+        Animates the movement of the last card in player.hand from (1700, 90) to its final position.
+        """
+        if not player.hand:
+            return
+
+        try:
+            i = self.players.index(player)
+        except ValueError:
+            return
+
+        card = player.hand[-1]
+        start_x, start_y = 1700, 90
+        end_x = (45 + i * 250) + (30 * (len(player.hand) - 1)) / 3
+        end_y = 780 - (30 * (len(player.hand) - 1))
+
+        frames = int(self.speed * 60)
+        for frame in range(frames + 1):
+            t_frac = frame / frames
+            curr_x = start_x + (end_x - start_x) * t_frac
+            curr_y = start_y + (end_y - start_y) * t_frac
+
+            # Clear screen and redraw everything except the moving card
+            self.display_board_without_last_card(screen, player)
+            
+            # Draw the moving card at current position
+            img = pygame.image.load(card.img)
+            screen.blit(img, (curr_x, curr_y))
+            pygame.display.update()
+            pygame.time.delay(int(1000 / 60))
+        self.display_board(screen)
+
+    def display_board_without_last_card(self, screen, moving_player, end=False):
+        screen.fill(COLOR_BOARD)
+        i = 0
+        for player in self.players:
+            if player.name == '&':
+                continue
+            self.draw_text(30 + i * 250, 520, screen, f"{player.name.upper()} - {self.bets[i]}$", FONT_VERDANA, 25, text_color=COLOR_BLACK)
+            score = player.get_score()
+            score_string = ""
+            if score == int(OBJECTIVE) and len(player.hand) == 2:
+                score_string = "BLACKJACK!"
+            else:
+                score_string = f"SCORE: {score}" if score != -1 else "BUSTED"
+            
+            self.draw_text(30 + i * 250+65, 580, screen, f"{score_string}", FONT_VERDANA, 25, text_color=COLOR_BLACK)
+            pygame.draw.rect(screen, COLOR_CARD_HOLDER, (30 + i * 250, 620, 220, 400))
+            
+            if player.hand:
+                j=0
+                # Don't draw the last card of the moving player
+                cards_to_draw = player.hand[:-1] if player == moving_player else player.hand
+                for card in cards_to_draw:
+                    screen.blit(pygame.image.load(card.img), ((45 + i * 250)+j/3, 780-j))
+                    j+=30
+            i += 1
+
+        # Draw dealer
+        score = self.dealer.get_score()
+        if score == -1:
+            score = "BUSTED"
+        elif len(self.dealer.hand) == 2 and end is False:
+            score = "???"
+
+        self.draw_text(800, 10, screen, f"DEALER'S SCORE: {score}", FONT_VERDANA, 25, text_color=COLOR_BLACK)
+        pygame.draw.rect(screen, COLOR_CARD_HOLDER, (350, 50, 1300, 300))
+        if self.dealer.hand:
+            j=0
+            for card in self.dealer.hand:
+                if len(self.dealer.hand) == 2 and j == 80 and end is False:
+                    screen.blit(pygame.image.load("./assets/cards/reverse.png"), ((300+160/2+j), 80))
+                else:
+                    screen.blit(pygame.image.load(card.img), ((300+160/2+j), 80))
+                j+=80
+
+        screen.blit(pygame.image.load("./assets/cards/deck.png"), (1700, 90))
+
+        pygame.display.update()
+
     def play(self, screen):
         clock = pygame.time.Clock()
         while True:
@@ -534,35 +615,7 @@ class Graphics(BlackJack):
             self.speed = SPEED_ULTRA_FAST
         self.action_done = True
 
-    def display_card(self, screen, player: Player) -> None:
-        """
-        Animates the movement of the last card in player.hand from (1700, 90) to its final position.
-        """
-        if not player.hand:
-            return
 
-        # Find player index
-        try:
-            i = self.players.index(player)
-        except ValueError:
-            return
-
-        card = player.hand[-1]
-        start_x, start_y = 1700, 90
-        end_x = (45 + i * 250) + (30 * (len(player.hand) - 1)) / 3
-        end_y = 780 - (30 * (len(player.hand) - 1))
-
-        frames = int(self.speed * 60)
-        for frame in range(frames + 1):
-            t_frac = frame / frames
-            curr_x = start_x + (end_x - start_x) * t_frac
-            curr_y = start_y + (end_y - start_y) * t_frac
-
-            img = pygame.image.load(card.img)
-            screen.blit(img, (curr_x, curr_y))
-            pygame.display.update()
-            pygame.time.delay(int(1000 / 60))
-        self.display_board(screen)
 
     # Rewrite
 
@@ -668,5 +721,7 @@ class Graphics(BlackJack):
         self.display_board(screen, end=True)
         t.sleep(self.speed*4)
         self.display_results(screen, has_bj)
+
+
 
 
