@@ -412,10 +412,10 @@ class Graphics(BlackJack):
             end_y = 780 - (30 * (len(player.hand) - 1))
             use_reverse = False
 
-        frames = 60
-        frame_delay = int((self.speed * 1000) / frames)
+        frames = 60 * self.speed
+        frame_delay = int((self.speed * 100) / frames)
         
-        for frame in range(frames + 1):
+        for frame in range(int(frames + 1)):
             t_frac = frame / frames
             curr_x = start_x + (end_x - start_x) * t_frac
             curr_y = start_y + (end_y - start_y) * t_frac
