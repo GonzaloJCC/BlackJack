@@ -401,7 +401,7 @@ class Graphics(BlackJack):
         end_x = (45 + i * 250) + (30 * (len(player.hand) - 1)) / 3
         end_y = 780 - (30 * (len(player.hand) - 1))
 
-        frames = int(self.speed * 60)
+        frames = int(self.speed/2 * 60)
         for frame in range(frames + 1):
             t_frac = frame / frames
             curr_x = start_x + (end_x - start_x) * t_frac
