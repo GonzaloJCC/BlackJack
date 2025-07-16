@@ -17,6 +17,8 @@ class Graphics(BlackJack):
         self.current_screen = MENU_SCREEN
         self.STAND_FLAG = False
         self.speed = SPEED
+        self.action_done = False
+        self.button_locked = False
     
     def __str__(self) -> str:
         return (
@@ -86,7 +88,7 @@ class Graphics(BlackJack):
 
     def menu(self) -> None:
         """
-        Displays the self.buttons of the main menu
+        Displays the buttons of the main menu
         """
         if not self.buttons:  # Only create self.buttons if they don't exist
             play_button = Button(pos_x=700, pos_y=300, width=500, height=150, button_color=COLOR_BLACK,
@@ -125,7 +127,7 @@ class Graphics(BlackJack):
 
     def select_player_amount(self, screen):
         """
-        Returns the ammount of players and their names
+        Returns the amount of players and their names
         """
         
         self.draw_text(600, 50, screen, "Enter the amount of players", FONT_VERDANA, 50, text_color=COLOR_WHITE)
@@ -382,6 +384,104 @@ class Graphics(BlackJack):
                         self.dealer.hand = []
                         return
 
+    def display_card(self, screen, player: Player = None, is_dealer: bool = False) -> None:
+        """
+        Animates the movement of the last card from (1700, 90) to its final position.
+        """
+        if is_dealer:
+            if not self.dealer.hand:
+                return
+            card = self.dealer.hand[-1]
+            start_x, start_y = 1700, 90
+            j = 80 * (len(self.dealer.hand) - 1)
+            end_x = (300 + 160/2 + j)
+            end_y = 80
+            
+            # Use reverse.png if dealer has only 2 cards and it's the second card
+            use_reverse = len(self.dealer.hand) == 2
+        else:
+            if not player or not player.hand:
+                return
+            try:
+                i = self.players.index(player)
+            except ValueError:
+                return
+            card = player.hand[-1]
+            start_x, start_y = 1700, 90
+            end_x = (45 + i * 250) + (30 * (len(player.hand) - 1)) / 3
+            end_y = 780 - (30 * (len(player.hand) - 1))
+            use_reverse = False
+
+        frames = 60 * self.speed
+        frame_delay = int((self.speed * 100) / frames)
+        
+        for frame in range(int(frames + 1)):
+            t_frac = frame / frames
+            curr_x = start_x + (end_x - start_x) * t_frac
+            curr_y = start_y + (end_y - start_y) * t_frac
+
+            if is_dealer:
+                self.display_board_without_last_card(screen, None, is_dealer_moving=True)
+            else:
+                self.display_board_without_last_card(screen, player)
+            
+            # Use reverse.png for dealer's second card
+            if use_reverse:
+                img = pygame.image.load("./assets/cards/reverse.png")
+            else:
+                img = pygame.image.load(card.img)
+            screen.blit(img, (curr_x, curr_y))
+            pygame.display.update()
+            pygame.time.delay(frame_delay)
+
+    def display_board_without_last_card(self, screen, moving_player=None, end=False, is_dealer_moving=False):
+        screen.fill(COLOR_BOARD)
+        i = 0
+        for player in self.players:
+            if player.name == '&':
+                continue
+            self.draw_text(30 + i * 250, 520, screen, f"{player.name.upper()} - {self.bets[i]}$", FONT_VERDANA, 25, text_color=COLOR_BLACK)
+            score = player.get_score()
+            score_string = ""
+            if score == int(OBJECTIVE) and len(player.hand) == 2:
+                score_string = "BLACKJACK!"
+            else:
+                score_string = f"SCORE: {score}" if score != -1 else "BUSTED"
+            
+            self.draw_text(30 + i * 250+65, 580, screen, f"{score_string}", FONT_VERDANA, 25, text_color=COLOR_BLACK)
+            pygame.draw.rect(screen, COLOR_CARD_HOLDER, (30 + i * 250, 620, 220, 400))
+            
+            if player.hand:
+                j=0
+                cards_to_draw = player.hand[:-1] if player == moving_player else player.hand
+                for card in cards_to_draw:
+                    screen.blit(pygame.image.load(card.img), ((45 + i * 250)+j/3, 780-j))
+                    j+=30
+            i += 1
+
+        score = self.dealer.get_score()
+        if score == -1:
+            score = "BUSTED"
+        elif len(self.dealer.hand) == 2 and end is False:
+            score = "???"
+
+        self.draw_text(800, 10, screen, f"DEALER'S SCORE: {score}", FONT_VERDANA, 25, text_color=COLOR_BLACK)
+        pygame.draw.rect(screen, COLOR_CARD_HOLDER, (350, 50, 1300, 300))
+        
+        if self.dealer.hand:
+            j=0
+            cards_to_draw = self.dealer.hand[:-1] if is_dealer_moving else self.dealer.hand
+            for card in cards_to_draw:
+                if len(self.dealer.hand) == 2 and j == 80 and end is False and not is_dealer_moving:
+                    screen.blit(pygame.image.load("./assets/cards/reverse.png"), ((300+160/2+j), 80))
+                else:
+                    screen.blit(pygame.image.load(card.img), ((300+160/2+j), 80))
+                j+=80
+
+        screen.blit(pygame.image.load("./assets/cards/deck.png"), (1700, 90))
+
+        pygame.display.update()
+
     def play(self, screen):
         clock = pygame.time.Clock()
         while True:
@@ -425,12 +525,25 @@ class Graphics(BlackJack):
                     _ = self.players[i]
                 except: break
                 self.buttons = []
+                self.bet_buttons(screen, self.players[i], i)
+                self.display_board(screen)
+
+                # Draw self.buttons
+                for button in self.buttons:
+                    button.draw(screen)
                 while self.players[i].get_score() < int(OBJECTIVE) and self.players[i].get_score() != int(BUSTED):
                     if self.players[i].name == '&':
-                        
                         continue
-                    self.buttons = []
-                    self.bet_buttons(self.players[i], i)
+                    if self.action_done:
+                        self.buttons = []
+                        self.bet_buttons(screen, self.players[i], i)
+                        self.display_board(screen)
+                        for button in self.buttons:
+                            button.draw(screen)
+                        pygame.display.update()
+                        self.action_done = False
+                        self.button_locked = False
+
                     for event in pygame.event.get():
                         if event.type == pygame.QUIT:
                             pygame.quit()
@@ -438,42 +551,47 @@ class Graphics(BlackJack):
 
                         # Handle button clicks
                         for button in self.buttons:
-                            button.clicked(event) 
-
-                    self.display_board(screen)
-                    # Draw self.buttons
-                    for button in self.buttons:
-                        button.draw(screen)
+                            button.clicked(event)
 
                     pygame.display.update()
                     if self.STAND_FLAG:
                         self.STAND_FLAG = False
                         break
-                    pygame.display.update()
                     clock.tick(FPS)
                 i+=1
             #the dealer gets the cards
             self.dealers_turn_gui(screen)
                     
-    def bet_buttons(self, player, i):
-
-        speed_button = Button(50, 50, 160, 100, COLOR_CYAN, "CHANGE SPEED", COLOR_BLACK, font_size=22, sound=ACTION_SOUND, callback=lambda: self.change_speed())
+    def bet_buttons(self, screen, player, i):
+        
+        self.buttons = []
+        text = f"x{self.speed}"
+        if self.speed == SPEED_ULTRA_SLOW:
+            text = f"SPEED: x0.5"
+        elif self.speed == SPEED_SLOW:
+            text = f"SPEED: x1"
+        elif self.speed == SPEED:
+            text = f"SPEED: x2"
+        elif self.speed == SPEED_ULTRA_FAST:
+            text = f"SPEED: x5"
+        
+        speed_button = Button(50, 50, 160, 100, COLOR_CYAN, text, COLOR_BLACK, font_size=22, sound=ACTION_SOUND, callback=lambda: self.change_speed())
         self.buttons.append(speed_button)
 
-        hit_button = Button(40 + i * 250, 440, 85, 30, COLOR_CYAN, "HIT", COLOR_BLACK, font_size=22, sound=ACTION_SOUND, callback=lambda: self.choose_move_gui(player, self.bets[i], HIT))
-        stand_button = Button(150 + i * 250, 440, 85, 30, COLOR_CYAN, "STAND", COLOR_BLACK, font_size=22, sound=ACTION_SOUND, callback=lambda: self.choose_move_gui(player, self.bets[i], STAND))
+        hit_button = Button(40 + i * 250, 440, 85, 30, COLOR_CYAN, "HIT", COLOR_BLACK, font_size=22, sound=ACTION_SOUND, callback=lambda: self.choose_move_gui(screen, player, self.bets[i], HIT))
+        stand_button = Button(150 + i * 250, 440, 85, 30, COLOR_CYAN, "STAND", COLOR_BLACK, font_size=22, sound=ACTION_SOUND, callback=lambda: self.choose_move_gui(screen, player, self.bets[i], STAND))
         self.buttons.append(hit_button)
         self.buttons.append(stand_button)
 
         if len(player.hand) != 2 or "&" in player.name or (player.chips - self.bets[i] < self.bets[i]):
             return
 
-        double_button = Button(40 + i * 250, 480, 85, 30, COLOR_CYAN, "DOUBLE", COLOR_BLACK, font_size=22, sound=ACTION_SOUND, callback=lambda: self.choose_move_gui(player, self.bets[i], DOUBLE))
+        double_button = Button(40 + i * 250, 480, 85, 30, COLOR_CYAN, "DOUBLE", COLOR_BLACK, font_size=22, sound=ACTION_SOUND, callback=lambda: self.choose_move_gui(screen, player, self.bets[i], DOUBLE))
         self.buttons.append(double_button)
 
         if player.hand[0].value != player.hand[1].value:
             return
-        split_button = Button(150 + i * 250, 480, 85, 30, COLOR_CYAN, "SPLIT", COLOR_BLACK, font_size=22, sound=ACTION_SOUND, callback=lambda: self.choose_move_gui(player, self.bets[i], SPLIT))
+        split_button = Button(150 + i * 250, 480, 85, 30, COLOR_CYAN, "SPLIT", COLOR_BLACK, font_size=22, sound=ACTION_SOUND, callback=lambda: self.choose_move_gui(screen, player, self.bets[i], SPLIT))
         self.buttons.append(split_button)
 
     ######################
@@ -501,43 +619,46 @@ class Graphics(BlackJack):
         screen.blit(img, (pos_x, pos_y))
 
     def change_speed(self) -> None:
-        if self.speed == 0.2:
-            self.speed = 2
+        if self.button_locked:
             return
-        elif self.speed == 0.5:
-            self.speed = 0.2
-            return
-        self.speed -= 0.5
+        
+        if self.speed == SPEED_ULTRA_FAST:
+            self.speed = SPEED_ULTRA_SLOW
+        elif self.speed == SPEED_ULTRA_SLOW:
+            self.speed = SPEED_SLOW
+        elif self.speed == SPEED_SLOW:
+            self.speed = SPEED
+        elif self.speed == SPEED:
+            self.speed = SPEED_ULTRA_FAST
+        self.action_done = True
+
+
 
     # Rewrite
 
     def deal_gui(self, x: bool, screen) -> None:
         """
         Deals a card to the dealer or all players.
-        :param x: True if the card is dealt to the dealer, False otherwise.
-        :return: None
         """
         if x:
             self.dealer.hand.append(self.take_card())
-            self.display_board(screen)
+            self.display_card(screen, is_dealer=True)
             t.sleep(self.speed*0.5)
         else:
-            self.display_board(screen)
             for player in self.players:
                 player.hand.append(self.take_card())
-
-                self.display_board(screen)
+                self.display_card(screen, player)
                 t.sleep(self.speed*0.5)
 
-    def choose_move_gui(self, player: Player, bet, decision) -> None:
-        """
-        Allows a player to choose their move during their turn.
-        :param player: The player making the move.
-        :param bet: The player's current bet.
-        :return: None
-        """
+    def choose_move_gui(self, screen, player: Player, bet, decision) -> None:
+        if self.button_locked:
+            return
+        
+        self.button_locked = True
+        
         if decision == HIT:
             player.hand.append(self.take_card())
+            self.display_card(screen, player)
 
         elif decision == DOUBLE:
             bet += player.bet(bet)
@@ -547,29 +668,26 @@ class Graphics(BlackJack):
             player.hand.append(self.take_card())
             self.STAND_FLAG = True
             self.buttons = []
+            self.display_card(screen, player)
 
         elif decision == SPLIT:
-            # Validation
             if "&" in player.name or len(player.hand) != 2 or player.hand[0].value != player.hand[1].value or player.chips - bet < bet:
                 self.buttons = []
+                self.button_locked = False
                 return
 
             player.bet(bet)
-            # create 2 new players: player.name&1 and player.name&2
             new_name_1 = player.name + "&1"
             new_name_2 = player.name + "&2"
             p1 = Player(new_name_1)
             p2 = Player(new_name_2)
 
-            # give them one card each
             p1.hand.append(player.hand[0])
             p2.hand.append(player.hand[1])
 
-            # create 2 new list: new_players and new_bets
             new_players = []
             new_bets = []
 
-            # append all players except the original, in its place append the 2 new players
             for i, aux in enumerate(self.players):
                 if aux.name == player.name:
                     new_players.append(p1)
@@ -587,12 +705,12 @@ class Graphics(BlackJack):
         elif decision == STAND:
             self.STAND_FLAG = True
             self.buttons = []
+        
+        self.action_done = True
 
     def dealers_turn_gui(self, screen, has_bj=False) -> None:
         """
-        Executes the dealer's turn, where the dealer draws cards until
-        reaching a stopping condition.
-        :return: None
+        Executes the dealer's turn with card animations.
         """
         score = self.dealer.get_score()
 
@@ -604,15 +722,16 @@ class Graphics(BlackJack):
             if temp_score > best_player_score:
                 best_player_score = temp_score
 
-        #the dealer takes cards 
-        while score < int(DEALER_STOP) and score != int(BUSTED) \
-                and score <= best_player_score:
-            self.display_board(screen)
+        while score < int(DEALER_STOP) and score != int(BUSTED) and score <= best_player_score:
             self.dealer.hand.append(self.take_card())
+            self.display_card(screen, is_dealer=True)
             score = self.dealer.get_score()
-            t.sleep(self.speed)
+            t.sleep(self.speed*0.5)
+        
         self.display_board(screen, end=True)
         t.sleep(self.speed*4)
         self.display_results(screen, has_bj)
+
+
 
 
