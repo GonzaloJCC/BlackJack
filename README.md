@@ -96,6 +96,5 @@ BlackJack/
 
 ## Known Issues:
 - Players cannot bet when their chips are between 0 and 1.
-- Action buttons blink a lot.
-- It may happen that when clicking too much the hit button more cards than intender are received.
+- It may happen that when clicking too much the hit button more cards than intender are received (usually at the lowest speed).
 
