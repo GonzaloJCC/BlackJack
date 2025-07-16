@@ -1,4 +1,4 @@
-# BlackJack
+# Blackjack
 A blackjack game built in Python. Featuring almost the same functionalities of a real casino, but without real money.
 
 ---
