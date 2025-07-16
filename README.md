@@ -15,7 +15,7 @@ A blackjack game built in Python. Featuring almost the same functionalities of a
 
 ---
 
-## Installation and Running the Project
+## 🔧 Installation and Running the Project
 
 1. Clone the repository:
    ```bash
