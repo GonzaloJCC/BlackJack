@@ -24,7 +24,7 @@ A blackjack game built in Python. Featuring almost the same functionalities of a
 
 2. Navigate to the project folder:
    ```bash
-   cd BlackJack
+   cd blackjack
    ```
 
 ### Option 1: Using `make`
