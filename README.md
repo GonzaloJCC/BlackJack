@@ -3,6 +3,11 @@ A blackjack game built in Python. Featuring almost the same functionalities of a
 
 ---
 
+## 🎞️ Preview
+[Preview Video](https://github.com/user-attachments/assets/4d24b136-3dd6-4071-b6a0-0054b458e664)
+
+---
+
 ## 📋 Requirements
 - Python 3.10 or higher
 - [Optional] `make` (to simplify running commands)
@@ -78,16 +83,11 @@ BlackJack/
 │   ├── person.py       # Player and dealer classes
 │   ├── text_box.py     # Text box class for the GUI
 │   └── utils.py        # Utility functions
-├── assets/             # Game assets (icons, sounds, cards, fonts)
+├── assets/             # Game assets (icons, sounds, cards, fonts) (Card assets where created with Microsoft Paint)
 ├── Makefile            # Build automation
 ├── README.md           # Project documentation
 └── requirements.txt    # Python dependencies
 ```
-
----
-
-## 🎞️ Preview
-https://github.com/user-attachments/assets/4d24b136-3dd6-4071-b6a0-0054b458e664
 
 ---
 
